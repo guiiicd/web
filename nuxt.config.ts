@@ -102,6 +102,7 @@ export default defineNuxtConfig({
         flag: "🇧🇷",
       }, // Brazilian Portuguese
       { code: "ru", name: "Русский", file: "ru_RU.json", flag: "🇷🇺" }, // Russian
+      { code: "sv", name: "Svenska", file: "sv_SE.json", flag: "🇸🇪" }, // Swedish
       { code: "tr", name: "Türkçe", file: "tr_TR.json", flag: "🇹🇷" }, // Turkish
       { code: "uk", name: "Українська", file: "uk_UA.json", flag: "🇺🇦" }, // Ukrainian
       { code: "zh-Hans", name: "中文 (简体)", file: "zh_Hans.json", flag: "🇨🇳" }, // Simplified Chinese
