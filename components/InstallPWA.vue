@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { MonitorDown, PlusSquare, Share } from "lucide-vue-next";
 import { useSidebar } from "@/components/ui/sidebar";
-import FiveStackTooltip from "~/components/FiveStackTooltip.vue";
+import FiveStackToolTip from "~/components/FiveStackToolTip.vue";
 const { state, isMobile } = useSidebar();
 </script>
 
@@ -25,14 +25,14 @@ const { state, isMobile } = useSidebar();
       </SidebarMenuItem>
     </template>
     <template v-else>
-      <FiveStackTooltip v-if="!isMobile">
+      <FiveStackToolTip v-if="!isMobile">
         <template #trigger>
           <Button @click="installPWA" size="sm">
             <MonitorDown />
           </Button>
         </template>
         {{ $t("pwa.install.button") }}
-      </FiveStackTooltip>
+      </FiveStackToolTip>
       <div class="flex items-center gap-2 uppercase font-bold" v-else>
         <MonitorDown class="size-5" @click="installPWA" />
         {{ $t("pwa.install.button") }}
