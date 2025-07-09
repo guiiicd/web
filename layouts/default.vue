@@ -11,9 +11,7 @@ import PlayerNameRegistration from "~/components/PlayerNameRegistration.vue";
   <AlertsContainer></AlertsContainer>
   <div class="flex min-h-screen w-full flex-col">
     <AppNav>
-      <main class="m-2 md:m-8">
-        <slot></slot>
-      </main>
+      <slot></slot>
     </AppNav>
   </div>
 
