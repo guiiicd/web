@@ -14,12 +14,14 @@ const { isMobile } = useSidebar();
 
 <template>
   <header
-    class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 px-4"
+    class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 px-8"
   >
     <div class="flex items-center justify-between w-full">
       <div class="flex items-center gap-2">
-        <SidebarTrigger v-if="showLeftNav" />
-        <Separator orientation="vertical" class="h-4" />
+        <template v-if="showLeftNav">
+          <SidebarTrigger v-if="showLeftNav" />
+          <Separator orientation="vertical" class="h-4" />
+        </template>
         <bread-crumbs></bread-crumbs>
       </div>
 
