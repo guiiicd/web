@@ -58,9 +58,8 @@ export default {
     lobbies() {
       return useMatchmakingStore().lobbies;
     },
-
     showLeftNav() {
-      return useAuthStore().isRoleAbove(e_player_roles_enum.verified_user);
+      return useAuthStore().isRoleAbove(e_player_roles_enum.match_organizer);
     },
   },
 };
