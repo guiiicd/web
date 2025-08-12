@@ -141,6 +141,7 @@ export const useApplicationSettingsStore = defineStore(
               status: true,
               description: true,
               is_lan: true,
+              has_node: true,
             },
           ],
         }),

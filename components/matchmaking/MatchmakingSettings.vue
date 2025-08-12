@@ -34,7 +34,10 @@ import { Loader2 } from "lucide-vue-next";
     </div>
   </div>
 
-  <div class="border border-border rounded-lg bg-card">
+  <div
+    class="border border-border rounded-lg bg-card"
+    v-if="availableRegions.length > 0"
+  >
     <div class="p-4 flex justify-end">
       <Button
         variant="outline"
@@ -200,7 +203,11 @@ export default {
       return useMatchmakingStore().storedRegions;
     },
     availableRegions() {
-      return useApplicationSettingsStore()?.availableRegions || [];
+      return (
+        useApplicationSettingsStore()?.availableRegions.filter(
+          (region) => region.has_node,
+        ) || []
+      );
     },
     maxAcceptableLatency() {
       return useApplicationSettingsStore().maxAcceptableLatency || 100;

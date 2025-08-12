@@ -84,7 +84,7 @@ import FiveStackToolTip from "../FiveStackToolTip.vue";
       </div>
 
       <div class="flex flex-col gap-4 bg-card p-8 rounded-lg" v-else>
-        <div>
+        <div v-if="availableRegionsWithNodes.length > 0">
           <div
             class="flex mb-4"
             :class="{
@@ -358,6 +358,15 @@ export default {
     },
     preferredRegions(): Region[] {
       return useMatchmakingStore().preferredRegions;
+    },
+    availableRegionsWithNodes(): Region[] {
+      console.info(
+        "availableRegionsWithNodes",
+        useApplicationSettingsStore().availableRegions,
+      );
+      return useApplicationSettingsStore().availableRegions.filter(
+        (region) => region.has_node,
+      );
     },
     regionStats() {
       return useMatchmakingStore().regionStats;
