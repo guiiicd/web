@@ -139,7 +139,6 @@ export default {
       return /iPad|iPhone|iPod/.test(navigator.userAgent);
     },
     canInstall() {
-      return true;
       if (this.$pwa?.isPWAInstalled) {
         return false;
       }
