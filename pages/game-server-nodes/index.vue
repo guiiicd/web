@@ -50,17 +50,22 @@ import { Info, ExternalLink } from "lucide-vue-next";
             </Button>
           </PopoverTrigger>
           <PopoverContent>
-            <div class="relative bg-gray-900 rounded-lg p-4" v-if="script">
-              <div class="flex justify-between items-start mb-2">
+            <div
+              class="relative bg-gray-900 rounded-lg p-4"
+              v-if="setupGameServer"
+            >
+              <div class="flex justify-between items-start">
                 <h3 class="text-white text-sm font-semibold">
                   {{ $t("pages.game_server_nodes.installation_script") }}
                 </h3>
                 <ClipBoard
-                  :data="script"
+                  :data="setupGameServer.link"
                   class="text-white hover:text-gray-300 transition-colors"
                 ></ClipBoard>
               </div>
-              <pre class="text-white overflow-x-auto text-sm">{{ script }}</pre>
+              <div class="text-sm mt-2">
+                {{ setupGameServer.gameServerId }}
+              </div>
             </div>
           </PopoverContent>
         </Popover>
@@ -168,8 +173,8 @@ import { generateMutation } from "~/graphql/graphqlGen";
 export default {
   data() {
     return {
-      script: undefined,
       gameServerNodes: [],
+      setupGameServer: undefined,
     };
   },
   apollo: {
@@ -222,11 +227,12 @@ export default {
         mutation: generateMutation({
           setupGameServer: {
             link: true,
+            gameServerId: true,
           },
         }),
       });
 
-      this.script = data.setupGameServer.link;
+      this.setupGameServer = data.setupGameServer;
     },
   },
   computed: {

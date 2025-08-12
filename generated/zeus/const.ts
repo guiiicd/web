@@ -13238,6 +13238,7 @@ export const ReturnTypes: Record<string,any> = {
 		node:"String"
 	},
 	SetupGameServeOutput:{
+		gameServerId:"String",
 		link:"String"
 	},
 	SuccessOutput:{
