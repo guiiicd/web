@@ -17,8 +17,16 @@ import {
 import { Button } from "~/components/ui/button";
 import GameServerNodeDisplay from "~/components/game-server-nodes/GameServerNodeDisplay.vue";
 import { e_game_server_node_statuses_enum } from "~/generated/zeus";
-import { Trash2, RefreshCw, Pencil, Activity, Cpu } from "lucide-vue-next";
+import {
+  Trash2,
+  RefreshCw,
+  Pencil,
+  Activity,
+  Cpu,
+  CircleFadingArrowUp,
+} from "lucide-vue-next";
 import UpdateGameServerLabel from "~/components/game-server-nodes/UpdateGameServerLabel.vue";
+import FiveStackToolTip from "../FiveStackToolTip.vue";
 </script>
 
 <template>
@@ -49,23 +57,85 @@ import UpdateGameServerLabel from "~/components/game-server-nodes/UpdateGameServ
           {{ gameServerNode.update_status }}
         </span>
       </template>
-      <template v-else-if="gameServerNode.build_id">
-        {{ gameServerNode.build_id }}
-        <template v-if="gameServerNode.build_id != csVersion">
-          <Button variant="destructive" size="sm" @click="updateCs">{{
-            $t("game_server.update_cs")
-          }}</Button>
+
+      <div class="flex items-center gap-2" v-else>
+        <div v-if="nodeBuildVersion">
+          {{ nodeBuildVersion?.version }} ({{ nodeBuildVersion?.build_id }})
+        </div>
+
+        <template v-if="gameServerNode.build_id">
+          <template
+            v-if="
+              (gameServerNode.pin_build_id &&
+                gameServerNode.pin_build_id != currentGameVersion?.build_id) ||
+              (!gameServerNode.pin_build_id &&
+                gameServerNode.build_id != currentGameVersion?.build_id)
+            "
+          >
+            <FiveStackToolTip>
+              {{ $t("game_server.update_cs") }}
+              <template #trigger>
+                <Button
+                  variant="destructive"
+                  size="icon"
+                  @click="updateCs"
+                  :disabled="
+                    gameServerNode.status !==
+                    e_game_server_node_statuses_enum.Online
+                  "
+                >
+                  <CircleFadingArrowUp class="h-4 w-4" />
+                </Button>
+              </template>
+            </FiveStackToolTip>
+          </template>
         </template>
-      </template>
-      <template
-        v-else-if="
-          gameServerNode.status === e_game_server_node_statuses_enum.Online
-        "
-      >
-        <Button size="sm" @click="updateCs">{{
-          $t("game_server.install_cs")
-        }}</Button>
-      </template>
+        <template v-else>
+          <Button
+            size="sm"
+            @click="updateCs"
+            :disabled="
+              gameServerNode.status !== e_game_server_node_statuses_enum.Online
+            "
+            >{{ $t("game_server.install_cs") }}</Button
+          >
+        </template>
+      </div>
+    </TableCell>
+    <TableCell>
+      <div class="flex items-center gap-2">
+        <Select
+          :model-value="pinBuildIdForm.values.pin_build_id"
+          @update:model-value="(value) => pinBuildId(value)"
+          v-slot="{ open }"
+        >
+          <SelectTrigger>
+            <SelectValue :placeholder="$t('game_server.pin_build_id')" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem :value="null">
+                <div class="flex flex-col gap-1">
+                  <div>
+                    {{ $t("game_server.unpin_build_id") }}
+                  </div>
+                </div>
+              </SelectItem>
+              <SelectItem
+                :value="version.build_id"
+                v-for="version of gameVersions"
+              >
+                <div class="flex flex-col gap-1">
+                  <div>{{ version.version }} ({{ version.build_id }})</div>
+                  <div class="text-xs text-muted-foreground" v-if="open">
+                    {{ new Date(version.updated_at).toLocaleString() }}
+                  </div>
+                </div>
+              </SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
     </TableCell>
     <TableCell>
       <Select
@@ -165,6 +235,7 @@ import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
 import { toast } from "@/components/ui/toast";
 import { defineComponent } from "vue";
+import { typedGql } from "~/generated/zeus/typedDocumentNode";
 
 interface ServerRegion {
   value: string;
@@ -222,13 +293,44 @@ export default defineComponent({
         ],
       }),
     },
+    $subscribe: {
+      game_versions: {
+        query: typedGql("subscription")({
+          game_versions: [
+            {
+              order_by: {
+                updated_at: "desc",
+              },
+            },
+            {
+              build_id: true,
+              version: true,
+              description: true,
+              updated_at: true,
+              current: true,
+            },
+          ],
+        }),
+        result: function ({ data }) {
+          this.gameVersions = data.game_versions;
+        },
+      },
+    },
   },
   data(): ComponentData {
     return {
+      gameVersions: [],
       regionForm: {
         region: undefined,
       },
       editLabelSheet: false,
+      pinBuildIdForm: useForm({
+        validationSchema: toTypedSchema(
+          z.object({
+            pin_build_id: z.string().nullable(),
+          }),
+        ),
+      }),
       portForm: useForm({
         validationSchema: toTypedSchema(
           z.object({
@@ -287,6 +389,18 @@ export default defineComponent({
     );
   },
   watch: {
+    nodeBuildVersion: {
+      immediate: true,
+      handler(nodeBuildVersion) {
+        if (!this.gameServerNode.pin_build_id) {
+          return;
+        }
+
+        this.pinBuildIdForm.setValues({
+          pin_build_id: nodeBuildVersion?.build_id,
+        });
+      },
+    },
     gameServerNode: {
       immediate: true,
       handler(gameServerNode) {
@@ -302,11 +416,6 @@ export default defineComponent({
           end_port_range,
         });
       },
-    },
-  },
-  computed: {
-    csVersion() {
-      return useApplicationSettingsStore().csBuildInfo?.buildid;
     },
   },
   methods: {
@@ -326,6 +435,33 @@ export default defineComponent({
 
       toast({
         title: this.$t("game_server.toast.cs_updating"),
+      });
+    },
+    async pinBuildId(buildId: string) {
+      this.pinBuildIdForm.setValues({
+        pin_build_id: buildId,
+      });
+
+      await this.$apollo.mutate({
+        mutation: generateMutation({
+          update_game_server_nodes_by_pk: [
+            {
+              pk_columns: {
+                id: this.gameServerNode.id,
+              },
+              _set: {
+                pin_build_id: this.pinBuildIdForm.values.pin_build_id,
+              },
+            },
+            {
+              __typename: true,
+            },
+          ],
+        }),
+      });
+
+      toast({
+        title: this.$t("game_server.pinned_build_id"),
       });
     },
     async removeGameNodeServer() {
@@ -423,6 +559,18 @@ export default defineComponent({
             },
           ],
         }),
+      });
+    },
+  },
+  computed: {
+    currentGameVersion() {
+      return this.gameVersions.find((version) => {
+        return version.current === true;
+      });
+    },
+    nodeBuildVersion() {
+      return this.gameVersions.find((version) => {
+        return version.build_id == this.gameServerNode.build_id;
       });
     },
   },

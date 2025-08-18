@@ -157,18 +157,6 @@ export const useApplicationSettingsStore = defineStore(
 
     subscribeToAvailableRegions();
 
-    const csBuildInfo = computed(() => {
-      const version = settings.value.find(({ name }) => {
-        return name === "cs_version";
-      })?.value;
-
-      if (!version) {
-        return;
-      }
-
-      return JSON.parse(version);
-    });
-
     const currentPluginVersion = computed(() => {
       return settings.value.find(({ name }) => {
         return name === "plugin_version";
@@ -200,7 +188,6 @@ export const useApplicationSettingsStore = defineStore(
       supportsDiscordBot,
       supportsGameServerNodes,
       playerNameRegistration,
-      csBuildInfo,
       canCreateMatch,
       currentPluginVersion,
     };

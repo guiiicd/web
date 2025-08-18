@@ -81,12 +81,14 @@ import { Info, ExternalLink } from "lucide-vue-next";
       </div>
       <AlertDescription class="m-0 flex items-center gap-2">
         <span>{{
-          $t("pages.game_server_nodes.build_id", { id: csVersion })
+          $t("pages.game_server_nodes.build_id", {
+            id: `${currentGameVersion?.version} (${currentGameVersion?.build_id})`,
+          })
         }}</span>
         <span class="text-muted-foreground">•</span>
         <span>{{
           $t("pages.game_server_nodes.last_updated", {
-            date: csVersionLastUpdated?.toLocaleString(),
+            date: new Date(currentGameVersion?.updated_at).toLocaleString(),
           })
         }}</span>
       </AlertDescription>
@@ -125,6 +127,7 @@ import { Info, ExternalLink } from "lucide-vue-next";
             <TableHead>{{
               $t("pages.game_server_nodes.table.cs_build_id")
             }}</TableHead>
+            <TableHead></TableHead>
             <TableHead>{{
               $t("pages.game_server_nodes.table.region")
             }}</TableHead>
@@ -173,12 +176,30 @@ import { generateMutation } from "~/graphql/graphqlGen";
 export default {
   data() {
     return {
+      gameVersions: [],
       gameServerNodes: [],
       setupGameServer: undefined,
     };
   },
   apollo: {
     $subscribe: {
+      game_versions: {
+        query: typedGql("subscription")({
+          game_versions: [
+            {},
+            {
+              build_id: true,
+              version: true,
+              description: true,
+              updated_at: true,
+              current: true,
+            },
+          ],
+        }),
+        result: function ({ data }) {
+          this.gameVersions = data.game_versions;
+        },
+      },
       game_server_nodes: {
         query: typedGql("subscription")({
           game_server_nodes: [
@@ -197,6 +218,7 @@ export default {
               region: true,
               enabled: true,
               build_id: true,
+              pin_build_id: true,
               lan_ip: true,
               public_ip: true,
               start_port_range: true,
@@ -236,16 +258,13 @@ export default {
     },
   },
   computed: {
+    currentGameVersion() {
+      return this.gameVersions.find((version) => {
+        return version.current === true;
+      });
+    },
     supportsGameServerNodes() {
       return useApplicationSettingsStore().supportsGameServerNodes;
-    },
-    csVersion() {
-      return useApplicationSettingsStore().csBuildInfo?.buildid;
-    },
-    csVersionLastUpdated() {
-      return new Date(
-        useApplicationSettingsStore().csBuildInfo?.timeupdated * 1000,
-      );
     },
   },
 };
