@@ -67,7 +67,7 @@ import FiveStackToolTip from "../FiveStackToolTip.vue";
           <template
             v-if="
               (gameServerNode.pin_build_id &&
-                gameServerNode.pin_build_id != currentGameVersion?.build_id) ||
+                gameServerNode.pin_build_id != gameServerNode?.build_id) ||
               (!gameServerNode.pin_build_id &&
                 gameServerNode.build_id != currentGameVersion?.build_id)
             "
