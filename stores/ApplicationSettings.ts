@@ -115,6 +115,18 @@ export const useApplicationSettingsStore = defineStore(
       );
     });
 
+    const supportsGameServerVersionPinning = computed(() => {
+      if (!settings.value) {
+        return false;
+      }
+
+      return (
+        settings.value.find(
+          (setting) => setting.name === "supports_game_server_version_pinning",
+        )?.value === "true"
+      );
+    });
+
     const playerNameRegistration = computed(() => {
       return (
         settings.value?.find(
@@ -187,6 +199,7 @@ export const useApplicationSettingsStore = defineStore(
       tournamentCreateRole,
       supportsDiscordBot,
       supportsGameServerNodes,
+      supportsGameServerVersionPinning,
       playerNameRegistration,
       canCreateMatch,
       currentPluginVersion,

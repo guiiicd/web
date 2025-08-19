@@ -18,6 +18,7 @@ import { Button } from "~/components/ui/button";
 import GameServerNodeDisplay from "~/components/game-server-nodes/GameServerNodeDisplay.vue";
 import { e_game_server_node_statuses_enum } from "~/generated/zeus";
 import {
+  ExternalLink,
   Trash2,
   RefreshCw,
   Pencil,
@@ -104,10 +105,26 @@ import FiveStackToolTip from "../FiveStackToolTip.vue";
     </TableCell>
     <TableCell>
       <div class="flex items-center gap-2">
+        <FiveStackToolTip v-if="!supportsGameServerVersionPinning">
+          <span>
+            {{ $t("game_server.version_pinning_not_supported") }}
+          </span>
+          <template #trigger>
+            <a
+              href="https://docs.5stack.gg/servers/game-server-nodes/version-pinning"
+              target="_blank"
+              class="text-warning"
+            >
+              <ExternalLink class="h-4 w-4" />
+            </a>
+          </template>
+        </FiveStackToolTip>
+
         <Select
           :model-value="pinBuildIdForm.values.pin_build_id"
           @update:model-value="(value) => pinBuildId(value)"
           v-slot="{ open }"
+          :disabled="!supportsGameServerVersionPinning"
         >
           <SelectTrigger>
             <SelectValue :placeholder="$t('game_server.pin_build_id')" />
@@ -568,6 +585,9 @@ export default defineComponent({
           return version.build_id == this.gameServerNode.build_id;
         }) || null
       );
+    },
+    supportsGameServerVersionPinning() {
+      return useApplicationSettingsStore().supportsGameServerVersionPinning;
     },
   },
 });
