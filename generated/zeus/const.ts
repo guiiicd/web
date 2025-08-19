@@ -13370,6 +13370,10 @@ export const ReturnTypes: Record<string,any> = {
 		used:"bigint",
 		window:"Float"
 	},
+	GetTestUploadResponse:{
+		error:"String",
+		link:"String"
+	},
 	MeResponse:{
 		avatar_url:"String",
 		country:"String",
@@ -13406,6 +13410,9 @@ export const ReturnTypes: Record<string,any> = {
 	},
 	TelemetryStats:{
 		online:"Int"
+	},
+	TestUploadResponse:{
+		error:"String"
 	},
 	_map_pool:{
 		map_id:"uuid",
@@ -15631,6 +15638,7 @@ export const ReturnTypes: Record<string,any> = {
 		delete_v_match_captains:"v_match_captains_mutation_response",
 		denyInvite:"SuccessOutput",
 		forfeitMatch:"SuccessOutput",
+		getTestUploadLink:"GetTestUploadResponse",
 		insert__map_pool:"_map_pool_mutation_response",
 		insert__map_pool_one:"_map_pool",
 		insert_abandoned_matches:"abandoned_matches_mutation_response",
@@ -15779,6 +15787,7 @@ export const ReturnTypes: Record<string,any> = {
 		startMatch:"SuccessOutput",
 		switchLineup:"SuccessOutput",
 		syncSteamFriends:"SuccessOutput",
+		testUpload:"TestUploadResponse",
 		unlinkDiscord:"SuccessOutput",
 		updateCs:"SuccessOutput",
 		updateServices:"SuccessOutput",

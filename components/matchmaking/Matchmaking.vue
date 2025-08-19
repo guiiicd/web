@@ -360,10 +360,6 @@ export default {
       return useMatchmakingStore().preferredRegions;
     },
     availableRegionsWithNodes(): Region[] {
-      console.info(
-        "availableRegionsWithNodes",
-        useApplicationSettingsStore().availableRegions,
-      );
       return useApplicationSettingsStore().availableRegions.filter(
         (region) => region.has_node,
       );

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { LucideCloud, LucideDownload, LucideUpload } from "lucide-vue-next";
+
 definePageMeta({
   layout: "application-settings",
 });
@@ -14,6 +16,33 @@ definePageMeta({
         {{ $t("pages.settings.application.demo_settings.used_storage") }}
       </p>
       <p class="text-2xl font-bold">~{{ currentStorage }} GB</p>
+    </div>
+  </div>
+
+  <div class="mb-8 p-4 bg-muted rounded-lg flex flex-col gap-2">
+    <h3 class="text-lg font-semibold">
+      {{ $t("pages.settings.application.demo_settings.test_s3_title") }}
+    </h3>
+    <div>
+      <p class="text-sm text-muted-foreground">
+        {{ $t("pages.settings.application.demo_settings.test_s3_description") }}
+      </p>
+    </div>
+    <div class="flex gap-4">
+      <Button
+        class="rounded-full px-6 py-2 font-medium shadow transition hover:bg-primary/90 flex items-center gap-2"
+        @click="testUpload"
+      >
+        <LucideUpload class="w-4 h-4" />
+        {{ $t("pages.settings.application.demo_settings.test_upload") }}
+      </Button>
+      <Button
+        class="rounded-full px-6 py-2 font-medium shadow transition hover:bg-primary/90 flex items-center gap-2"
+        @click="testDownload"
+      >
+        <LucideDownload class="w-4 h-4" />
+        {{ $t("pages.settings.application.demo_settings.test_download") }}
+      </Button>
     </div>
   </div>
 
@@ -137,6 +166,57 @@ export default {
     },
   },
   methods: {
+    async testUpload() {
+      const {
+        data: {
+          testUpload: { error },
+        },
+      } = await this.$apollo.mutate({
+        mutation: generateMutation({
+          testUpload: {
+            error: true,
+          },
+        }),
+      });
+
+      if (!error) {
+        toast({
+          title: this.$t(
+            "pages.settings.application.demo_settings.test_upload_success",
+          ),
+        });
+        return;
+      }
+
+      toast({
+        title: `${this.$t("pages.settings.application.demo_settings.test_upload_failed")} ${error}`,
+        variant: "destructive",
+      });
+    },
+    async testDownload() {
+      const {
+        data: {
+          getTestUploadLink: { link, error },
+        },
+      } = await this.$apollo.mutate({
+        mutation: generateMutation({
+          getTestUploadLink: {
+            link: true,
+            error: true,
+          },
+        }),
+      });
+
+      if (error) {
+        toast({
+          title: `${this.$t("pages.settings.application.demo_settings.test_download_failed")} ${error}`,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      window.open(link, "_blank");
+    },
     async updateSettings() {
       await this.$apollo.mutate({
         mutation: generateMutation({

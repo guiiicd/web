@@ -131,7 +131,14 @@
                     "cloudflare_worker_url_description": "The URL of the Cloudflare worker that will be used to store and retrieve the demo files.",
                     "min_retention_description": "The minimum retention days for the demo files.",
                     "current_storage": "Current Storage",
-                    "used_storage": "Approximate Storage Used"
+                    "used_storage": "Approximate Storage Used",
+                    "test_s3_title": "Test S3",
+                    "test_s3_description": "Test the S3 connection and upload a file to the demo bucket.",
+                    "test_upload": "Test Upload",
+                    "test_upload_success": "Test Upload Success",
+                    "test_upload_failed": "Test Upload Failed",
+                    "test_download": "Test Download",
+                    "test_download_failed": "Test Download Failed"
                 },
                 "update_map_pools": {
                     "title": "Automatic Update Map Pools",
