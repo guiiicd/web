@@ -389,18 +389,6 @@ export default defineComponent({
     );
   },
   watch: {
-    nodeBuildVersion: {
-      immediate: true,
-      handler(nodeBuildVersion) {
-        if (!this.gameServerNode.pin_build_id) {
-          return;
-        }
-
-        this.pinBuildIdForm.setValues({
-          pin_build_id: nodeBuildVersion?.build_id,
-        });
-      },
-    },
     gameServerNode: {
       immediate: true,
       handler(gameServerNode) {
@@ -415,6 +403,12 @@ export default defineComponent({
           start_port_range,
           end_port_range,
         });
+
+        if (this.gameServerNode.pin_build_id) {
+          this.pinBuildIdForm.setValues({
+            pin_build_id: this.gameServerNode.pin_build_id,
+          });
+        }
       },
     },
   },
@@ -438,10 +432,6 @@ export default defineComponent({
       });
     },
     async pinBuildId(buildId: string) {
-      this.pinBuildIdForm.setValues({
-        pin_build_id: buildId,
-      });
-
       await this.$apollo.mutate({
         mutation: generateMutation({
           update_game_server_nodes_by_pk: [
@@ -450,7 +440,7 @@ export default defineComponent({
                 id: this.gameServerNode.id,
               },
               _set: {
-                pin_build_id: this.pinBuildIdForm.values.pin_build_id,
+                pin_build_id: buildId,
               },
             },
             {
@@ -458,6 +448,10 @@ export default defineComponent({
             },
           ],
         }),
+      });
+
+      this.pinBuildIdForm.setValues({
+        pin_build_id: buildId,
       });
 
       toast({
@@ -569,9 +563,11 @@ export default defineComponent({
       });
     },
     nodeBuildVersion() {
-      return this.gameVersions.find((version) => {
-        return version.build_id == this.gameServerNode.build_id;
-      });
+      return (
+        this.gameVersions.find((version) => {
+          return version.build_id == this.gameServerNode.build_id;
+        }) || null
+      );
     },
   },
 });
