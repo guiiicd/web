@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import TournamentRoundLineup from "~/components/tournament/TournamentRoundLineup.vue";
+import TimeAgo from "~/components/TimeAgo.vue";
 </script>
 
 <template>
@@ -26,7 +27,7 @@ import TournamentRoundLineup from "~/components/tournament/TournamentRoundLineup
         <div class="text-xs text-muted-foreground">
           {{ $t("tournament.match.scheduled_for") }}:
           <span class="text-blue-400 font-medium">
-            {{ formatScheduledEta(bracket.scheduled_eta) }}
+            <TimeAgo :date="bracket.scheduled_eta"></TimeAgo>
           </span>
         </div>
       </div>
@@ -34,14 +35,14 @@ import TournamentRoundLineup from "~/components/tournament/TournamentRoundLineup
       <!-- Show only team 1 if it's a bye round -->
       <div v-if="bracket.bye && bracket.team_1" class="items-center m-2">
         <div class="bg-gray-600 text-gray-300 rounded py-1 px-4">
-          <span>{{ bracket.team_1.name }}</span>
+          <span>{{ bracket.team_1.team.name }}</span>
         </div>
       </div>
 
       <!-- Show only team 2 if it's a bye round and team 1 doesn't exist -->
       <div v-else-if="bracket.bye && bracket.team_2" class="items-center m-2">
         <div class="bg-gray-600 text-gray-300 rounded py-1 px-4">
-          <span>{{ bracket.team_2.name }}</span>
+          <span>{{ bracket.team_2.team.name }}</span>
         </div>
       </div>
 
@@ -50,7 +51,7 @@ import TournamentRoundLineup from "~/components/tournament/TournamentRoundLineup
         <div class="items-center m-2">
           <div class="bg-gray-600 text-gray-300 rounded py-1 px-4">
             <TournamentRoundLineup
-              :lineup_name="bracket.team_1.name"
+              :lineup_name="bracket.team_1.team.name"
               :match="bracket.match"
               :lineup="bracket.match.lineup_1"
               v-if="bracket.match"
@@ -69,7 +70,7 @@ import TournamentRoundLineup from "~/components/tournament/TournamentRoundLineup
         <div class="items-center m-2">
           <div class="bg-gray-600 text-gray-300 rounded py-1 px-4">
             <TournamentRoundLineup
-              :lineup_name="bracket.team_2.name"
+              :lineup_name="bracket.team_2.team.name"
               :match="bracket.match"
               :lineup="bracket.match.lineup_2"
               v-if="bracket.match"
@@ -114,14 +115,6 @@ export default {
         name: "matches-id",
         params: { id: bracket.match.id },
       });
-    },
-    formatScheduledEta(scheduledEta: string) {
-      try {
-        const date = new Date(scheduledEta);
-        return date.toLocaleString();
-      } catch (error) {
-        return scheduledEta;
-      }
     },
   },
 };
