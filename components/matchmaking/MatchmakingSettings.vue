@@ -130,7 +130,6 @@ import { Loader2 } from "lucide-vue-next";
 export default {
   data() {
     return {
-      isRefreshing: false,
       playerMaxAcceptablelatnecy: 75,
     };
   },
@@ -140,12 +139,7 @@ export default {
   },
   methods: {
     async refreshLatencies() {
-      this.isRefreshing = true;
-      try {
-        await useMatchmakingStore().refreshLatencies();
-      } finally {
-        this.isRefreshing = false;
-      }
+      await useMatchmakingStore().refreshLatencies();
     },
     togglePreferredRegion(region: string) {
       useMatchmakingStore().togglePreferredRegion(region);
@@ -199,6 +193,9 @@ export default {
     },
   },
   computed: {
+    isRefreshing() {
+      return useMatchmakingStore().isRefreshing;
+    },
     storedRegions() {
       return useMatchmakingStore().storedRegions;
     },

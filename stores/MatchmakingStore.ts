@@ -309,6 +309,9 @@ export const useMatchmakingStore = defineStore("matchmaking", () => {
 
   const isRefreshing = ref(false);
   async function refreshLatencies() {
+    if (isRefreshing.value) {
+      return;
+    }
     isRefreshing.value = true;
     resetLatencies();
     await Promise.all(
@@ -326,30 +329,36 @@ export const useMatchmakingStore = defineStore("matchmaking", () => {
   }
 
   async function getLatency(region: string) {
-    try {
-      const buffer = new Uint8Array([0x01]).buffer;
+    return new Promise(async (resolve) => {
+      setTimeout(() => {
+        resolve(undefined);
+      }, 5000);
+      try {
+        const buffer = new Uint8Array([0x01]).buffer;
 
-      const datachannel = await webrtc.connect(region, (data) => {
-        if (data === "") {
-          datachannel.send(buffer);
-          return;
-        }
+        const datachannel = await webrtc.connect(region, (data) => {
+          if (data === "") {
+            datachannel.send(buffer);
+            return;
+          }
 
-        const event = JSON.parse(data) as {
-          type: string;
-          data: Record<string, unknown>;
-        };
+          const event = JSON.parse(data) as {
+            type: string;
+            data: Record<string, unknown>;
+          };
 
-        if (event.type === "latency-results") {
-          datachannel.close();
-          latencies.value.set(region, event.data);
-        }
-      });
+          if (event.type === "latency-results") {
+            datachannel.close();
+            latencies.value.set(region, event.data);
+          }
+        });
 
-      datachannel.send("latency-test");
-    } catch (error) {
-      console.error(`Failed to get latency for ${region}`, error);
-    }
+        datachannel.send("latency-test");
+      } catch (error) {
+        console.error(`Failed to get latency for ${region}`, error);
+        resolve(undefined);
+      }
+    });
   }
 
   function togglePreferredRegion(region: string) {
@@ -418,9 +427,12 @@ export const useMatchmakingStore = defineStore("matchmaking", () => {
     }
 
     if (storedRegions.value.length > 0) {
-      return availableRegions.filter((region) => {
+      const _preferredRegions = availableRegions.filter((region) => {
         return storedRegions.value.includes(region.value);
       });
+      if (_preferredRegions.length > 0) {
+        return _preferredRegions;
+      }
     }
 
     return availableRegions
@@ -471,6 +483,7 @@ export const useMatchmakingStore = defineStore("matchmaking", () => {
 
     checkLatenies,
     refreshLatencies,
+    isRefreshing,
     getRegionlatencyResult,
     togglePreferredRegion,
     updateMaxAcceptableLatency,
