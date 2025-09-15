@@ -411,9 +411,20 @@ export const useMatchmakingStore = defineStore("matchmaking", () => {
           return true;
         }
 
+        console.info({
+          region: region.value,
+          isLan: region.is_lan,
+          isLanResult: regionLatency?.isLan,
+          regionLatency: regionLatency?.latency,
+          maxAcceptableLatency: useApplicationSettingsStore().maxAcceptableLatency,
+          defaulted: useApplicationSettingsStore().maxAcceptableLatency || 100,
+          check: regionLatency?.latency >
+            (useApplicationSettingsStore().maxAcceptableLatency || 100),
+        });
+        
         if (
           regionLatency &&
-          regionLatency.latency >
+          regionLatency?.latency >
             (useApplicationSettingsStore().maxAcceptableLatency || 100)
         ) {
           return false;
