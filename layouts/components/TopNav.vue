@@ -105,6 +105,16 @@ const { isMobile } = useSidebar();
               </div>
             </NavigationMenuContent>
           </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink as-child>
+              <NuxtLink
+                to="/watch"
+                class="uppercase font-bold px-4 py-2 transition-colors duration-150 border-none outline-none focus:ring-0 hover:text-green-300 rounded bg-transparent"
+              >
+                {{ $t("layouts.top_nav.watch_menu") }}
+              </NuxtLink>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
           <!-- Community menu: multi-column grouped style, no icons in links -->
           <NavigationMenuItem>
             <NavigationMenuTrigger

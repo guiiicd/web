@@ -16,6 +16,7 @@ import {
   ShieldHalf,
   ChevronRight,
   Users,
+  Radio,
 } from "lucide-vue-next";
 import TournamentBracket from "~/components/icons/tournament-bracket.vue";
 import InstallPWA from "~/components/InstallPWA.vue";
@@ -59,6 +60,23 @@ import Logout from "./Logout.vue";
                 <Badge size="sm" v-if="myMatches.length > 0">
                   {{ myMatches.length }}
                 </Badge>
+              </NuxtLink>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          <SidebarMenuItem :tooltip="$t('layouts.app_nav.tooltips.watch')">
+            <SidebarMenuButton
+              as-child
+              :tooltip="$t('layouts.app_nav.tooltips.watch')"
+            >
+              <NuxtLink
+                :to="{ name: 'watch' }"
+                :class="{
+                  'router-link-active': isRouteActive('watch'),
+                }"
+              >
+                <Radio />
+                {{ $t("layouts.app_nav.navigation.watch") }}
               </NuxtLink>
             </SidebarMenuButton>
           </SidebarMenuItem>

@@ -164,6 +164,13 @@
 
             }
         },
+        "watch": {
+            "title": "Watch",
+            "description": "Watch matches and tournaments.",
+            "live_matches": "Live Matches",
+            "upcoming_matches": "Upcoming Matches",
+            "finished_matches": "Finished Matches"
+        },
         "regions": {
             "title": "Regions",
             "description": "Regions allow you to group game servers by geographic location. Players can select preferred regions during matchmaking and veto undesired regions during match setup.",
@@ -398,6 +405,7 @@
             "brand": "5stack",
             "navigation": {
                 "play": "Play",
+                "watch": "Watch",
                 "matches": "Matches",
                 "tournaments": "Tournaments",
                 "players": "Players",
@@ -426,6 +434,7 @@
             },
             "tooltips": {
                 "play": "Play",
+                "watch": "Watch",
                 "matches": "Matches",
                 "tournaments": "Tournaments",
                 "players": "Players",
@@ -447,6 +456,44 @@
                 "description": "Are you sure you want to logout?",
                 "cancel": "Cancel",
                 "confirm": "Logout"
+            }
+        },
+        "top_nav": {
+            "play_menu": "Play",
+            "community_menu": "Community",
+            "watch_menu": "Watch",
+            "play": {
+                "find_match": "Find a Match",
+                "tournaments": "Tournaments",
+                "view_previous_matches": "View Previous Matches",
+                "hero": {
+                    "title": "Play & Compete",
+                    "subtitle": "Join matches, tournaments, and view your match history."
+                }
+            },
+            "community": {
+                "players": {
+                    "title": "Players",
+                    "subtitle": "Browse and search for players"
+                },
+                "teams": {
+                    "title": "Teams",
+                    "subtitle": "Find and manage teams"
+                },
+                "social": {
+                    "title": "Social",
+                    "join_discord": {
+                        "title": "Join our Discord",
+                        "subtitle": "Chat, support, and announcements"
+                    },
+                    "github": {
+                        "title": "5stack.gg",
+                        "subtitle": "View 5stack on GitHub"
+                    }
+                }
+            },
+            "tooltip": {
+                "join_discord": "Join our Discord"
             }
         }
     },

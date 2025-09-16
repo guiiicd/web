@@ -30,6 +30,12 @@ import { simpleMatchFields } from "~/graphql/simpleMatchFields";
 import { $, order_by } from "~/generated/zeus";
 
 export default {
+  props: {
+    statuses: {
+      type: Array as PropType<e_match_status_enum[]>,
+      default: () => null,
+    },
+  },
   data() {
     return {
       page: 1,
@@ -56,6 +62,9 @@ export default {
                 is_in_lineup: {
                   _eq: false,
                 },
+                status: {
+                  _in: $("statuses", "[e_match_status_enum]"),
+                },
               },
             },
             simpleMatchFields,
@@ -66,6 +75,7 @@ export default {
             limit: this.perPage,
             order_by: order_by.desc,
             offset: (this.page - 1) * this.perPage,
+            statuses: this.statuses,
           };
         },
         result: function ({ data }) {
@@ -80,6 +90,9 @@ export default {
                 is_in_lineup: {
                   _eq: false,
                 },
+                status: {
+                  _in: $("statuses", "[e_match_status_enum]"),
+                },
               },
             },
             {
@@ -89,6 +102,11 @@ export default {
             },
           ],
         }),
+        variables: function () {
+          return {
+            statuses: this.statuses,
+          };
+        },
         result: function ({ data }) {
           this.otherMatchesAggregate = data.matches_aggregate;
         },
