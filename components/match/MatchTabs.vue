@@ -22,6 +22,7 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import ServiceLogs from "~/components/ServiceLogs.vue";
 import { e_match_types_enum } from "~/generated/zeus";
 import MatchForm from "~/components/match/MatchForm.vue";
+import MatchLiveStreams from "~/components/match/MatchLiveStreams.vue";
 
 const commander = new EventEmitter();
 provide("commander", commander);
@@ -55,6 +56,9 @@ provide("commander", commander);
       </TabsTrigger>
       <TabsTrigger value="settings">
         {{ $t("match.tabs.settings") }}
+      </TabsTrigger>
+      <TabsTrigger value="streams">
+        {{ $t("match.tabs.streams") }}
       </TabsTrigger>
       <TabsTrigger
         :disabled="!match.server_id"
@@ -296,6 +300,9 @@ provide("commander", commander);
       <Card class="p-3" v-if="match.is_organizer">
         <MatchForm :match="match" />
       </Card>
+    </TabsContent>
+    <TabsContent value="streams">
+      <MatchLiveStreams :match="match" />
     </TabsContent>
   </Tabs>
 </template>

@@ -3912,6 +3912,69 @@ export const AllTypesProps: Record<string,any> = {
 		_set:"match_region_veto_picks_set_input",
 		where:"match_region_veto_picks_bool_exp"
 	},
+	match_streams_aggregate_fields:{
+		count:{
+			columns:"match_streams_select_column"
+		}
+	},
+	match_streams_bool_exp:{
+		_and:"match_streams_bool_exp",
+		_not:"match_streams_bool_exp",
+		_or:"match_streams_bool_exp",
+		id:"uuid_comparison_exp",
+		link:"String_comparison_exp",
+		match:"matches_bool_exp",
+		match_id:"uuid_comparison_exp",
+		priority:"numeric_comparison_exp",
+		title:"String_comparison_exp"
+	},
+	match_streams_constraint: "enum" as const,
+	match_streams_inc_input:{
+		priority:"numeric"
+	},
+	match_streams_insert_input:{
+		id:"uuid",
+		match:"matches_obj_rel_insert_input",
+		match_id:"uuid",
+		priority:"numeric"
+	},
+	match_streams_on_conflict:{
+		constraint:"match_streams_constraint",
+		update_columns:"match_streams_update_column",
+		where:"match_streams_bool_exp"
+	},
+	match_streams_order_by:{
+		id:"order_by",
+		link:"order_by",
+		match:"matches_order_by",
+		match_id:"order_by",
+		priority:"order_by",
+		title:"order_by"
+	},
+	match_streams_pk_columns_input:{
+		id:"uuid"
+	},
+	match_streams_select_column: "enum" as const,
+	match_streams_set_input:{
+		id:"uuid",
+		match_id:"uuid",
+		priority:"numeric"
+	},
+	match_streams_stream_cursor_input:{
+		initial_value:"match_streams_stream_cursor_value_input",
+		ordering:"cursor_ordering"
+	},
+	match_streams_stream_cursor_value_input:{
+		id:"uuid",
+		match_id:"uuid",
+		priority:"numeric"
+	},
+	match_streams_update_column: "enum" as const,
+	match_streams_updates:{
+		_inc:"match_streams_inc_input",
+		_set:"match_streams_set_input",
+		where:"match_streams_bool_exp"
+	},
 	match_type_cfgs_aggregate_fields:{
 		count:{
 			columns:"match_type_cfgs_select_column"
@@ -4722,6 +4785,12 @@ export const AllTypesProps: Record<string,any> = {
 		delete_match_region_veto_picks_by_pk:{
 			id:"uuid"
 		},
+		delete_match_streams:{
+			where:"match_streams_bool_exp"
+		},
+		delete_match_streams_by_pk:{
+			id:"uuid"
+		},
 		delete_match_type_cfgs:{
 			where:"match_type_cfgs_bool_exp"
 		},
@@ -5200,6 +5269,14 @@ export const AllTypesProps: Record<string,any> = {
 		insert_match_region_veto_picks_one:{
 			object:"match_region_veto_picks_insert_input",
 			on_conflict:"match_region_veto_picks_on_conflict"
+		},
+		insert_match_streams:{
+			objects:"match_streams_insert_input",
+			on_conflict:"match_streams_on_conflict"
+		},
+		insert_match_streams_one:{
+			object:"match_streams_insert_input",
+			on_conflict:"match_streams_on_conflict"
 		},
 		insert_match_type_cfgs:{
 			objects:"match_type_cfgs_insert_input",
@@ -5918,6 +5995,19 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		update_match_region_veto_picks_many:{
 			updates:"match_region_veto_picks_updates"
+		},
+		update_match_streams:{
+			_inc:"match_streams_inc_input",
+			_set:"match_streams_set_input",
+			where:"match_streams_bool_exp"
+		},
+		update_match_streams_by_pk:{
+			_inc:"match_streams_inc_input",
+			_set:"match_streams_set_input",
+			pk_columns:"match_streams_pk_columns_input"
+		},
+		update_match_streams_many:{
+			updates:"match_streams_updates"
 		},
 		update_match_type_cfgs:{
 			_set:"match_type_cfgs_set_input",
@@ -9231,6 +9321,19 @@ export const AllTypesProps: Record<string,any> = {
 		match_region_veto_picks_by_pk:{
 			id:"uuid"
 		},
+		match_streams:{
+			distinct_on:"match_streams_select_column",
+			order_by:"match_streams_order_by",
+			where:"match_streams_bool_exp"
+		},
+		match_streams_aggregate:{
+			distinct_on:"match_streams_select_column",
+			order_by:"match_streams_order_by",
+			where:"match_streams_bool_exp"
+		},
+		match_streams_by_pk:{
+			id:"uuid"
+		},
 		match_type_cfgs:{
 			distinct_on:"match_type_cfgs_select_column",
 			order_by:"match_type_cfgs_order_by",
@@ -10675,6 +10778,23 @@ export const AllTypesProps: Record<string,any> = {
 		match_region_veto_picks_stream:{
 			cursor:"match_region_veto_picks_stream_cursor_input",
 			where:"match_region_veto_picks_bool_exp"
+		},
+		match_streams:{
+			distinct_on:"match_streams_select_column",
+			order_by:"match_streams_order_by",
+			where:"match_streams_bool_exp"
+		},
+		match_streams_aggregate:{
+			distinct_on:"match_streams_select_column",
+			order_by:"match_streams_order_by",
+			where:"match_streams_bool_exp"
+		},
+		match_streams_by_pk:{
+			id:"uuid"
+		},
+		match_streams_stream:{
+			cursor:"match_streams_stream_cursor_input",
+			where:"match_streams_bool_exp"
 		},
 		match_type_cfgs:{
 			distinct_on:"match_type_cfgs_select_column",
@@ -15451,6 +15571,73 @@ export const ReturnTypes: Record<string,any> = {
 		affected_rows:"Int",
 		returning:"match_region_veto_picks"
 	},
+	match_streams:{
+		id:"uuid",
+		link:"String",
+		match:"matches",
+		match_id:"uuid",
+		priority:"numeric",
+		title:"String"
+	},
+	match_streams_aggregate:{
+		aggregate:"match_streams_aggregate_fields",
+		nodes:"match_streams"
+	},
+	match_streams_aggregate_fields:{
+		avg:"match_streams_avg_fields",
+		count:"Int",
+		max:"match_streams_max_fields",
+		min:"match_streams_min_fields",
+		stddev:"match_streams_stddev_fields",
+		stddev_pop:"match_streams_stddev_pop_fields",
+		stddev_samp:"match_streams_stddev_samp_fields",
+		sum:"match_streams_sum_fields",
+		var_pop:"match_streams_var_pop_fields",
+		var_samp:"match_streams_var_samp_fields",
+		variance:"match_streams_variance_fields"
+	},
+	match_streams_avg_fields:{
+		priority:"Float"
+	},
+	match_streams_max_fields:{
+		id:"uuid",
+		link:"String",
+		match_id:"uuid",
+		priority:"numeric",
+		title:"String"
+	},
+	match_streams_min_fields:{
+		id:"uuid",
+		link:"String",
+		match_id:"uuid",
+		priority:"numeric",
+		title:"String"
+	},
+	match_streams_mutation_response:{
+		affected_rows:"Int",
+		returning:"match_streams"
+	},
+	match_streams_stddev_fields:{
+		priority:"Float"
+	},
+	match_streams_stddev_pop_fields:{
+		priority:"Float"
+	},
+	match_streams_stddev_samp_fields:{
+		priority:"Float"
+	},
+	match_streams_sum_fields:{
+		priority:"numeric"
+	},
+	match_streams_var_pop_fields:{
+		priority:"Float"
+	},
+	match_streams_var_samp_fields:{
+		priority:"Float"
+	},
+	match_streams_variance_fields:{
+		priority:"Float"
+	},
 	match_type_cfgs:{
 		cfg:"String",
 		type:"e_game_cfg_types_enum"
@@ -15781,6 +15968,8 @@ export const ReturnTypes: Record<string,any> = {
 		delete_match_options_by_pk:"match_options",
 		delete_match_region_veto_picks:"match_region_veto_picks_mutation_response",
 		delete_match_region_veto_picks_by_pk:"match_region_veto_picks",
+		delete_match_streams:"match_streams_mutation_response",
+		delete_match_streams_by_pk:"match_streams",
 		delete_match_type_cfgs:"match_type_cfgs_mutation_response",
 		delete_match_type_cfgs_by_pk:"match_type_cfgs",
 		delete_matches:"matches_mutation_response",
@@ -15913,6 +16102,8 @@ export const ReturnTypes: Record<string,any> = {
 		insert_match_options_one:"match_options",
 		insert_match_region_veto_picks:"match_region_veto_picks_mutation_response",
 		insert_match_region_veto_picks_one:"match_region_veto_picks",
+		insert_match_streams:"match_streams_mutation_response",
+		insert_match_streams_one:"match_streams",
 		insert_match_type_cfgs:"match_type_cfgs_mutation_response",
 		insert_match_type_cfgs_one:"match_type_cfgs",
 		insert_matches:"matches_mutation_response",
@@ -16106,6 +16297,9 @@ export const ReturnTypes: Record<string,any> = {
 		update_match_region_veto_picks:"match_region_veto_picks_mutation_response",
 		update_match_region_veto_picks_by_pk:"match_region_veto_picks",
 		update_match_region_veto_picks_many:"match_region_veto_picks_mutation_response",
+		update_match_streams:"match_streams_mutation_response",
+		update_match_streams_by_pk:"match_streams",
+		update_match_streams_many:"match_streams_mutation_response",
 		update_match_type_cfgs:"match_type_cfgs_mutation_response",
 		update_match_type_cfgs_by_pk:"match_type_cfgs",
 		update_match_type_cfgs_many:"match_type_cfgs_mutation_response",
@@ -17591,6 +17785,9 @@ export const ReturnTypes: Record<string,any> = {
 		match_region_veto_picks:"match_region_veto_picks",
 		match_region_veto_picks_aggregate:"match_region_veto_picks_aggregate",
 		match_region_veto_picks_by_pk:"match_region_veto_picks",
+		match_streams:"match_streams",
+		match_streams_aggregate:"match_streams_aggregate",
+		match_streams_by_pk:"match_streams",
 		match_type_cfgs:"match_type_cfgs",
 		match_type_cfgs_aggregate:"match_type_cfgs_aggregate",
 		match_type_cfgs_by_pk:"match_type_cfgs",
@@ -18055,6 +18252,10 @@ export const ReturnTypes: Record<string,any> = {
 		match_region_veto_picks_aggregate:"match_region_veto_picks_aggregate",
 		match_region_veto_picks_by_pk:"match_region_veto_picks",
 		match_region_veto_picks_stream:"match_region_veto_picks",
+		match_streams:"match_streams",
+		match_streams_aggregate:"match_streams_aggregate",
+		match_streams_by_pk:"match_streams",
+		match_streams_stream:"match_streams",
 		match_type_cfgs:"match_type_cfgs",
 		match_type_cfgs_aggregate:"match_type_cfgs_aggregate",
 		match_type_cfgs_by_pk:"match_type_cfgs",

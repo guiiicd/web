@@ -9,6 +9,7 @@ import JoinMatch from "~/components/match/JoinMatch.vue";
 import { e_match_status_enum } from "~/generated/zeus";
 import MatchMapVeto from "~/components/match/MatchMapVeto.vue";
 import ScheduleMatch from "~/components/match/ScheduleMatch.vue";
+import MatchLiveStreams from "~/components/match/MatchLiveStreams.vue";
 </script>
 
 <template>
@@ -42,6 +43,7 @@ import ScheduleMatch from "~/components/match/ScheduleMatch.vue";
         :lobby-id="match.id"
         v-if="canJoinLobby"
       />
+      <MatchLiveStreams :match="match"></MatchLiveStreams>
     </div>
 
     <div class="grid grid-cols-1 gap-y-4">

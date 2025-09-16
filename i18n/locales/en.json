@@ -508,6 +508,7 @@
         }
     },
     "common": {
+        "delete": "Delete",
         "cancel": "Cancel",
         "tbd": "TBD",
         "boolean": {
@@ -848,6 +849,7 @@
             "clutches": "Clutches",
             "map_veto_tab": "Map Veto",
             "settings": "Match Settings",
+            "streams": "Match Live Streams",
             "server_console": "Server Console",
             "randomize_teams": "Randomize Teams",
             "invited_to_match": "Invited to Match",
@@ -1172,5 +1174,29 @@
                 "revert": "Error reverting config to defaults"
             }
         }
+    },
+    "streams": {
+        "add": "Add Stream",
+        "add_new": "Add New Stream",
+        "add_description": "Add a new stream link for this match.",
+        "added_successfully": "Stream Added",
+        "stream_added_message": "The stream has been added successfully.",
+        "add_error": "Failed to add stream. Please try again.",
+        "update": "Update Stream",
+        "edit_stream": "Edit Stream",
+        "edit_description": "Update the stream information.",
+        "updated_successfully": "Stream Updated",
+        "stream_updated_message": "The stream has been updated successfully.",
+        "update_error": "Failed to update stream. Please try again.",
+        "delete": "Delete Stream",
+        "delete_title": "Delete Stream",
+        "delete_description": "Are you sure you want to delete \"{title}\"? This action cannot be undone.",
+        "deleted_successfully": "Stream Deleted",
+        "stream_deleted_message": "The stream has been deleted successfully.",
+        "delete_error": "Failed to delete stream. Please try again.",
+        "priority_update_error": "Failed to update stream priorities. Please try again.",
+        "streams_description": "Streams",
+        "link": "Link",
+        "title": "Title"
     }
 }

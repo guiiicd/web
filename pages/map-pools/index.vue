@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Info } from "lucide-vue-next";
+import { Info, PlusCircle } from "lucide-vue-next";
 import PageHeading from "~/components/PageHeading.vue";
 import { Separator } from "~/components/ui/separator";
 import {
@@ -53,6 +53,7 @@ import FiveStackToolTip from "~/components/FiveStackToolTip.vue";
             </FiveStackToolTip>
           </div>
           <Button @click="mapFormSheet = true">
+            <PlusCircle class="w-4 h-4" />
             {{ $t("pages.map_pools.add_new_map") }}
           </Button>
         </div>
