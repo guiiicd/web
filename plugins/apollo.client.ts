@@ -1,5 +1,3 @@
-import alertStore from "~/stores/AlertStore";
-import { AlertStatuses } from "~/constants/AlertStatuses";
 import { onError } from "@apollo/client/link/error";
 import { RetryLink } from "@apollo/client/link/retry";
 import { getMainDefinition } from "@apollo/client/utilities";
@@ -7,6 +5,7 @@ import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
 import { provideApolloClient } from "@vue/apollo-composable";
 import { createHttpLink, from, split } from "@apollo/client/core";
+import { toast } from "@/components/ui/toast";
 
 export default defineNuxtPlugin((nuxtApp) => {
   const $apollo = nuxtApp.$apollo;
@@ -79,10 +78,10 @@ export default defineNuxtPlugin((nuxtApp) => {
           return;
         }
 
-        alertStore().add({
-          duration: 5000,
-          severity: AlertStatuses.Error,
-          title: graphqlError.message,
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: graphqlError.message,
         });
       }
     }

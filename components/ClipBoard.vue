@@ -28,8 +28,7 @@ import { Copy } from "lucide-vue-next";
 
 <script lang="ts">
 import ClipboardJS from "clipboard";
-import alertStore from "~/stores/AlertStore";
-import { AlertStatuses } from "@/constants/AlertStatuses";
+import { toast } from "@/components/ui/toast";
 export default {
   props: {
     target: {
@@ -57,9 +56,7 @@ export default {
     this.clipboard = new ClipboardJS(this.$refs["copy"]);
 
     this.clipboard.on("success", (e) => {
-      alertStore().add({
-        duration: 1000,
-        severity: AlertStatuses.Success,
+      toast({
         title: "Copied to Clipboard",
       });
       e.clearSelection();

@@ -1,7 +1,6 @@
-import alertStore from "~/stores/AlertStore";
 import EventEmitter from "eventemitter3";
-import { AlertStatuses } from "~/constants/AlertStatuses";
 import type { e_match_types_enum } from "~/generated/zeus";
+import { toast } from "@/components/ui/toast";
 
 export interface Lobby {
   messages: any[];
@@ -245,11 +244,10 @@ socket.listen("players-online", (onlinePlayerSteamIds) => {
 });
 
 socket.listen("matchmaking:error", (data: { message: string }) => {
-  alertStore().add({
-    duration: 5000,
-    severity: AlertStatuses.Error,
+  toast({
+    variant: "destructive",
     title: "Error",
-    message: data.message,
+    description: data.message,
   });
 });
 

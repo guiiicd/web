@@ -973,7 +973,10 @@
             "select": "Select a server",
             "dedicated": "Dedicated Servers",
             "on_demand": "On Demand",
-            "assigned": "Assigned Match Server"
+            "assigned": "Assigned Match Server",
+            "join_server": "Join Server",
+            "join_as_spectator": "Spectator Details",
+            "join_tv_stream": "TV Stream Details"
         },
         "lobby": {
             "access_updated": "Match lobby access updated to {access}"

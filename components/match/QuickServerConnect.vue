@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Loader, ExternalLink, Copy } from "lucide-vue-next";
+import { Loader, ExternalLink, Copy, Tv } from "lucide-vue-next";
 import ClipBoard from "~/components/ClipBoard.vue";
 
 export default {
@@ -7,6 +7,7 @@ export default {
     Loader,
     ExternalLink,
     Copy,
+    Tv,
     ClipBoard,
   },
   props: {
@@ -39,13 +40,34 @@ export default {
       return this.match.is_in_lineup;
     },
     inGame() {
-      return this.lobby?.get(this.me?.steam_id)?.inGame || false;
+      const player =
+        (this.lobby?.get(this.me?.steam_id) as unknown as {
+          inGame?: boolean;
+        }) || undefined;
+      return !!player?.inGame;
     },
   },
 };
 </script>
 
 <template>
+  <template v-if="match.tv_connection_string && !match.connection_link">
+    <div
+      class="flex items-center gap-2 p-4 rounded-lg border bg-foreground/10 mb-2"
+    >
+      <ClipBoard
+        :data="match.tv_connection_string"
+        class="grow shrink-0 p-3 rounded-md"
+      >
+        <div class="flex items-center justify-center gap-2">
+          <Tv class="w-4 h-4" />
+          <span>{{ $t("match.server.join_tv_stream") }}</span>
+        </div>
+      </ClipBoard>
+    </div>
+    <Separator class="my-4" label="OR" v-if="match.connection_string" />
+  </template>
+
   <div v-if="match.connection_string">
     <template v-if="!match.is_server_online">
       <template v-if="match.server_type === 'Dedicated'">
@@ -75,7 +97,7 @@ export default {
             v-if="!match.connection_link"
           >
             <Copy class="w-4 h-4" />
-            <span>Copy Link</span>
+            <span>{{ $t("match.server.join_as_spectator") }}</span>
           </div>
         </ClipBoard>
         <template v-if="match.connection_link">
@@ -95,7 +117,7 @@ export default {
                   :class="inGame ? 'bg-green-500' : 'bg-red-500'"
                 ></span>
               </div>
-              <span>Join Server</span>
+              <span>{{ $t("match.server.join_server") }}</span>
               <ExternalLink class="w-4 h-4" />
             </template>
             <Loader v-else class="w-6 h-6 animate-spin" />

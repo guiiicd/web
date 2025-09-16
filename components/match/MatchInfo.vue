@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Tv } from "lucide-vue-next";
-import ClipBoard from "~/components/ClipBoard.vue";
 import MatchActions from "~/components/match/MatchActions.vue";
 import MatchStatus from "~/components/match/MatchStatus.vue";
 import MatchLineupScoreDisplay from "~/components/match/MatchLineupScoreDisplay.vue";
@@ -15,17 +13,7 @@ import { e_match_status_enum } from "~/generated/zeus";
   <Card>
     <CardHeader class="bg-muted/50">
       <CardTitle>
-        <div class="flex items-center">
-          <MatchStatus :match="match" />
-          <ClipBoard
-            v-if="match.tv_connection_string"
-            :data="match.tv_connection_string"
-            class="flex items-center"
-          >
-            <Tv class="h-4 w-4 mr-2" />
-          </ClipBoard>
-        </div>
-
+        <MatchStatus :match="match" />
         <div class="flex justify-between items-center">
           <div class="flex gap-1">
             {{ match.options.type }}

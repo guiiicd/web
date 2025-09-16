@@ -1,6 +1,5 @@
 import { useAuthStore } from "~/stores/AuthStore";
-import alertStore from "~/stores/AlertStore";
-import { AlertStatuses } from "~/constants/AlertStatuses";
+import { toast } from "@/components/ui/toast";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
   if (process.server) return;
@@ -12,11 +11,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       : to.query.error;
 
     if (typeof errorMessage === "string") {
-      alertStore().add({
-        duration: 5000,
-        severity: AlertStatuses.Error,
+      toast({
+        variant: "destructive",
         title: "Error",
-        message: errorMessage,
+        description: errorMessage,
       });
     }
 
