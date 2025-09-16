@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ChevronDown, Sofa } from "lucide-vue-next";
+import { ChevronDown, Merge } from "lucide-vue-next";
 import MatchLobbySelector from "./MathcLobbySelector.vue";
 import ChatLobby from "~/components/chat/ChatLobby.vue";
 import MatchLobby from "~/components/matchmaking-lobby/MatchLobby.vue";
@@ -58,7 +58,7 @@ import MatchLobby from "~/components/matchmaking-lobby/MatchLobby.vue";
       ></span>
 
       <div class="relative flex items-center gap-2 z-10">
-        <Sofa class="h-5 w-5 drop-shadow-sm" />
+        <Merge class="h-5 w-5 drop-shadow-sm" />
         <span class="font-semibold">Create Lobby</span>
       </div>
     </Button>
