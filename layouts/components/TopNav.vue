@@ -28,7 +28,6 @@ import OnlinePlayers from "./OnlinePlayers.vue";
 import AppNotifications from "./AppNotifications.vue";
 import { useSidebar } from "~/components/ui/sidebar/utils";
 import { NuxtImg } from "#components";
-import FiveStackToolTip from "~/components/FiveStackToolTip.vue";
 const { isMobile } = useSidebar();
 </script>
 
@@ -56,7 +55,7 @@ const { isMobile } = useSidebar();
             <NavigationMenuTrigger
               class="uppercase font-bold px-4 py-2 transition-colors duration-150 border-none outline-none focus:ring-0 hover:text-green-300 rounded bg-transparent"
             >
-              Play
+              {{ $t("layouts.top_nav.play_menu") }}
             </NavigationMenuTrigger>
             <NavigationMenuContent
               class="bg-[#232326] border border-neutral-800 rounded-lg shadow-lg p-0 min-w-[350px] md:min-w-[500px] max-w-[95vw] flex mt-0"
@@ -69,7 +68,7 @@ const { isMobile } = useSidebar();
                         to="/play"
                         class="block w-full text-left px-4 py-2 uppercase font-bold text-sm transition-colors duration-150 border-none outline-none hover:text-green-300"
                       >
-                        Find a Match
+                        {{ $t("layouts.top_nav.play.find_match") }}
                       </NuxtLink>
                     </NavigationMenuLink>
                   </li>
@@ -79,7 +78,7 @@ const { isMobile } = useSidebar();
                         to="/tournaments"
                         class="block w-full text-left px-4 py-2 uppercase font-bold text-sm transition-colors duration-150 border-none outline-none hover:text-green-300"
                       >
-                        Tournaments
+                        {{ $t("layouts.top_nav.play.tournaments") }}
                       </NuxtLink>
                     </NavigationMenuLink>
                   </li>
@@ -89,7 +88,7 @@ const { isMobile } = useSidebar();
                         to="/matches"
                         class="block w-full text-left px-4 py-2 uppercase font-bold text-sm transition-colors duration-150 border-none outline-none hover:text-green-300"
                       >
-                        View Previous Matches
+                        {{ $t("layouts.top_nav.play.view_previous_matches") }}
                       </NuxtLink>
                     </NavigationMenuLink>
                   </li>
@@ -97,9 +96,11 @@ const { isMobile } = useSidebar();
                 <div
                   class="flex flex-col items-center justify-center bg-[#18181b] rounded-t-lg md:rounded-l-lg md:rounded-tr-none p-6 min-w-[120px] max-w-[200px]"
                 >
-                  <div class="text-lg font-bold mb-1">Play & Compete</div>
+                  <div class="text-lg font-bold mb-1">
+                    {{ $t("layouts.top_nav.play.hero.title") }}
+                  </div>
                   <div class="text-xs text-neutral-400 text-center">
-                    Join matches, tournaments, and view your match history.
+                    {{ $t("layouts.top_nav.play.hero.subtitle") }}
                   </div>
                 </div>
               </div>
@@ -120,7 +121,7 @@ const { isMobile } = useSidebar();
             <NavigationMenuTrigger
               class="uppercase font-bold px-4 py-2 transition-colors duration-150 border-none outline-none focus:ring-0 hover:text-green-300 rounded bg-transparent"
             >
-              Community
+              {{ $t("layouts.top_nav.community_menu") }}
             </NavigationMenuTrigger>
             <NavigationMenuContent
               class="bg-[#232326] border border-neutral-800 rounded-lg shadow-lg p-0 min-w-[320px] md:min-w-[600px] max-w-[95vw] flex mt-0"
@@ -139,10 +140,12 @@ const { isMobile } = useSidebar();
                           to="/players"
                           class="flex flex-col px-2 py-2 rounded hover:text-green-300 transition-colors"
                         >
-                          <span class="block font-bold">Players</span>
-                          <span class="block text-xs text-neutral-400"
-                            >Browse and search for players</span
-                          >
+                          <span class="block font-bold">{{
+                            $t("layouts.top_nav.community.players.title")
+                          }}</span>
+                          <span class="block text-xs text-neutral-400">{{
+                            $t("layouts.top_nav.community.players.subtitle")
+                          }}</span>
                         </NuxtLink>
                       </NavigationMenuLink>
                     </li>
@@ -152,10 +155,12 @@ const { isMobile } = useSidebar();
                           to="/teams"
                           class="flex flex-col px-2 py-2 rounded hover:text-green-300 transition-colors"
                         >
-                          <span class="block font-bold">Teams</span>
-                          <span class="block text-xs text-neutral-400"
-                            >Find and manage teams</span
-                          >
+                          <span class="block font-bold">{{
+                            $t("layouts.top_nav.community.teams.title")
+                          }}</span>
+                          <span class="block text-xs text-neutral-400">{{
+                            $t("layouts.top_nav.community.teams.subtitle")
+                          }}</span>
                         </NuxtLink>
                       </NavigationMenuLink>
                     </li>
@@ -166,7 +171,7 @@ const { isMobile } = useSidebar();
                   <div
                     class="text-xs font-bold text-neutral-400 mb-2 uppercase tracking-widest"
                   >
-                    Social
+                    {{ $t("layouts.top_nav.community.social.title") }}
                   </div>
                   <ul class="flex flex-col gap-2">
                     <li>
@@ -177,10 +182,19 @@ const { isMobile } = useSidebar();
                           rel="noopener noreferrer"
                           class="flex flex-col px-2 py-2 rounded hover:text-green-300 transition-colors"
                         >
-                          <span class="block font-bold">Join our Discord</span>
-                          <span class="block text-xs text-neutral-400"
-                            >Chat, support, and announcements</span
-                          >
+                          <span class="block font-bold flex items-center gap-2">
+                            {{
+                              $t(
+                                "layouts.top_nav.community.social.join_discord.title",
+                              )
+                            }}
+                            <DiscordLogoIcon class="w-4 h-4" />
+                          </span>
+                          <span class="block text-xs text-neutral-400">{{
+                            $t(
+                              "layouts.top_nav.community.social.join_discord.subtitle",
+                            )
+                          }}</span>
                         </a>
                       </NavigationMenuLink>
                     </li>
@@ -193,12 +207,20 @@ const { isMobile } = useSidebar();
                           class="flex flex-col px-2 py-2 rounded hover:text-green-300 transition-colors"
                         >
                           <span class="block font-bold">
-                            {{ $t("pages.login.powered_by") }} 5stack.gg
+                            {{
+                              $t(
+                                "layouts.top_nav.community.social.github.title",
+                              )
+                            }}
                           </span>
                           <span
                             class="block text-xs text-neutral-400 flex items-center gap-1"
                           >
-                            View 5stack on GitHub
+                            {{
+                              $t(
+                                "layouts.top_nav.community.social.github.subtitle",
+                              )
+                            }}
                           </span>
                         </a>
                       </NavigationMenuLink>
@@ -212,19 +234,6 @@ const { isMobile } = useSidebar();
       </NavigationMenu>
     </div>
     <div class="flex items-center gap-4">
-      <FiveStackToolTip v-if="!isMobile">
-        <template #trigger>
-          <a
-            :href="inviteLink"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
-          >
-            <DiscordLogoIcon class="w-5 h-5" />
-          </a>
-        </template>
-        Join our Discord
-      </FiveStackToolTip>
       <InstallPWA v-if="!isMobile" :is-menu-item="false" />
       <MatchLobbies v-if="!isMobile" />
       <OnlinePlayers v-if="!isMobile" />

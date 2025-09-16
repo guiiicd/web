@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ChevronDown } from "lucide-vue-next";
+import { ChevronDown, Sofa } from "lucide-vue-next";
 import MatchLobbySelector from "./MathcLobbySelector.vue";
 import ChatLobby from "~/components/chat/ChatLobby.vue";
 import MatchLobby from "~/components/matchmaking-lobby/MatchLobby.vue";
@@ -41,6 +41,28 @@ import MatchLobby from "~/components/matchmaking-lobby/MatchLobby.vue";
 
     <MatchLobby :lobby="currentLobby" />
   </template>
+
+  <template v-else>
+    <Button
+      @click="createLobByMatch"
+      class="relative group overflow-hidden rounded bg-transparent text-white shadow-lg hover:shadow px-5 py-4 transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-300"
+    >
+      <span
+        class="absolute inset-0 rounded p-[2px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
+      >
+        <span class="block h-full w-full bg-zinc-900/90"></span>
+      </span>
+
+      <span
+        class="pointer-events-none absolute inset-0 rounded bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300 ease-out"
+      ></span>
+
+      <div class="relative flex items-center gap-2 z-10">
+        <Sofa class="h-5 w-5 drop-shadow-sm" />
+        <span class="font-semibold">Create Lobby</span>
+      </div>
+    </Button>
+  </template>
 </template>
 
 <script lang="ts">
@@ -79,6 +101,9 @@ export default {
     selectLobby(matchId: string) {
       this.choosingLobby = false;
       useMatchLobbyStore().viewMatchLobby = matchId;
+    },
+    createLobByMatch() {
+      useMatchmakingStore().createLobby();
     },
   },
 };

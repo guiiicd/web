@@ -242,25 +242,29 @@ export const useMatchmakingStore = defineStore("matchmaking", () => {
     }
   });
 
+  const createLobby = async () => {
+    const { data } = await getGraphqlClient().mutate({
+      mutation: typedGql("mutation")({
+        insert_lobbies_one: [
+          {
+            object: {},
+          },
+          {
+            id: true,
+          },
+        ],
+      }),
+    });
+    return data.insert_lobbies_one.id;
+  };
+
   const inviteToLobby = async (steam_id: string) => {
     const me = useAuthStore().me;
 
     let lobby_id = me?.current_lobby_id;
 
     if (!lobby_id) {
-      const { data } = await getGraphqlClient().mutate({
-        mutation: typedGql("mutation")({
-          insert_lobbies_one: [
-            {
-              object: {},
-            },
-            {
-              id: true,
-            },
-          ],
-        }),
-      });
-      lobby_id = data.insert_lobbies_one.id;
+      lobby_id = await createLobby();
     }
 
     await getGraphqlClient().mutate({
@@ -496,6 +500,7 @@ export const useMatchmakingStore = defineStore("matchmaking", () => {
     playerMaxAcceptableLatency,
     lobbyInvites,
 
+    createLobby,
     inviteToLobby,
   };
 });
