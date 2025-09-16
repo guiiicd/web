@@ -15,7 +15,7 @@ import RightSideBar from "./RightSideBar.vue";
 
     <SidebarInset class="bg-muted/40 pt-4 overflow-hidden">
       <TopNav v-if="!showLeftNav"></TopNav>
-      <AppHeader class="px-6"></AppHeader>
+      <AppHeader class="px-6" v-if="showLeftNav"></AppHeader>
       <div class="px-6 py-4">
         <slot></slot>
       </div>

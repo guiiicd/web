@@ -34,7 +34,7 @@ const { isMobile } = useSidebar();
 
 <template>
   <nav
-    class="text-sm w-full bg-[#28282b] border-t border-[#3a3a3d] border-b-2 border-[#18181b] shadow-lg flex items-center justify-between px-4 py-2 z-50 relative"
+    class="text-sm w-full bg-[#28282b] border-t border-[#3a3a3d] border-b-2 border-[#18181b] shadow-lg flex items-center justify-between px-4 py-2 z-50 relative mb-2"
   >
     <div class="flex items-center gap-2 relative">
       <NuxtLink

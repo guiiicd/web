@@ -18,14 +18,12 @@ const { isMobile } = useSidebar();
   >
     <div class="flex items-center justify-between w-full">
       <div class="flex items-center gap-2">
-        <template v-if="showLeftNav">
-          <SidebarTrigger v-if="showLeftNav" />
-          <Separator orientation="vertical" class="h-4" />
-        </template>
+        <SidebarTrigger />
+        <Separator orientation="vertical" class="h-4" />
         <bread-crumbs></bread-crumbs>
       </div>
 
-      <div class="flex gap-4" v-if="showLeftNav">
+      <div class="flex gap-4">
         <MatchLobbies></MatchLobbies>
 
         <SystemUpdate v-if="isAdmin"></SystemUpdate>
@@ -59,9 +57,6 @@ export default {
     },
     lobbies() {
       return useMatchmakingStore().lobbies;
-    },
-    showLeftNav() {
-      return useAuthStore().isRoleAbove(e_player_roles_enum.match_organizer);
     },
   },
 };
