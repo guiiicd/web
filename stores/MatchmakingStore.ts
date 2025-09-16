@@ -414,7 +414,9 @@ export const useMatchmakingStore = defineStore("matchmaking", () => {
         if (
           regionLatency &&
           parseFloat(regionLatency?.latency) >
-            parseFloat(useApplicationSettingsStore().maxAcceptableLatency || "75")
+            parseFloat(
+              useApplicationSettingsStore().maxAcceptableLatency || "75",
+            )
         ) {
           return false;
         }

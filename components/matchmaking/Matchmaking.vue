@@ -143,6 +143,14 @@ import FiveStackToolTip from "../FiveStackToolTip.vue";
             }"
             @click="handleMatchTypeClick(type.value)"
           >
+            <Badge
+              variant="secondary"
+              class="absolute top-2 right-2 px-3 py-1"
+              v-if="inQueueStas[type.value] > 0"
+            >
+              {{ inQueueStas[type.value] || 0 }}
+              {{ $t("matchmaking.in_queue") }}
+            </Badge>
             <div class="relative z-10 h-full">
               <template v-if="pendingMatchType !== type.value">
                 <h3 class="text-lg font-medium">{{ type.value }}</h3>
@@ -201,7 +209,6 @@ import socket from "~/web-sockets/Socket";
 import { typedGql } from "~/generated/zeus/typedDocumentNode";
 import { generateQuery } from "~/graphql/graphqlGen";
 import { e_match_types_enum, e_match_status_enum } from "~/generated/zeus";
-import FiveStackToolTip from "../FiveStackToolTip.vue";
 
 interface Region {
   value: string;
@@ -340,7 +347,7 @@ export default {
         this.confirmationTimeout = undefined;
       }, 5000);
     },
-    joinMatchmaking(matchType: MatchType): void {
+    joinMatchmaking(matchType: e_match_types_enum): void {
       socket.event("matchmaking:join-queue", {
         type: matchType,
         regions: this.preferredRegions.map((region: Region) => {
@@ -361,11 +368,34 @@ export default {
     },
     availableRegionsWithNodes(): Region[] {
       return useApplicationSettingsStore().availableRegions.filter(
-        (region) => region.has_node,
+        (region: { has_node: boolean }) => region.has_node,
       );
     },
     regionStats() {
       return useMatchmakingStore().regionStats;
+    },
+    inQueueStas() {
+      const inQueue = {
+        [e_match_types_enum.Duel]: 0,
+        [e_match_types_enum.Wingman]: 0,
+        [e_match_types_enum.Competitive]: 0,
+      };
+      const regions = this.preferredRegions as Region[];
+      for (let i = 0; i < regions.length; i++) {
+        const region: Region = regions[i];
+        const regionStats = this.regionStats[region.value];
+        if (!regionStats) {
+          continue;
+        }
+        inQueue[e_match_types_enum.Duel] +=
+          regionStats[e_match_types_enum.Duel] || 0;
+        inQueue[e_match_types_enum.Wingman] +=
+          regionStats[e_match_types_enum.Wingman] || 0;
+        inQueue[e_match_types_enum.Competitive] +=
+          regionStats[e_match_types_enum.Competitive] || 0;
+      }
+
+      return inQueue;
     },
     matchMakingQueueDetails(): QueueDetails | undefined {
       return useMatchmakingStore().joinedMatchmakingQueues.details;
