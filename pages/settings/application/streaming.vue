@@ -8,6 +8,45 @@ definePageMeta({
 
 <template>
   <form @submit.prevent="updateSettings" class="grid gap-4">
+    <FormField
+      v-slot="{ componentField }"
+      name="public.minimum_role_to_spectate"
+    >
+      <FormItem>
+        <FormLabel class="text-lg font-semibold">{{
+          $t("pages.settings.application.streaming.minimum_role_to_spectate")
+        }}</FormLabel>
+        <FormDescription>
+          {{
+            $t(
+              "pages.settings.application.streaming.minimum_role_to_spectate_description",
+            )
+          }}
+        </FormDescription>
+        <FormControl>
+          <Select v-bind="componentField">
+            <FormControl>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem
+                  :value="role.value"
+                  v-for="role in roles"
+                  :key="role.value"
+                >
+                  <span class="capitalize">{{ role.display }}</span>
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </FormField>
+
     <FormField v-slot="{ componentField }" name="public.minimum_role_to_stream">
       <FormItem>
         <FormLabel class="text-lg font-semibold">{{
@@ -88,7 +127,10 @@ export default {
             public: z.object({
               minimum_role_to_stream: z
                 .string()
-                .default(e_player_roles_enum.user),
+                .default(e_player_roles_enum.verified_user),
+              minimum_role_to_spectate: z
+                .string()
+                .default(e_player_roles_enum.streamer),
             }),
           }),
         ),
@@ -107,14 +149,25 @@ export default {
   },
   methods: {
     async updateSettings() {
-      await this.$apollo.mutate({
+      const roleToStream =
+        this.form.values.public?.minimum_role_to_stream ??
+        e_player_roles_enum.verified_user;
+      const roleToSpectate =
+        this.form.values.public?.minimum_role_to_spectate ??
+        e_player_roles_enum.streamer;
+
+      await (this as any).$apollo.mutate({
         mutation: generateMutation({
           insert_settings: [
             {
               objects: [
                 {
                   name: "public.minimum_role_to_stream",
-                  value: this.form.values.public.minimum_role_to_stream,
+                  value: roleToStream,
+                },
+                {
+                  name: "public.minimum_role_to_spectate",
+                  value: roleToSpectate,
                 },
               ],
               on_conflict: {
