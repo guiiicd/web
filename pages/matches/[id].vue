@@ -43,7 +43,7 @@ import MatchLiveStreams from "~/components/match/MatchLiveStreams.vue";
         :lobby-id="match.id"
         v-if="canJoinLobby"
       />
-      <MatchLiveStreams :match="match"></MatchLiveStreams>
+      <MatchLiveStreams :match="match" v-if="canViewStreams"></MatchLiveStreams>
     </div>
 
     <div class="grid grid-cols-1 gap-y-4">
@@ -238,6 +238,24 @@ export default {
               ],
               lineup_1: [{}, matchLineups],
               lineup_2: [{}, matchLineups],
+              streams: [
+                {
+                  order_by: [
+                    {
+                      priority: order_by.asc,
+                    },
+                    {
+                      title: order_by.asc,
+                    },
+                  ],
+                },
+                {
+                  id: true,
+                  link: true,
+                  title: true,
+                  priority: true,
+                },
+              ],
             },
           ],
         }),
@@ -274,6 +292,24 @@ export default {
         this.match.is_organizer ||
         this.match.is_coach
       );
+    },
+    canViewStreams() {
+      if (
+        this.match.is_organizer ||
+        useAuthStore().isRoleAbove(e_player_roles_enum.streamer)
+      ) {
+        return true;
+      }
+
+      if (this.match?.streams.length === 0) {
+        return false;
+      }
+
+      return [
+        e_match_status_enum.Live,
+        e_match_status_enum.Scheduled,
+        e_match_status_enum.Veto,
+      ].includes(this.match.status);
     },
   },
 };

@@ -89,7 +89,7 @@ import { e_player_roles_enum } from "~/generated/zeus";
     </CardHeader>
     <CardContent>
       <!-- Streams Table -->
-      <div v-if="streams && streams.length > 0">
+      <div v-if="match.streams.length > 0">
         <div class="border rounded-lg relative">
           <Table>
             <TableHeader>
@@ -102,7 +102,10 @@ import { e_player_roles_enum } from "~/generated/zeus";
             <TableBody>
               <!-- Top spacer removed to avoid visual white gap; moving row directly during drag -->
 
-              <template v-for="(stream, index) in streams" :key="stream.id">
+              <template
+                v-for="(stream, index) in match.streams"
+                :key="stream.id"
+              >
                 <!-- Spacer to preview insertion position (slot before each row) -->
                 <tr v-if="isDragging && dragOverIndex === index" class="h-0">
                   <td colspan="4" class="p-0">
@@ -317,8 +320,6 @@ import { e_player_roles_enum } from "~/generated/zeus";
 </template>
 
 <script lang="ts">
-import { $, order_by } from "~/generated/zeus";
-import { typedGql } from "~/generated/zeus/typedDocumentNode";
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import { z } from "zod";
@@ -335,7 +336,6 @@ export default {
   data() {
     return {
       dragOverIndex: null,
-      streams: undefined,
       draggedIndex: null,
       dragStartY: 0,
       dragStartX: 0,
@@ -358,45 +358,6 @@ export default {
         ),
       }),
     };
-  },
-  apollo: {
-    $subscribe: {
-      match_streams: {
-        variables: function () {
-          return {
-            match_id: this.match.id,
-          };
-        },
-        query: typedGql("subscription")({
-          match_streams: [
-            {
-              order_by: [
-                {
-                  priority: order_by.asc,
-                },
-                {
-                  title: order_by.asc,
-                },
-              ],
-              where: {
-                match_id: {
-                  _eq: $("match_id", "uuid!"),
-                },
-              },
-            },
-            {
-              id: true,
-              link: true,
-              title: true,
-              priority: true,
-            },
-          ],
-        }),
-        result: function ({ data }) {
-          this.streams = data.match_streams;
-        },
-      },
-    },
   },
   computed: {
     canManageStreams() {
@@ -423,7 +384,9 @@ export default {
                   match_id: this.match.id,
                   link: this.form.values.link,
                   title: this.form.values.title,
-                  priority: this.streams ? this.streams.length + 1 : 1,
+                  priority: this.match.streams
+                    ? this.match.streams.length + 1
+                    : 1,
                 },
               },
               {
@@ -458,7 +421,7 @@ export default {
       try {
         // Find the original stream to get the current values if not changed
         const originalStream =
-          this.streams.find((s) => s.id === streamId) || {};
+          this.match.streams.find((s) => s.id === streamId) || {};
         const linkToUpdate = this.form.values.link || originalStream.link;
         const titleToUpdate = this.form.values.title || originalStream.title;
         await this.$apollo.mutate({
@@ -607,8 +570,8 @@ export default {
             let insertIndex = targetSlot;
             if (insertIndex > this.draggedIndex) insertIndex -= 1;
             if (insertIndex < 0) insertIndex = 0;
-            if (insertIndex > this.streams.length - 1)
-              insertIndex = this.streams.length - 1;
+            if (insertIndex > this.match.streams.length - 1)
+              insertIndex = this.match.streams.length - 1;
             if (insertIndex !== this.draggedIndex) {
               this.updateVisualOrder(this.draggedIndex, insertIndex);
             }
@@ -691,7 +654,8 @@ export default {
       // Above first
       if (clientY < slots[0].mid) return 0;
       // Below last
-      if (clientY > slots[slots.length - 1].mid) return this.streams.length;
+      if (clientY > slots[slots.length - 1].mid)
+        return this.match.streams.length;
 
       // Between: find first slot where clientY < mid of next
       for (let i = 0; i < slots.length - 1; i++) {
@@ -718,19 +682,19 @@ export default {
       if (fromIndex === toIndex) return;
 
       // Create a copy of the streams array and update visual order
-      const newStreams = [...this.streams];
+      const newStreams = [...this.match.streams];
       const [movedStream] = newStreams.splice(fromIndex, 1);
       newStreams.splice(toIndex, 0, movedStream);
 
       // Update the local streams array for visual feedback
-      this.streams = newStreams;
+      this.match.streams = newStreams;
 
       // Track last moved for single-row DB update
       this.lastMovedStreamId = movedStream?.id || null;
       this.lastMovedNewIndex = toIndex;
     },
     async saveStreamOrder() {
-      if (!this.streams || this.streams.length === 0) return;
+      if (!this.match.streams || this.match.streams.length === 0) return;
 
       // Only update the moved stream's priority - DB trigger handles the rest
       if (this.lastMovedStreamId != null && this.lastMovedNewIndex != null) {

@@ -3912,10 +3912,38 @@ export const AllTypesProps: Record<string,any> = {
 		_set:"match_region_veto_picks_set_input",
 		where:"match_region_veto_picks_bool_exp"
 	},
+	match_streams_aggregate_bool_exp:{
+		count:"match_streams_aggregate_bool_exp_count"
+	},
+	match_streams_aggregate_bool_exp_count:{
+		arguments:"match_streams_select_column",
+		filter:"match_streams_bool_exp",
+		predicate:"Int_comparison_exp"
+	},
 	match_streams_aggregate_fields:{
 		count:{
 			columns:"match_streams_select_column"
 		}
+	},
+	match_streams_aggregate_order_by:{
+		avg:"match_streams_avg_order_by",
+		count:"order_by",
+		max:"match_streams_max_order_by",
+		min:"match_streams_min_order_by",
+		stddev:"match_streams_stddev_order_by",
+		stddev_pop:"match_streams_stddev_pop_order_by",
+		stddev_samp:"match_streams_stddev_samp_order_by",
+		sum:"match_streams_sum_order_by",
+		var_pop:"match_streams_var_pop_order_by",
+		var_samp:"match_streams_var_samp_order_by",
+		variance:"match_streams_variance_order_by"
+	},
+	match_streams_arr_rel_insert_input:{
+		data:"match_streams_insert_input",
+		on_conflict:"match_streams_on_conflict"
+	},
+	match_streams_avg_order_by:{
+		priority:"order_by"
 	},
 	match_streams_bool_exp:{
 		_and:"match_streams_bool_exp",
@@ -3925,18 +3953,31 @@ export const AllTypesProps: Record<string,any> = {
 		link:"String_comparison_exp",
 		match:"matches_bool_exp",
 		match_id:"uuid_comparison_exp",
-		priority:"numeric_comparison_exp",
+		priority:"Int_comparison_exp",
 		title:"String_comparison_exp"
 	},
 	match_streams_constraint: "enum" as const,
 	match_streams_inc_input:{
-		priority:"numeric"
+
 	},
 	match_streams_insert_input:{
 		id:"uuid",
 		match:"matches_obj_rel_insert_input",
-		match_id:"uuid",
-		priority:"numeric"
+		match_id:"uuid"
+	},
+	match_streams_max_order_by:{
+		id:"order_by",
+		link:"order_by",
+		match_id:"order_by",
+		priority:"order_by",
+		title:"order_by"
+	},
+	match_streams_min_order_by:{
+		id:"order_by",
+		link:"order_by",
+		match_id:"order_by",
+		priority:"order_by",
+		title:"order_by"
 	},
 	match_streams_on_conflict:{
 		constraint:"match_streams_constraint",
@@ -3957,8 +3998,16 @@ export const AllTypesProps: Record<string,any> = {
 	match_streams_select_column: "enum" as const,
 	match_streams_set_input:{
 		id:"uuid",
-		match_id:"uuid",
-		priority:"numeric"
+		match_id:"uuid"
+	},
+	match_streams_stddev_order_by:{
+		priority:"order_by"
+	},
+	match_streams_stddev_pop_order_by:{
+		priority:"order_by"
+	},
+	match_streams_stddev_samp_order_by:{
+		priority:"order_by"
 	},
 	match_streams_stream_cursor_input:{
 		initial_value:"match_streams_stream_cursor_value_input",
@@ -3966,14 +4015,25 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	match_streams_stream_cursor_value_input:{
 		id:"uuid",
-		match_id:"uuid",
-		priority:"numeric"
+		match_id:"uuid"
+	},
+	match_streams_sum_order_by:{
+		priority:"order_by"
 	},
 	match_streams_update_column: "enum" as const,
 	match_streams_updates:{
 		_inc:"match_streams_inc_input",
 		_set:"match_streams_set_input",
 		where:"match_streams_bool_exp"
+	},
+	match_streams_var_pop_order_by:{
+		priority:"order_by"
+	},
+	match_streams_var_samp_order_by:{
+		priority:"order_by"
+	},
+	match_streams_variance_order_by:{
+		priority:"order_by"
 	},
 	match_type_cfgs_aggregate_fields:{
 		count:{
@@ -4143,6 +4203,16 @@ export const AllTypesProps: Record<string,any> = {
 			order_by:"match_region_veto_picks_order_by",
 			where:"match_region_veto_picks_bool_exp"
 		},
+		streams:{
+			distinct_on:"match_streams_select_column",
+			order_by:"match_streams_order_by",
+			where:"match_streams_bool_exp"
+		},
+		streams_aggregate:{
+			distinct_on:"match_streams_select_column",
+			order_by:"match_streams_order_by",
+			where:"match_streams_bool_exp"
+		},
 		teams:{
 			distinct_on:"teams_select_column",
 			order_by:"teams_order_by",
@@ -4267,6 +4337,8 @@ export const AllTypesProps: Record<string,any> = {
 		server_type:"String_comparison_exp",
 		started_at:"timestamptz_comparison_exp",
 		status:"e_match_status_enum_comparison_exp",
+		streams:"match_streams_bool_exp",
+		streams_aggregate:"match_streams_aggregate_bool_exp",
 		teams:"teams_bool_exp",
 		tournament_brackets:"tournament_brackets_bool_exp",
 		tournament_brackets_aggregate:"tournament_brackets_aggregate_bool_exp",
@@ -4310,6 +4382,7 @@ export const AllTypesProps: Record<string,any> = {
 		server_id:"uuid",
 		started_at:"timestamptz",
 		status:"e_match_status_enum",
+		streams:"match_streams_arr_rel_insert_input",
 		tournament_brackets:"tournament_brackets_arr_rel_insert_input",
 		winner:"match_lineups_obj_rel_insert_input",
 		winning_lineup_id:"uuid"
@@ -4417,6 +4490,7 @@ export const AllTypesProps: Record<string,any> = {
 		server_type:"order_by",
 		started_at:"order_by",
 		status:"order_by",
+		streams_aggregate:"match_streams_aggregate_order_by",
 		teams_aggregate:"teams_aggregate_order_by",
 		tournament_brackets_aggregate:"tournament_brackets_aggregate_order_by",
 		tv_connection_string:"order_by",
@@ -15576,7 +15650,7 @@ export const ReturnTypes: Record<string,any> = {
 		link:"String",
 		match:"matches",
 		match_id:"uuid",
-		priority:"numeric",
+		priority:"Int",
 		title:"String"
 	},
 	match_streams_aggregate:{
@@ -15603,14 +15677,14 @@ export const ReturnTypes: Record<string,any> = {
 		id:"uuid",
 		link:"String",
 		match_id:"uuid",
-		priority:"numeric",
+		priority:"Int",
 		title:"String"
 	},
 	match_streams_min_fields:{
 		id:"uuid",
 		link:"String",
 		match_id:"uuid",
-		priority:"numeric",
+		priority:"Int",
 		title:"String"
 	},
 	match_streams_mutation_response:{
@@ -15627,7 +15701,7 @@ export const ReturnTypes: Record<string,any> = {
 		priority:"Float"
 	},
 	match_streams_sum_fields:{
-		priority:"numeric"
+		priority:"Int"
 	},
 	match_streams_var_pop_fields:{
 		priority:"Float"
@@ -15733,6 +15807,8 @@ export const ReturnTypes: Record<string,any> = {
 		server_type:"String",
 		started_at:"timestamptz",
 		status:"e_match_status_enum",
+		streams:"match_streams",
+		streams_aggregate:"match_streams_aggregate",
 		teams:"teams",
 		tournament_brackets:"tournament_brackets",
 		tournament_brackets_aggregate:"tournament_brackets_aggregate",
