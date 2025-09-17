@@ -10,6 +10,7 @@ import { e_match_status_enum } from "~/generated/zeus";
 import MatchMapVeto from "~/components/match/MatchMapVeto.vue";
 import ScheduleMatch from "~/components/match/ScheduleMatch.vue";
 import MatchLiveStreams from "~/components/match/MatchLiveStreams.vue";
+import { e_player_roles_enum } from "~/generated/zeus";
 </script>
 
 <template>
