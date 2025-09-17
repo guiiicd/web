@@ -27,13 +27,13 @@ import MatchesTable from "~/components/MatchesTable.vue";
 <script lang="ts">
 import { typedGql } from "~/generated/zeus/typedDocumentNode";
 import { simpleMatchFields } from "~/graphql/simpleMatchFields";
-import { $, order_by } from "~/generated/zeus";
+import { $, order_by, e_match_status_enum } from "~/generated/zeus";
 
 export default {
   props: {
     statuses: {
       type: Array as PropType<e_match_status_enum[]>,
-      default: () => null,
+      default: () => Object.values(e_match_status_enum),
     },
   },
   data() {
