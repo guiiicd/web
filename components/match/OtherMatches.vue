@@ -35,6 +35,10 @@ export default {
       type: Array as PropType<e_match_status_enum[]>,
       default: () => Object.values(e_match_status_enum),
     },
+    isInLineup: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -58,14 +62,7 @@ export default {
                   created_at: $("order_by", "order_by"),
                 },
               ],
-              where: {
-                is_in_lineup: {
-                  _eq: false,
-                },
-                status: {
-                  _in: $("statuses", "[e_match_status_enum]"),
-                },
-              },
+              where: $("where", "matches_bool_exp!"),
             },
             simpleMatchFields,
           ],
@@ -75,7 +72,18 @@ export default {
             limit: this.perPage,
             order_by: order_by.desc,
             offset: (this.page - 1) * this.perPage,
-            statuses: this.statuses,
+            where: {
+              status: {
+                _in: this.statuses,
+              },
+              ...(this.isInLineup === false
+                ? {
+                    is_in_lineup: {
+                      _eq: false,
+                    },
+                  }
+                : {}),
+            },
           };
         },
         result: function ({ data }) {
@@ -86,14 +94,7 @@ export default {
         query: typedGql("subscription")({
           matches_aggregate: [
             {
-              where: {
-                is_in_lineup: {
-                  _eq: false,
-                },
-                status: {
-                  _in: $("statuses", "[e_match_status_enum]"),
-                },
-              },
+              where: $("where", "matches_bool_exp!"),
             },
             {
               aggregate: {
@@ -104,7 +105,18 @@ export default {
         }),
         variables: function () {
           return {
-            statuses: this.statuses,
+            where: {
+              status: {
+                _in: this.statuses,
+              },
+              ...(this.isInLineup === false
+                ? {
+                    is_in_lineup: {
+                      _eq: false,
+                    },
+                  }
+                : {}),
+            },
           };
         },
         result: function ({ data }) {

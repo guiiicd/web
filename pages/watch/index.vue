@@ -28,16 +28,21 @@ import { e_match_status_enum } from "~/generated/zeus";
       </TabsList>
 
       <TabsContent value="live-matches">
-        <OtherMatches :statuses="[e_match_status_enum.Live]"></OtherMatches>
-      </TabsContent>
-      <TabsContent value="upcoming-matches">
         <OtherMatches
+          :is-in-lineup="true"
           :statuses="[
+            e_match_status_enum.Live,
             e_match_status_enum.Scheduled,
             e_match_status_enum.WaitingForCheckIn,
             e_match_status_enum.WaitingForServer,
             e_match_status_enum.Veto,
           ]"
+        ></OtherMatches>
+      </TabsContent>
+      <TabsContent value="upcoming-matches">
+        <OtherMatches
+          :is-in-lineup="true"
+          :statuses="[e_match_status_enum.Scheduled]"
         ></OtherMatches>
       </TabsContent>
       <TabsContent value="finished-matches">
