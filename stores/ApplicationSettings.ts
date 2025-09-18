@@ -4,6 +4,7 @@ import { e_player_roles_enum } from "~/generated/zeus";
 import getGraphqlClient from "~/graphql/getGraphqlClient";
 import { generateSubscription } from "~/graphql/graphqlGen";
 import { useMatchmakingStore } from "./MatchmakingStore";
+import { order_by } from "@/generated/zeus";
 
 interface Region {
   value: string;
@@ -38,6 +39,36 @@ export const useApplicationSettingsStore = defineStore(
     };
 
     subscribeToSettings();
+
+    const currentPluginVersion = ref<string | null>(null);
+
+    const subscribeToPluginVersion = async () => {
+      const subscription = getGraphqlClient().subscribe({
+        query: generateSubscription({
+          plugin_versions: [
+            {
+              limit: 1,
+              order_by: [
+                {
+                  published_at: order_by.desc,
+                },
+              ],
+            },
+            {
+              version: true,
+            },
+          ],
+        }),
+      });
+
+      subscription.subscribe({
+        next: ({ data }) => {
+          currentPluginVersion.value = data.plugin_versions.at(0).version;
+        },
+      });
+    };
+
+    subscribeToPluginVersion();
 
     const matchCreateRole = computed(() => {
       if (!settings.value) {
@@ -168,12 +199,6 @@ export const useApplicationSettingsStore = defineStore(
     };
 
     subscribeToAvailableRegions();
-
-    const currentPluginVersion = computed(() => {
-      return settings.value.find(({ name }) => {
-        return name === "plugin_version";
-      })?.value;
-    });
 
     const canCreateMatch = computed(() => {
       const me = useAuthStore().me;
