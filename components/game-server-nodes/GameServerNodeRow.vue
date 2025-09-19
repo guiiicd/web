@@ -26,6 +26,7 @@ import {
   Cpu,
   CircleFadingArrowUp,
   AlertCircle,
+  Plus,
 } from "lucide-vue-next";
 import UpdateGameServerLabel from "~/components/game-server-nodes/UpdateGameServerLabel.vue";
 import FiveStackToolTip from "../FiveStackToolTip.vue";
@@ -266,14 +267,18 @@ import FiveStackToolTip from "../FiveStackToolTip.vue";
         <DropdownMenuContent class="w-56">
           <template
             v-if="
-              gameServerNode.status ===
-                e_game_server_node_statuses_enum.Online &&
-              gameServerNode.build_id
+              gameServerNode.status === e_game_server_node_statuses_enum.Online
             "
           >
             <DropdownMenuItem @click="updateCs">
-              <RefreshCw class="mr-2 h-4 w-4" />
-              <span>{{ $t("game_server.update_cs") }}</span>
+              <template v-if="gameServerNode.build_id">
+                <RefreshCw class="mr-2 h-4 w-4" />
+                <span>{{ $t("game_server.update_cs") }}</span>
+              </template>
+              <template v-else>
+                <Plus class="mr-2 h-4 w-4" />
+                {{ $t("game_server.install_cs") }}
+              </template>
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />

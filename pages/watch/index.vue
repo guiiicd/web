@@ -46,7 +46,10 @@ import { e_match_status_enum } from "~/generated/zeus";
         ></OtherMatches>
       </TabsContent>
       <TabsContent value="finished-matches">
-        <OtherMatches :statuses="[e_match_status_enum.Finished]"></OtherMatches>
+        <OtherMatches
+          :is-in-lineup="true"
+          :statuses="[e_match_status_enum.Finished]"
+        ></OtherMatches>
       </TabsContent>
     </Tabs>
   </Card>
