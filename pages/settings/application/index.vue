@@ -25,6 +25,23 @@ definePageMeta({
         @update:model-value="toggleMatchmaking"
       />
     </div>
+    
+    <FormField v-slot="{ componentField }" name="auto_cancel_duration">
+      <FormItem>
+        <FormLabel class="text-lg font-semibold">{{
+          $t("pages.settings.application.auto_cancel_duration")
+        }}</FormLabel>
+        <FormDescription>
+          {{
+            $t("pages.settings.application.auto_cancel_duration_description")
+          }}
+        </FormDescription>
+        <FormControl>
+          <Input v-bind="componentField" type="number" />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </FormField>
 
     <FormField v-slot="{ componentField }" name="public.matchmaking_min_role">
       <FormItem>
@@ -186,6 +203,7 @@ export default {
       form: useForm({
         validationSchema: toTypedSchema(
           z.object({
+            auto_cancel_duration: z.number().default(15),
             public: z.object({
               create_matches_role: z.string().default(e_player_roles_enum.user),
               create_tournaments_role: z
@@ -206,7 +224,7 @@ export default {
       immediate: true,
       handler(newVal) {
         for (const setting of newVal) {
-          if (setting.name === "public.max_acceptable_latency") {
+          if (setting.name === "public.max_acceptable_latency" || setting.name === "auto_cancel_duration") {
             this.form.setFieldValue(setting.name, Number(setting.value) || 100);
           } else {
             this.form.setFieldValue(setting.name, setting.value || "");
@@ -259,6 +277,10 @@ export default {
                   name: "public.max_acceptable_latency",
                   value:
                     this.form.values.public.max_acceptable_latency.toString(),
+                },
+                {
+                  name: "auto_cancel_duration",
+                  value: this.form.values.auto_cancel_duration.toString(),
                 },
               ],
               on_conflict: {
