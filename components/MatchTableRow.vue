@@ -8,7 +8,7 @@ import PlayerDisplay from "~/components/PlayerDisplay.vue";
 
 <template>
   <div
-    class="bg-muted/30 border border-border rounded-lg hover:shadow-md hover:bg-muted/20 transition-all duration-200 cursor-pointer group"
+    class="bg-muted/30 border border-border rounded-lg hover:shadow-lg hover:shadow-primary/10 hover:bg-muted/20 hover:border-primary/30 hover:-translate-y-1 transition-all duration-300 cursor-pointer group"
     @click="navigateToMatch(match.id, $event)"
   >
     <div class="block p-6">
@@ -81,7 +81,10 @@ import PlayerDisplay from "~/components/PlayerDisplay.vue";
               <h3 class="font-semibold text-foreground truncate">
                 {{ match.lineup_1.name }}
               </h3>
-              <div class="flex items-center space-x-2 mt-1">
+              <div
+                v-if="match.status === e_match_status_enum.PickingPlayers"
+                class="flex items-center space-x-2 mt-1"
+              >
                 <UsersIcon class="h-4 w-4 text-muted-foreground" />
                 <span class="text-sm text-muted-foreground">
                   {{ match.lineup_counts.lineup_1_count }}/{{
@@ -92,7 +95,12 @@ import PlayerDisplay from "~/components/PlayerDisplay.vue";
               </div>
             </div>
             <div class="text-right">
-              <div class="text-2xl font-bold text-foreground">
+              <div
+                :class="[
+                  'text-2xl font-bold',
+                  getScoreColorClasses(match.lineup_1.id),
+                ]"
+              >
                 {{ getTeamScore(match, match.lineup_1.id) }}
               </div>
             </div>
@@ -233,7 +241,10 @@ import PlayerDisplay from "~/components/PlayerDisplay.vue";
               <h3 class="font-semibold text-foreground truncate">
                 {{ match.lineup_2.name }}
               </h3>
-              <div class="flex items-center space-x-2 mt-1">
+              <div
+                v-if="match.status === e_match_status_enum.PickingPlayers"
+                class="flex items-center space-x-2 mt-1"
+              >
                 <UsersIcon class="h-4 w-4 text-muted-foreground" />
                 <span class="text-sm text-muted-foreground">
                   {{ match.lineup_counts.lineup_2_count }}/{{
@@ -244,7 +255,12 @@ import PlayerDisplay from "~/components/PlayerDisplay.vue";
               </div>
             </div>
             <div class="text-right">
-              <div class="text-2xl font-bold text-foreground">
+              <div
+                :class="[
+                  'text-2xl font-bold',
+                  getScoreColorClasses(match.lineup_2.id),
+                ]"
+              >
                 {{ getTeamScore(match, match.lineup_2.id) }}
               </div>
             </div>
@@ -379,7 +395,6 @@ import PlayerDisplay from "~/components/PlayerDisplay.vue";
       >
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-2">
-            <h4 class="text-sm font-medium text-foreground">Maps:</h4>
             <div class="flex flex-wrap gap-2">
               <div
                 v-for="(match_map, index) of match.match_maps"
@@ -398,13 +413,21 @@ import PlayerDisplay from "~/components/PlayerDisplay.vue";
                   cleanMapName(match_map.map.name)
                 }}</span>
                 <div class="flex items-center space-x-1 text-xs">
-                  <span class="font-semibold text-primary">{{
-                    match_map.lineup_1_score
-                  }}</span>
+                  <span
+                    :class="[
+                      'font-semibold',
+                      getMapScoreColorClasses(match_map, match.lineup_1.id),
+                    ]"
+                    >{{ match_map.lineup_1_score }}</span
+                  >
                   <span class="text-muted-foreground">-</span>
-                  <span class="font-semibold text-destructive">{{
-                    match_map.lineup_2_score
-                  }}</span>
+                  <span
+                    :class="[
+                      'font-semibold',
+                      getMapScoreColorClasses(match_map, match.lineup_2.id),
+                    ]"
+                    >{{ match_map.lineup_2_score }}</span
+                  >
                 </div>
               </div>
             </div>
@@ -428,8 +451,8 @@ export default {
   },
   data() {
     return {
-      showPlayers: false,
       matchStats: {},
+      showPlayers: false,
     };
   },
   methods: {
@@ -460,15 +483,13 @@ export default {
       await this.getMatchStats();
     },
     navigateToMatch(matchId: string, event: Event) {
-      // Check if the click was on the toggle button
       const target = event.target as HTMLElement;
       const isToggleButton = target.closest("button");
 
       if (isToggleButton) {
-        return; // Don't navigate if clicking on toggle button
+        return;
       }
 
-      // Navigate to match details
       this.$router.push({ name: "matches-id", params: { id: matchId } });
     },
     getTeamInitials(teamName: string): string {
@@ -480,7 +501,7 @@ export default {
         .slice(0, 2);
     },
     getTeamScore(match: any, lineupId: string): string | number {
-      if (match.status !== "Finished") {
+      if (match.status !== e_match_status_enum.Finished) {
         return "-";
       }
 
@@ -494,11 +515,11 @@ export default {
       return totalScore;
     },
     getMatchDuration(match: any): string {
-      if (!match.ended_at || !match.created_at) {
+      if (!match.ended_at || !match.started_at) {
         return "N/A";
       }
 
-      const start = new Date(match.created_at);
+      const start = new Date(match.started_at);
       const end = new Date(match.ended_at);
       const durationMs = end.getTime() - start.getTime();
 
@@ -515,6 +536,41 @@ export default {
         return kills > 0 ? kills.toFixed(1) : "0.0";
       }
       return (kills / deaths).toFixed(2);
+    },
+    isMatchLive(): boolean {
+      return this.match.status === e_match_status_enum.Live;
+    },
+    didTeamWin(lineupId: string): boolean {
+      if (this.match.winning_lineup_id === lineupId) {
+        return true;
+      }
+      return false;
+    },
+    getScoreColorClasses(lineupId: string): string {
+      if (this.isMatchLive()) {
+        return "text-foreground";
+      }
+
+      if (this.match.status === e_match_status_enum.Finished) {
+        if (this.didTeamWin(lineupId)) {
+          return "text-green-500";
+        } else {
+          return "text-red-500";
+        }
+      }
+
+      return "text-foreground";
+    },
+    getMapScoreColorClasses(matchMap: any, lineupId: string): string {
+      if (!matchMap.winning_lineup_id) {
+        return "text-foreground";
+      }
+
+      if (matchMap.winning_lineup_id === lineupId) {
+        return "text-green-500";
+      } else {
+        return "text-red-500";
+      }
     },
   },
 };
