@@ -25,7 +25,7 @@ definePageMeta({
         @update:model-value="toggleMatchmaking"
       />
     </div>
-    
+
     <FormField v-slot="{ componentField }" name="auto_cancel_duration">
       <FormItem>
         <FormLabel class="text-lg font-semibold">{{
@@ -224,7 +224,10 @@ export default {
       immediate: true,
       handler(newVal) {
         for (const setting of newVal) {
-          if (setting.name === "public.max_acceptable_latency" || setting.name === "auto_cancel_duration") {
+          if (
+            setting.name === "public.max_acceptable_latency" ||
+            setting.name === "auto_cancel_duration"
+          ) {
             this.form.setFieldValue(setting.name, Number(setting.value) || 100);
           } else {
             this.form.setFieldValue(setting.name, setting.value || "");

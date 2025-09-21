@@ -176,6 +176,69 @@ export const AllTypesProps: Record<string,any> = {
 	abandoned_matches_variance_order_by:{
 		steam_id:"order_by"
 	},
+	api_keys_aggregate_fields:{
+		count:{
+			columns:"api_keys_select_column"
+		}
+	},
+	api_keys_bool_exp:{
+		_and:"api_keys_bool_exp",
+		_not:"api_keys_bool_exp",
+		_or:"api_keys_bool_exp",
+		created_at:"timestamptz_comparison_exp",
+		id:"uuid_comparison_exp",
+		label:"String_comparison_exp",
+		last_used_at:"timestamptz_comparison_exp",
+		steam_id:"bigint_comparison_exp"
+	},
+	api_keys_constraint: "enum" as const,
+	api_keys_inc_input:{
+		steam_id:"bigint"
+	},
+	api_keys_insert_input:{
+		created_at:"timestamptz",
+		id:"uuid",
+		last_used_at:"timestamptz",
+		steam_id:"bigint"
+	},
+	api_keys_on_conflict:{
+		constraint:"api_keys_constraint",
+		update_columns:"api_keys_update_column",
+		where:"api_keys_bool_exp"
+	},
+	api_keys_order_by:{
+		created_at:"order_by",
+		id:"order_by",
+		label:"order_by",
+		last_used_at:"order_by",
+		steam_id:"order_by"
+	},
+	api_keys_pk_columns_input:{
+		id:"uuid"
+	},
+	api_keys_select_column: "enum" as const,
+	api_keys_set_input:{
+		created_at:"timestamptz",
+		id:"uuid",
+		last_used_at:"timestamptz",
+		steam_id:"bigint"
+	},
+	api_keys_stream_cursor_input:{
+		initial_value:"api_keys_stream_cursor_value_input",
+		ordering:"cursor_ordering"
+	},
+	api_keys_stream_cursor_value_input:{
+		created_at:"timestamptz",
+		id:"uuid",
+		last_used_at:"timestamptz",
+		steam_id:"bigint"
+	},
+	api_keys_update_column: "enum" as const,
+	api_keys_updates:{
+		_inc:"api_keys_inc_input",
+		_set:"api_keys_set_input",
+		where:"api_keys_bool_exp"
+	},
 	bigint: `scalar.bigint` as const,
 	bigint_comparison_exp:{
 		_eq:"bigint",
@@ -4628,6 +4691,9 @@ export const AllTypesProps: Record<string,any> = {
 		checkIntoMatch:{
 			match_id:"uuid"
 		},
+		createApiKey:{
+
+		},
 		delete__map_pool:{
 			where:"_map_pool_bool_exp"
 		},
@@ -4639,6 +4705,12 @@ export const AllTypesProps: Record<string,any> = {
 			where:"abandoned_matches_bool_exp"
 		},
 		delete_abandoned_matches_by_pk:{
+			id:"uuid"
+		},
+		delete_api_keys:{
+			where:"api_keys_bool_exp"
+		},
+		delete_api_keys_by_pk:{
 			id:"uuid"
 		},
 		delete_e_friend_status:{
@@ -5059,6 +5131,14 @@ export const AllTypesProps: Record<string,any> = {
 		insert_abandoned_matches_one:{
 			object:"abandoned_matches_insert_input",
 			on_conflict:"abandoned_matches_on_conflict"
+		},
+		insert_api_keys:{
+			objects:"api_keys_insert_input",
+			on_conflict:"api_keys_on_conflict"
+		},
+		insert_api_keys_one:{
+			object:"api_keys_insert_input",
+			on_conflict:"api_keys_on_conflict"
 		},
 		insert_e_friend_status:{
 			objects:"e_friend_status_insert_input",
@@ -5650,6 +5730,19 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		update_abandoned_matches_many:{
 			updates:"abandoned_matches_updates"
+		},
+		update_api_keys:{
+			_inc:"api_keys_inc_input",
+			_set:"api_keys_set_input",
+			where:"api_keys_bool_exp"
+		},
+		update_api_keys_by_pk:{
+			_inc:"api_keys_inc_input",
+			_set:"api_keys_set_input",
+			pk_columns:"api_keys_pk_columns_input"
+		},
+		update_api_keys_many:{
+			updates:"api_keys_updates"
 		},
 		update_e_friend_status:{
 			_set:"e_friend_status_set_input",
@@ -6531,6 +6624,7 @@ export const AllTypesProps: Record<string,any> = {
 		elo:"numeric_comparison_exp",
 		friend_steam_id:"bigint_comparison_exp",
 		invited_by_steam_id:"bigint_comparison_exp",
+		language:"String_comparison_exp",
 		name:"String_comparison_exp",
 		name_registered:"Boolean_comparison_exp",
 		player:"players_bool_exp",
@@ -6561,6 +6655,7 @@ export const AllTypesProps: Record<string,any> = {
 		elo:"order_by",
 		friend_steam_id:"order_by",
 		invited_by_steam_id:"order_by",
+		language:"order_by",
 		name:"order_by",
 		profile_url:"order_by",
 		role:"order_by",
@@ -6575,6 +6670,7 @@ export const AllTypesProps: Record<string,any> = {
 		elo:"order_by",
 		friend_steam_id:"order_by",
 		invited_by_steam_id:"order_by",
+		language:"order_by",
 		name:"order_by",
 		profile_url:"order_by",
 		role:"order_by",
@@ -6589,6 +6685,7 @@ export const AllTypesProps: Record<string,any> = {
 		elo:"order_by",
 		friend_steam_id:"order_by",
 		invited_by_steam_id:"order_by",
+		language:"order_by",
 		name:"order_by",
 		name_registered:"order_by",
 		player:"players_order_by",
@@ -8995,6 +9092,19 @@ export const AllTypesProps: Record<string,any> = {
 		abandoned_matches_by_pk:{
 			id:"uuid"
 		},
+		api_keys:{
+			distinct_on:"api_keys_select_column",
+			order_by:"api_keys_order_by",
+			where:"api_keys_bool_exp"
+		},
+		api_keys_aggregate:{
+			distinct_on:"api_keys_select_column",
+			order_by:"api_keys_order_by",
+			where:"api_keys_bool_exp"
+		},
+		api_keys_by_pk:{
+			id:"uuid"
+		},
 		e_friend_status:{
 			distinct_on:"e_friend_status_select_column",
 			order_by:"e_friend_status_order_by",
@@ -10317,6 +10427,23 @@ export const AllTypesProps: Record<string,any> = {
 		abandoned_matches_stream:{
 			cursor:"abandoned_matches_stream_cursor_input",
 			where:"abandoned_matches_bool_exp"
+		},
+		api_keys:{
+			distinct_on:"api_keys_select_column",
+			order_by:"api_keys_order_by",
+			where:"api_keys_bool_exp"
+		},
+		api_keys_aggregate:{
+			distinct_on:"api_keys_select_column",
+			order_by:"api_keys_order_by",
+			where:"api_keys_bool_exp"
+		},
+		api_keys_by_pk:{
+			id:"uuid"
+		},
+		api_keys_stream:{
+			cursor:"api_keys_stream_cursor_input",
+			where:"api_keys_bool_exp"
 		},
 		e_friend_status:{
 			distinct_on:"e_friend_status_select_column",
@@ -13823,6 +13950,9 @@ export const ReturnTypes: Record<string,any> = {
 		ttl:"Int",
 		refresh:"Boolean"
 	},
+	ApiKeyResponse:{
+		key:"String"
+	},
 	CpuStat:{
 		time:"timestamp",
 		total:"bigint",
@@ -13956,6 +14086,72 @@ export const ReturnTypes: Record<string,any> = {
 		steam_id:"Float"
 	},
 	abandoned_matches_variance_fields:{
+		steam_id:"Float"
+	},
+	api_keys:{
+		created_at:"timestamptz",
+		id:"uuid",
+		label:"String",
+		last_used_at:"timestamptz",
+		steam_id:"bigint"
+	},
+	api_keys_aggregate:{
+		aggregate:"api_keys_aggregate_fields",
+		nodes:"api_keys"
+	},
+	api_keys_aggregate_fields:{
+		avg:"api_keys_avg_fields",
+		count:"Int",
+		max:"api_keys_max_fields",
+		min:"api_keys_min_fields",
+		stddev:"api_keys_stddev_fields",
+		stddev_pop:"api_keys_stddev_pop_fields",
+		stddev_samp:"api_keys_stddev_samp_fields",
+		sum:"api_keys_sum_fields",
+		var_pop:"api_keys_var_pop_fields",
+		var_samp:"api_keys_var_samp_fields",
+		variance:"api_keys_variance_fields"
+	},
+	api_keys_avg_fields:{
+		steam_id:"Float"
+	},
+	api_keys_max_fields:{
+		created_at:"timestamptz",
+		id:"uuid",
+		label:"String",
+		last_used_at:"timestamptz",
+		steam_id:"bigint"
+	},
+	api_keys_min_fields:{
+		created_at:"timestamptz",
+		id:"uuid",
+		label:"String",
+		last_used_at:"timestamptz",
+		steam_id:"bigint"
+	},
+	api_keys_mutation_response:{
+		affected_rows:"Int",
+		returning:"api_keys"
+	},
+	api_keys_stddev_fields:{
+		steam_id:"Float"
+	},
+	api_keys_stddev_pop_fields:{
+		steam_id:"Float"
+	},
+	api_keys_stddev_samp_fields:{
+		steam_id:"Float"
+	},
+	api_keys_sum_fields:{
+		steam_id:"bigint"
+	},
+	api_keys_var_pop_fields:{
+		steam_id:"Float"
+	},
+	api_keys_var_samp_fields:{
+		steam_id:"Float"
+	},
+	api_keys_variance_fields:{
 		steam_id:"Float"
 	},
 	bigint: `scalar.bigint` as const,
@@ -16083,10 +16279,13 @@ export const ReturnTypes: Record<string,any> = {
 		callForOrganizer:"SuccessOutput",
 		cancelMatch:"SuccessOutput",
 		checkIntoMatch:"SuccessOutput",
+		createApiKey:"ApiKeyResponse",
 		delete__map_pool:"_map_pool_mutation_response",
 		delete__map_pool_by_pk:"_map_pool",
 		delete_abandoned_matches:"abandoned_matches_mutation_response",
 		delete_abandoned_matches_by_pk:"abandoned_matches",
+		delete_api_keys:"api_keys_mutation_response",
+		delete_api_keys_by_pk:"api_keys",
 		delete_e_friend_status:"e_friend_status_mutation_response",
 		delete_e_friend_status_by_pk:"e_friend_status",
 		delete_e_game_cfg_types:"e_game_cfg_types_mutation_response",
@@ -16223,6 +16422,8 @@ export const ReturnTypes: Record<string,any> = {
 		insert__map_pool_one:"_map_pool",
 		insert_abandoned_matches:"abandoned_matches_mutation_response",
 		insert_abandoned_matches_one:"abandoned_matches",
+		insert_api_keys:"api_keys_mutation_response",
+		insert_api_keys_one:"api_keys",
 		insert_e_friend_status:"e_friend_status_mutation_response",
 		insert_e_friend_status_one:"e_friend_status",
 		insert_e_game_cfg_types:"e_game_cfg_types_mutation_response",
@@ -16383,6 +16584,9 @@ export const ReturnTypes: Record<string,any> = {
 		update_abandoned_matches:"abandoned_matches_mutation_response",
 		update_abandoned_matches_by_pk:"abandoned_matches",
 		update_abandoned_matches_many:"abandoned_matches_mutation_response",
+		update_api_keys:"api_keys_mutation_response",
+		update_api_keys_by_pk:"api_keys",
+		update_api_keys_many:"api_keys_mutation_response",
 		update_e_friend_status:"e_friend_status_mutation_response",
 		update_e_friend_status_by_pk:"e_friend_status",
 		update_e_friend_status_many:"e_friend_status_mutation_response",
@@ -16590,6 +16794,7 @@ export const ReturnTypes: Record<string,any> = {
 		elo:"numeric",
 		friend_steam_id:"bigint",
 		invited_by_steam_id:"bigint",
+		language:"String",
 		name:"String",
 		name_registered:"Boolean",
 		player:"players",
@@ -16629,6 +16834,7 @@ export const ReturnTypes: Record<string,any> = {
 		elo:"numeric",
 		friend_steam_id:"bigint",
 		invited_by_steam_id:"bigint",
+		language:"String",
 		name:"String",
 		profile_url:"String",
 		role:"String",
@@ -16643,6 +16849,7 @@ export const ReturnTypes: Record<string,any> = {
 		elo:"numeric",
 		friend_steam_id:"bigint",
 		invited_by_steam_id:"bigint",
+		language:"String",
 		name:"String",
 		profile_url:"String",
 		role:"String",
@@ -17932,6 +18139,9 @@ export const ReturnTypes: Record<string,any> = {
 		abandoned_matches:"abandoned_matches",
 		abandoned_matches_aggregate:"abandoned_matches_aggregate",
 		abandoned_matches_by_pk:"abandoned_matches",
+		api_keys:"api_keys",
+		api_keys_aggregate:"api_keys_aggregate",
+		api_keys_by_pk:"api_keys",
 		e_friend_status:"e_friend_status",
 		e_friend_status_aggregate:"e_friend_status_aggregate",
 		e_friend_status_by_pk:"e_friend_status",
@@ -18367,6 +18577,10 @@ export const ReturnTypes: Record<string,any> = {
 		abandoned_matches_aggregate:"abandoned_matches_aggregate",
 		abandoned_matches_by_pk:"abandoned_matches",
 		abandoned_matches_stream:"abandoned_matches",
+		api_keys:"api_keys",
+		api_keys_aggregate:"api_keys_aggregate",
+		api_keys_by_pk:"api_keys",
+		api_keys_stream:"api_keys",
 		e_friend_status:"e_friend_status",
 		e_friend_status_aggregate:"e_friend_status_aggregate",
 		e_friend_status_by_pk:"e_friend_status",
