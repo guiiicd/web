@@ -42,32 +42,23 @@
                 "appearance": "Appearance",
                 "api_keys": "API Keys",
                 "api_keys_management": {
-                    "title": "API Keys",
-                    "description": "Manage your API keys for programmatic access to 5Stack services.",
                     "your_api_keys": "Your API Keys",
                     "api_keys_description": "API keys allow you to authenticate with the 5Stack API programmatically.",
                     "add_api_key": "Add API Key",
-                    "no_api_keys": "No API Keys",
-                    "no_api_keys_description": "You haven't created any API keys yet. Create one to get started.",
                     "create_new_api_key": "Create New API Key",
                     "create_new_description": "Create a new API key with a descriptive label to identify its purpose.",
                     "label": "Label",
                     "label_placeholder": "e.g., My App, Development, Production",
                     "label_description": "Choose a descriptive name to identify this API key.",
-                    "label_required": "Label is required",
-                    "label_max_length": "Label must be less than 50 characters",
                     "created": "Created",
                     "last_used": "Last Used",
                     "never": "Never",
                     "actions": "Actions",
-                    "delete_api_key": "Delete API Key",
                     "delete_confirmation_title": "Delete API Key",
                     "delete_confirmation_description": "Are you sure you want to delete the API key \"{label}\"? This action cannot be undone and any applications using this key will lose access.",
                     "cancel": "Cancel",
                     "create_api_key": "Create API Key",
                     "delete_api_key_action": "Delete API Key",
-                    "api_key_created": "API Key Created",
-                    "api_key_created_description": "Your new API key has been created successfully.",
                     "api_key_deleted": "API Key Deleted",
                     "api_key_deleted_description": "The API key has been deleted successfully.",
                     "error_creating": "Error",
@@ -542,7 +533,6 @@
                 }
             },
             "tooltip": {
-                "join_discord": "Join our Discord"
             }
         }
     },
@@ -559,6 +549,7 @@
     "common": {
         "delete": "Delete",
         "cancel": "Cancel",
+        "error": "Error",
         "tbd": "TBD",
         "boolean": {
             "yes": "Yes",
@@ -1243,9 +1234,6 @@
         "updated_successfully": "Stream Updated",
         "stream_updated_message": "The stream has been updated successfully.",
         "update_error": "Failed to update stream. Please try again.",
-        "delete": "Delete Stream",
-        "delete_title": "Delete Stream",
-        "delete_description": "Are you sure you want to delete \"{title}\"? This action cannot be undone.",
         "deleted_successfully": "Stream Deleted",
         "stream_deleted_message": "The stream has been deleted successfully.",
         "delete_error": "Failed to delete stream. Please try again.",
