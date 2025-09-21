@@ -82,56 +82,133 @@ definePageMeta({
     <Dialog v-model:open="showAddDialog">
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{{
+          <DialogTitle v-if="!showingNewApiKey">{{
             $t("pages.settings.account.api_keys_management.create_new_api_key")
           }}</DialogTitle>
-          <DialogDescription>
+          <DialogTitle v-else>{{
+            $t(
+              "pages.settings.account.api_keys_management.copy_key_dialog.title",
+            )
+          }}</DialogTitle>
+          <DialogDescription v-if="!showingNewApiKey">
             {{
               $t(
                 "pages.settings.account.api_keys_management.create_new_description",
               )
             }}
           </DialogDescription>
+          <DialogDescription v-else>
+            {{
+              $t(
+                "pages.settings.account.api_keys_management.copy_key_dialog.description",
+              )
+            }}
+          </DialogDescription>
         </DialogHeader>
 
-        <form :form="form" @submit.prevent="addApiKey">
-          <FormField v-slot="{ componentField }" name="label">
-            <FormItem>
-              <FormLabel>{{
-                $t("pages.settings.account.api_keys_management.label")
-              }}</FormLabel>
-              <FormControl>
-                <Input
-                  v-bind="componentField"
-                  :placeholder="
+        <!-- Form View -->
+        <template v-if="!showingNewApiKey">
+          <form :form="form" @submit.prevent="addApiKey">
+            <FormField v-slot="{ componentField }" name="label">
+              <FormItem>
+                <FormLabel>{{
+                  $t("pages.settings.account.api_keys_management.label")
+                }}</FormLabel>
+                <FormControl>
+                  <Input
+                    v-bind="componentField"
+                    :placeholder="
+                      $t(
+                        'pages.settings.account.api_keys_management.label_placeholder',
+                      )
+                    "
+                  />
+                </FormControl>
+                <FormDescription>
+                  {{
                     $t(
-                      'pages.settings.account.api_keys_management.label_placeholder',
+                      "pages.settings.account.api_keys_management.label_description",
                     )
-                  "
-                />
-              </FormControl>
-              <FormDescription>
+                  }}
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            </FormField>
+
+            <DialogFooter>
+              <Button type="button" variant="outline" @click="closeAddDialog">
+                {{ $t("pages.settings.account.api_keys_management.cancel") }}
+              </Button>
+              <Button type="submit">
                 {{
                   $t(
-                    "pages.settings.account.api_keys_management.label_description",
+                    "pages.settings.account.api_keys_management.create_api_key",
                   )
                 }}
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          </FormField>
+              </Button>
+            </DialogFooter>
+          </form>
+        </template>
+
+        <!-- API Key Display View -->
+        <template v-else>
+          <div class="space-y-4">
+            <div class="space-y-2">
+              <label class="text-sm font-medium">{{
+                $t(
+                  "pages.settings.account.api_keys_management.copy_key_dialog.api_key_label",
+                )
+              }}</label>
+              <div v-if="newApiKey">
+                <div class="relative">
+                  <div
+                    class="border rounded-md p-3 pr-12 font-mono text-sm break-all bg-background"
+                  >
+                    {{ newApiKey }}
+                  </div>
+                  <div class="absolute top-2 right-2">
+                    <ClipBoard
+                      :data="newApiKey"
+                      class="p-2 rounded-md hover:bg-muted transition-colors"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-yellow-50 border border-yellow-200 rounded-md p-3">
+              <div class="flex">
+                <TriangleAlert class="w-5 h-5 text-yellow-400 mr-2 mt-0.5" />
+                <div class="text-sm text-yellow-800">
+                  <p class="font-medium">
+                    {{
+                      $t(
+                        "pages.settings.account.api_keys_management.copy_key_dialog.warning_title",
+                      )
+                    }}
+                  </p>
+                  <p>
+                    {{
+                      $t(
+                        "pages.settings.account.api_keys_management.copy_key_dialog.warning_message",
+                      )
+                    }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <DialogFooter>
-            <Button type="button" variant="outline" @click="closeAddDialog">
-              {{ $t("pages.settings.account.api_keys_management.cancel") }}
-            </Button>
-            <Button type="submit">
+            <Button @click="closeAddDialog">
               {{
-                $t("pages.settings.account.api_keys_management.create_api_key")
+                $t(
+                  "pages.settings.account.api_keys_management.copy_key_dialog.copied_button",
+                )
               }}
             </Button>
           </DialogFooter>
-        </form>
+        </template>
       </DialogContent>
     </Dialog>
 
@@ -170,83 +247,6 @@ definePageMeta({
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-
-    <!-- Copy API Key Dialog -->
-    <Dialog v-model:open="showCopyKeyDialog">
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{{
-            $t(
-              "pages.settings.account.api_keys_management.copy_key_dialog.title",
-            )
-          }}</DialogTitle>
-          <DialogDescription>
-            {{
-              $t(
-                "pages.settings.account.api_keys_management.copy_key_dialog.description",
-              )
-            }}
-          </DialogDescription>
-        </DialogHeader>
-
-        <div class="space-y-4">
-          <div class="space-y-2">
-            <label class="text-sm font-medium">{{
-              $t(
-                "pages.settings.account.api_keys_management.copy_key_dialog.api_key_label",
-              )
-            }}</label>
-            <div v-if="newApiKey">
-              <div class="relative">
-                <div
-                  class="border rounded-md p-3 pr-12 font-mono text-sm break-all bg-background"
-                >
-                  {{ newApiKey }}
-                </div>
-                <div class="absolute top-2 right-2">
-                  <ClipBoard
-                    :data="newApiKey"
-                    class="p-2 rounded-md hover:bg-muted transition-colors"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="bg-yellow-50 border border-yellow-200 rounded-md p-3">
-            <div class="flex">
-              <TriangleAlert class="w-5 h-5 text-yellow-400 mr-2 mt-0.5" />
-              <div class="text-sm text-yellow-800">
-                <p class="font-medium">
-                  {{
-                    $t(
-                      "pages.settings.account.api_keys_management.copy_key_dialog.warning_title",
-                    )
-                  }}
-                </p>
-                <p>
-                  {{
-                    $t(
-                      "pages.settings.account.api_keys_management.copy_key_dialog.warning_message",
-                    )
-                  }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <DialogFooter>
-          <Button @click="closeCopyKeyDialog">
-            {{
-              $t(
-                "pages.settings.account.api_keys_management.copy_key_dialog.copied_button",
-              )
-            }}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
   </div>
 </template>
 
@@ -309,7 +309,7 @@ export default {
       }),
       showAddDialog: false,
       showDeleteDialog: false,
-      showCopyKeyDialog: false,
+      showingNewApiKey: false,
       apiKeyToDelete: null,
       newApiKey: null,
       apiKeys: [],
@@ -323,10 +323,14 @@ export default {
   methods: {
     openAddDialog() {
       this.showAddDialog = true;
+      this.showingNewApiKey = false;
+      this.newApiKey = null;
       this.form.resetForm();
     },
     closeAddDialog() {
       this.showAddDialog = false;
+      this.showingNewApiKey = false;
+      this.newApiKey = null;
       this.form.resetForm();
     },
     openDeleteDialog(apiKey: any) {
@@ -336,10 +340,6 @@ export default {
     closeDeleteDialog() {
       this.showDeleteDialog = false;
       this.apiKeyToDelete = null;
-    },
-    closeCopyKeyDialog() {
-      this.showCopyKeyDialog = false;
-      this.newApiKey = null;
     },
     async addApiKey() {
       const { valid } = await this.form.validate();
@@ -365,12 +365,9 @@ export default {
           }),
         });
 
-        // Store the new API key and show copy dialog
+        // Store the new API key and show clipboard content in modal
         this.newApiKey = data.createApiKey.key;
-        this.closeAddDialog();
-        this.$nextTick(() => {
-          this.showCopyKeyDialog = true;
-        });
+        this.showingNewApiKey = true;
       } catch (error) {
         console.error("Error creating API key:", error);
         toast({
