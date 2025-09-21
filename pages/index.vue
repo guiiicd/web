@@ -2,7 +2,7 @@
 definePageMeta({
   middleware: [
     function (to, from) {
-      return navigateTo("/play");
+      return navigateTo("/my-matches");
     },
   ],
 });

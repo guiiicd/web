@@ -2,7 +2,10 @@
 import { Copy } from "lucide-vue-next";
 </script>
 <template>
-  <div class="copy bg-background hover:bg-background/50 transition-colors" @click="copyToClipboard">
+  <div
+    class="copy bg-background hover:bg-background/50 transition-colors"
+    @click="copyToClipboard"
+  >
     <div
       ref="copy"
       class="icon--btn icon--btn-small"
@@ -38,42 +41,42 @@ export default {
         } else {
           this.fallbackCopyToClipboard(this.data);
         }
-        
+
         toast({
           title: "Copied to Clipboard",
         });
       } catch (err) {
-        console.error('Failed to copy to clipboard:', err);
+        console.error("Failed to copy to clipboard:", err);
         this.fallbackCopyToClipboard(this.data);
         toast({
           title: "Copied to Clipboard",
         });
       }
     },
-    
+
     fallbackCopyToClipboard(text) {
       // Create a temporary textarea element
       const textArea = document.createElement("textarea");
       textArea.value = text;
-      
+
       // Make it invisible
       textArea.style.position = "fixed";
       textArea.style.left = "-999999px";
       textArea.style.top = "-999999px";
       document.body.appendChild(textArea);
-      
+
       // Select and copy the text
       textArea.focus();
       textArea.select();
-      
+
       try {
-        document.execCommand('copy');
+        document.execCommand("copy");
       } catch (err) {
-        console.error('Fallback copy failed:', err);
+        console.error("Fallback copy failed:", err);
       }
-      
+
       document.body.removeChild(textArea);
-    }
+    },
   },
 };
 </script>

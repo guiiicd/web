@@ -36,13 +36,6 @@ export default {
       perPage: 10,
       myMatches: [],
       myMatchesAggregate: undefined,
-      statuses: [
-        e_match_status_enum.Forfeit,
-        e_match_status_enum.Canceled,
-        e_match_status_enum.Surrendered,
-        e_match_status_enum.Tie,
-        e_match_status_enum.Finished,
-      ],
     };
   },
   apollo: {
@@ -56,9 +49,6 @@ export default {
               where: {
                 is_in_lineup: {
                   _eq: true,
-                },
-                status: {
-                  _in: $("statuses", "[e_match_status_enum]"),
                 },
               },
               order_by: [
@@ -90,9 +80,6 @@ export default {
               where: {
                 is_in_lineup: {
                   _eq: true,
-                },
-                status: {
-                  _in: $("statuses", "[e_match_status_enum]"),
                 },
               },
             },

@@ -50,6 +50,17 @@ const { isMobile } = useSidebar();
       <!-- Unified Play and Community menus for all screen sizes -->
       <NavigationMenu>
         <NavigationMenuList class="flex items-center">
+          <NavigationMenuItem class="hidden md:block">
+            <NavigationMenuLink as-child>
+              <NuxtLink
+                to="/my-matches"
+                class="uppercase font-bold px-4 py-2 transition-colors duration-150 border-none outline-none focus:ring-0 hover:text-green-300 rounded bg-transparent"
+              >
+                {{ $t("layouts.top_nav.home") }}
+              </NuxtLink>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+
           <!-- Play menu with hero card -->
           <NavigationMenuItem>
             <NavigationMenuTrigger
@@ -82,16 +93,16 @@ const { isMobile } = useSidebar();
                       </NuxtLink>
                     </NavigationMenuLink>
                   </li>
-                  <li>
+                  <NavigationMenuItem class="block md:hidden">
                     <NavigationMenuLink as-child>
                       <NuxtLink
-                        to="/matches"
+                        to="/my-matches"
                         class="block w-full text-left px-4 py-2 uppercase font-bold text-sm transition-colors duration-150 border-none outline-none hover:text-green-300"
                       >
-                        {{ $t("layouts.top_nav.play.view_previous_matches") }}
+                        {{ $t("layouts.top_nav.my_matches") }}
                       </NuxtLink>
                     </NavigationMenuLink>
-                  </li>
+                  </NavigationMenuItem>
                 </ul>
                 <div
                   class="flex flex-col items-center justify-center bg-[#18181b] rounded-t-lg md:rounded-l-lg md:rounded-tr-none p-6 min-w-[120px] max-w-[200px]"
@@ -106,7 +117,7 @@ const { isMobile } = useSidebar();
               </div>
             </NavigationMenuContent>
           </NavigationMenuItem>
-          <NavigationMenuItem>
+          <NavigationMenuItem class="hidden md:block">
             <NavigationMenuLink as-child>
               <NuxtLink
                 to="/watch"
@@ -134,6 +145,21 @@ const { isMobile } = useSidebar();
                     <div
                       class="text-xs font-bold text-neutral-400 mb-2 uppercase tracking-widest"
                     ></div>
+                    <li class="block md:hidden">
+                      <NavigationMenuLink as-child>
+                        <NuxtLink
+                          to="/watch"
+                          class="flex flex-col px-2 py-2 rounded hover:text-green-300 transition-colors"
+                        >
+                          <span class="block font-bold">{{
+                            $t("layouts.top_nav.community.watch.title")
+                          }}</span>
+                          <span class="block text-xs text-neutral-400">{{
+                            $t("layouts.top_nav.community.watch.subtitle")
+                          }}</span>
+                        </NuxtLink>
+                      </NavigationMenuLink>
+                    </li>
                     <li>
                       <NavigationMenuLink as-child>
                         <NuxtLink

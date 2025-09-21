@@ -87,7 +87,7 @@ import Logout from "./Logout.vue";
               :tooltip="$t('layouts.app_nav.tooltips.matches')"
             >
               <NuxtLink
-                :to="{ name: 'matches' }"
+                :to="{ name: 'my-matches' }"
                 :class="{
                   'router-link-active': isRouteActive('matches'),
                 }"
