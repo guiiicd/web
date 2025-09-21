@@ -34,11 +34,7 @@ import Pagination from "~/components/Pagination.vue";
   </div>
 
   <Card class="p-4">
-    <matches-table
-      class="p-3"
-      :matches="matches"
-      v-if="matches"
-    ></matches-table>
+    <MatchesTable class="p-3" :matches="matches" v-if="matches"></MatchesTable>
   </Card>
 
   <Pagination

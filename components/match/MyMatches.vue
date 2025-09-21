@@ -3,11 +3,11 @@ import Pagination from "~/components/Pagination.vue";
 import MatchesTable from "~/components/MatchesTable.vue";
 </script>
 <template>
-  <matches-table
+  <MatchesTable
     class="p-3"
     :matches="myMatches"
     v-if="myMatches"
-  ></matches-table>
+  ></MatchesTable>
 
   <Teleport defer to="#pagination">
     <Pagination
@@ -27,7 +27,7 @@ import MatchesTable from "~/components/MatchesTable.vue";
 <script lang="ts">
 import { typedGql } from "~/generated/zeus/typedDocumentNode";
 import { simpleMatchFields } from "~/graphql/simpleMatchFields";
-import { $, e_match_status_enum, order_by } from "~/generated/zeus/index";
+import { $, order_by } from "~/generated/zeus/index";
 
 export default {
   data() {

@@ -3,11 +3,11 @@ import Pagination from "~/components/Pagination.vue";
 import MatchesTable from "~/components/MatchesTable.vue";
 </script>
 <template>
-  <matches-table
+  <MatchesTable
     class="p-3"
     :matches="openMatches"
     v-if="openMatches"
-  ></matches-table>
+  ></MatchesTable>
 
   <Teleport defer to="#pagination">
     <Pagination

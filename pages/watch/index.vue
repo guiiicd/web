@@ -32,7 +32,6 @@ import { e_match_status_enum } from "~/generated/zeus";
           :is-in-lineup="true"
           :statuses="[
             e_match_status_enum.Live,
-            e_match_status_enum.Scheduled,
             e_match_status_enum.WaitingForCheckIn,
             e_match_status_enum.WaitingForServer,
             e_match_status_enum.Veto,

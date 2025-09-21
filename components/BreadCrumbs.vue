@@ -39,6 +39,15 @@ export default {
       let path = "";
       segments.forEach((segment: string) => {
         path += `/${segment}`;
+
+        if (path === "/matches") {
+          path = "/my-matches";
+        }
+
+        if (path.includes("/my-matches/")) {
+          path = path.replace("/my-matches/", "/matches/");
+        }
+
         breadcrumbs.push({
           text: segment,
           to: path,

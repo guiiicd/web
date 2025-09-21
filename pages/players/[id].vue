@@ -168,10 +168,10 @@ import SteamIcon from "~/components/icons/SteamIcon.vue";
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <matches-table
+        <MatchesTable
           :matches="playerWithMatches?.matches"
           v-if="playerWithMatches?.matches"
-        ></matches-table>
+        ></MatchesTable>
       </CardContent>
     </Card>
 
