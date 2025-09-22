@@ -229,6 +229,21 @@ import FiveStackToolTip from "./FiveStackToolTip.vue";
                             </template>
                           </MapDisplay>
                           <div
+                            v-if="
+                              !form.values.map_veto &&
+                              Number(form.values.best_of) > 1 &&
+                              form.values.map_pool?.includes(map.id)
+                            "
+                            class="absolute top-1 left-1"
+                          >
+                            <Badge
+                              variant="secondary"
+                              class="rounded-full w-6 h-6 flex items-center justify-center"
+                            >
+                              {{ form.values.map_pool.indexOf(map.id) + 1 }}
+                            </Badge>
+                          </div>
+                          <div
                             class="absolute inset-0 flex items-center justify-center bg-opacity-40 transition-opacity duration-200"
                           ></div>
                         </div>
@@ -960,7 +975,13 @@ export default {
           return;
         }
 
-        this.form.setFieldValue("map_pool", [this.form.values.map_pool.at(-1)]);
+        const bestOf = this.form.values.best_of;
+        const mapPool = this.form.values.map_pool;
+
+        if (mapPool.length > bestOf) {
+          const newMapPool = mapPool.slice(-bestOf);
+          this.form.setFieldValue("map_pool", newMapPool);
+        }
       },
     },
   },
