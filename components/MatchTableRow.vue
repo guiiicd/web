@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { UserPlusIcon, EyeIcon, EyeOffIcon, UsersIcon } from "lucide-vue-next";
+import {
+  UserPlusIcon,
+  UsersIcon,
+  ChevronsDownIcon,
+  ChevronsUpIcon,
+} from "lucide-vue-next";
 import TimeAgo from "~/components/TimeAgo.vue";
 import { e_lobby_access_enum, e_match_status_enum } from "~/generated/zeus";
 import cleanMapName from "~/utilities/cleanMapName";
@@ -11,9 +16,9 @@ import PlayerDisplay from "~/components/PlayerDisplay.vue";
     class="bg-muted/30 border border-border rounded-lg hover:shadow-lg hover:shadow-primary/10 hover:bg-muted/20 hover:border-primary/30 hover:-translate-y-1 transition-all duration-300 cursor-pointer group"
     @click="navigateToMatch(match.id, $event)"
   >
-    <div class="block p-6">
+    <div class="p-6 flex flex-col gap-3">
       <!-- Match Header -->
-      <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
           <Badge variant="secondary" class="text-xs">
             {{ match.options.type }}
@@ -37,16 +42,7 @@ import PlayerDisplay from "~/components/PlayerDisplay.vue";
             <span>{{ $t("match.options.table.join") }}</span>
           </Button>
 
-          <Button
-            variant="ghost"
-            size="sm"
-            @click.stop="toggleShowPlayers"
-            class="flex items-center space-x-2"
-          >
-            <EyeIcon v-if="!showPlayers" class="h-4 w-4" />
-            <EyeOffIcon v-else class="h-4 w-4" />
-            <span>{{ showPlayers ? "Hide Players" : "Show Players" }}</span>
-          </Button>
+          <!-- moved player toggle below maps -->
           <div
             class="flex items-center space-x-2 text-sm text-muted-foreground"
           >
@@ -65,161 +61,39 @@ import PlayerDisplay from "~/components/PlayerDisplay.vue";
         </div>
       </div>
 
-      <!-- Teams Section -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-4 items-center">
-        <!-- Team 1 -->
-        <div class="space-y-3">
-          <div class="flex items-center space-x-3">
-            <div class="flex-shrink-0">
-              <div
-                class="uppercase w-10 h-10 bg-gradient-to-br from-primary via-primary/90 to-primary/70 rounded-xl flex items-center justify-center text-primary-foreground font-bold text-lg shadow-lg border-2 border-primary/20"
-              >
-                {{ getTeamInitials(match.lineup_1.name) }}
-              </div>
-            </div>
-            <div class="flex-1 min-w-0">
-              <h3 class="font-semibold text-foreground truncate">
-                {{ match.lineup_1.name }}
-              </h3>
-              <div
-                v-if="match.status === e_match_status_enum.PickingPlayers"
-                class="flex items-center space-x-2 mt-1"
-              >
-                <UsersIcon class="h-4 w-4 text-muted-foreground" />
-                <span class="text-sm text-muted-foreground">
-                  {{ match.lineup_counts.lineup_1_count }}/{{
-                    match.max_players_per_lineup
-                  }}
-                  players
-                </span>
-              </div>
+      <!-- Team Names + Score (no player tables) -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+        <!-- Team 1 name -->
+        <div class="flex items-center space-x-3">
+          <div class="flex-shrink-0">
+            <div
+              class="uppercase w-10 h-10 bg-gradient-to-br from-primary via-primary/90 to-primary/70 rounded-xl flex items-center justify-center text-primary-foreground font-bold text-lg shadow-lg border-2 border-primary/20"
+            >
+              {{ getTeamInitials(match.lineup_1.name) }}
             </div>
           </div>
-
-          <!-- Players for Team 1 -->
-          <div v-if="showPlayers" class="space-y-2">
+          <div class="flex-1 min-w-0">
+            <h3 class="font-semibold text-foreground truncate">
+              {{ match.lineup_1.name }}
+            </h3>
             <div
-              v-if="matchStats.lineup_1"
-              class="bg-muted/50 rounded-lg p-4 border border-border min-h-[200px] flex flex-col"
+              v-if="match.status === e_match_status_enum.PickingPlayers"
+              class="flex items-center space-x-2 mt-1"
             >
-              <h5 class="text-sm font-semibold text-foreground mb-3">
-                {{ matchStats.lineup_1.name }} Stats
-              </h5>
-              <div class="overflow-x-auto flex-1">
-                <table class="w-full text-xs min-w-[400px] h-full">
-                  <thead>
-                    <tr class="border-b border-border">
-                      <th class="text-left py-2 px-3 font-medium">Player</th>
-                      <th class="text-center py-2 px-3 font-medium w-12">K</th>
-                      <th class="text-center py-2 px-3 font-medium w-12">D</th>
-                      <th class="text-center py-2 px-3 font-medium w-12">A</th>
-                      <th class="text-center py-2 px-3 font-medium w-16">
-                        DMG
-                      </th>
-                      <th class="text-center py-2 px-3 font-medium w-12">
-                        K/D
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <template
-                      v-for="lineupPlayer in matchStats.lineup_1.lineup_players"
-                      :key="lineupPlayer.steam_id"
-                    >
-                      <tr class="border-b border-border/50 last:border-b-0">
-                        <td class="py-3 px-3">
-                          <PlayerDisplay
-                            :player="lineupPlayer.player"
-                          ></PlayerDisplay>
-                        </td>
-                        <td class="text-center py-3 px-3">
-                          {{
-                            lineupPlayer.player.kills_aggregate?.aggregate
-                              ?.count || 0
-                          }}
-                        </td>
-                        <td class="text-center py-3 px-3">
-                          {{
-                            lineupPlayer.player.deaths_aggregate?.aggregate
-                              ?.count || 0
-                          }}
-                        </td>
-                        <td class="text-center py-3 px-3">
-                          {{
-                            lineupPlayer.player.assists_aggregate?.aggregate
-                              ?.count || 0
-                          }}
-                        </td>
-                        <td class="text-center py-3 px-3">
-                          {{
-                            Math.round(
-                              lineupPlayer.player.damage_dealt_aggregate
-                                ?.aggregate?.sum?.damage || 0,
-                            )
-                          }}
-                        </td>
-                        <td class="text-center py-3 px-3">
-                          {{
-                            getKDRatio(
-                              lineupPlayer.player.kills_aggregate?.aggregate
-                                ?.count || 0,
-                              lineupPlayer.player.deaths_aggregate?.aggregate
-                                ?.count || 0,
-                            )
-                          }}
-                        </td>
-                      </tr>
-                    </template>
-                    <!-- Empty rows to maintain consistent height -->
-                    <template
-                      v-for="i in Math.max(
-                        0,
-                        5 -
-                          (matchStats.lineup_1?.lineup_players?.length ||
-                            match.lineup_1?.lineup_players?.length ||
-                            0),
-                      )"
-                      :key="`empty-${i}`"
-                    >
-                      <tr class="border-b border-border/50 last:border-b-0">
-                        <td class="py-3 px-3">
-                          <PlayerDisplay
-                            :show-flag="false"
-                            :show-role="false"
-                            :show-elo="false"
-                            :linkable="false"
-                            :player="{
-                              name: `Slot ${(matchStats.lineup_1?.lineup_players?.length || match.lineup_1?.lineup_players?.length || 0) + i}`,
-                            }"
-                          />
-                        </td>
-                        <td class="text-center py-3 px-3 text-muted-foreground">
-                          -
-                        </td>
-                        <td class="text-center py-3 px-3 text-muted-foreground">
-                          -
-                        </td>
-                        <td class="text-center py-3 px-3 text-muted-foreground">
-                          -
-                        </td>
-                        <td class="text-center py-3 px-3 text-muted-foreground">
-                          -
-                        </td>
-                        <td class="text-center py-3 px-3 text-muted-foreground">
-                          -
-                        </td>
-                      </tr>
-                    </template>
-                  </tbody>
-                </table>
-              </div>
+              <UsersIcon class="h-4 w-4 text-muted-foreground" />
+              <span class="text-sm text-muted-foreground">
+                {{ match.lineup_counts.lineup_1_count }}/{{
+                  match.max_players_per_lineup
+                }}
+                players
+              </span>
             </div>
           </div>
         </div>
 
-        <!-- Combined Score (inline between teams) -->
-        <div class="hidden lg:flex items-center justify-center">
-          <div class="text-2xl font-bold">
+        <!-- Center score -->
+        <div class="flex items-center justify-center">
+          <div class="text-2xl md:text-3xl font-bold">
             <span :class="getScoreColorClasses(match.lineup_1.id)">{{
               getTeamScore(match, match.lineup_1.id)
             }}</span>
@@ -230,152 +104,30 @@ import PlayerDisplay from "~/components/PlayerDisplay.vue";
           </div>
         </div>
 
-        <!-- Team 2 -->
-        <div class="space-y-3">
-          <div class="flex items-center space-x-3">
-            <div class="flex-1 min-w-0">
-              <h3 class="font-semibold text-foreground truncate text-right">
-                {{ match.lineup_2.name }}
-              </h3>
-              <div
-                v-if="match.status === e_match_status_enum.PickingPlayers"
-                class="flex items-center space-x-2 mt-1"
-              >
-                <UsersIcon class="h-4 w-4 text-muted-foreground" />
-                <span class="text-sm text-muted-foreground">
-                  {{ match.lineup_counts.lineup_2_count }}/{{
-                    match.max_players_per_lineup
-                  }}
-                  players
-                </span>
-              </div>
-            </div>
-            <div class="flex-shrink-0">
-              <div
-                class="uppercase w-10 h-10 bg-gradient-to-br from-destructive via-destructive/90 to-destructive/70 rounded-xl flex items-center justify-center text-destructive-foreground font-bold text-lg shadow-lg border-2 border-destructive/20"
-              >
-                {{ getTeamInitials(match.lineup_2.name) }}
-              </div>
+        <!-- Team 2 name -->
+        <div class="flex items-center space-x-3 justify-end">
+          <div class="flex-1 min-w-0">
+            <h3 class="font-semibold text-foreground truncate text-right">
+              {{ match.lineup_2.name }}
+            </h3>
+            <div
+              v-if="match.status === e_match_status_enum.PickingPlayers"
+              class="flex items-center space-x-2 mt-1 justify-end"
+            >
+              <UsersIcon class="h-4 w-4 text-muted-foreground" />
+              <span class="text-sm text-muted-foreground">
+                {{ match.lineup_counts.lineup_2_count }}/{{
+                  match.max_players_per_lineup
+                }}
+                players
+              </span>
             </div>
           </div>
-
-          <!-- Players for Team 2 -->
-          <div v-if="showPlayers" class="space-y-2">
+          <div class="flex-shrink-0">
             <div
-              v-if="matchStats.lineup_2"
-              class="bg-muted/50 rounded-lg p-4 border border-border min-h-[200px] flex flex-col"
+              class="uppercase w-10 h-10 bg-gradient-to-br from-destructive via-destructive/90 to-destructive/70 rounded-xl flex items-center justify-center text-destructive-foreground font-bold text-lg shadow-lg border-2 border-destructive/20"
             >
-              <h5 class="text-sm font-semibold text-foreground mb-3">
-                {{ matchStats.lineup_2.name }} Stats
-              </h5>
-              <div class="overflow-x-auto flex-1">
-                <table class="w-full text-xs min-w-[400px] h-full">
-                  <thead>
-                    <tr class="border-b border-border">
-                      <th class="text-left py-2 px-3 font-medium">Player</th>
-                      <th class="text-center py-2 px-3 font-medium w-12">K</th>
-                      <th class="text-center py-2 px-3 font-medium w-12">D</th>
-                      <th class="text-center py-2 px-3 font-medium w-12">A</th>
-                      <th class="text-center py-2 px-3 font-medium w-16">
-                        DMG
-                      </th>
-                      <th class="text-center py-2 px-3 font-medium w-12">
-                        K/D
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <template
-                      v-for="lineupPlayer in matchStats.lineup_2.lineup_players"
-                      :key="lineupPlayer.steam_id"
-                    >
-                      <tr class="border-b border-border/50 last:border-b-0">
-                        <td class="py-3 px-3">
-                          <PlayerDisplay
-                            :player="lineupPlayer.player"
-                          ></PlayerDisplay>
-                        </td>
-                        <td class="text-center py-3 px-3">
-                          {{
-                            lineupPlayer.player.kills_aggregate?.aggregate
-                              ?.count || 0
-                          }}
-                        </td>
-                        <td class="text-center py-3 px-3">
-                          {{
-                            lineupPlayer.player.deaths_aggregate?.aggregate
-                              ?.count || 0
-                          }}
-                        </td>
-                        <td class="text-center py-3 px-3">
-                          {{
-                            lineupPlayer.player.assists_aggregate?.aggregate
-                              ?.count || 0
-                          }}
-                        </td>
-                        <td class="text-center py-3 px-3">
-                          {{
-                            Math.round(
-                              lineupPlayer.player.damage_dealt_aggregate
-                                ?.aggregate?.sum?.damage || 0,
-                            )
-                          }}
-                        </td>
-                        <td class="text-center py-3 px-3">
-                          {{
-                            getKDRatio(
-                              lineupPlayer.player.kills_aggregate?.aggregate
-                                ?.count || 0,
-                              lineupPlayer.player.deaths_aggregate?.aggregate
-                                ?.count || 0,
-                            )
-                          }}
-                        </td>
-                      </tr>
-                    </template>
-                    <!-- Empty rows to maintain consistent height -->
-                    <template
-                      v-for="i in Math.max(
-                        0,
-                        5 -
-                          (matchStats.lineup_2?.lineup_players?.length ||
-                            match.lineup_2?.lineup_players?.length ||
-                            0),
-                      )"
-                      :key="`empty-${i}`"
-                    >
-                      <tr class="border-b border-border/50 last:border-b-0">
-                        <td class="py-3 px-3">
-                          <PlayerDisplay
-                            :show-flag="false"
-                            :show-role="false"
-                            :show-elo="false"
-                            :linkable="false"
-                            :player="{
-                              name: `Slot ${(matchStats.lineup_2?.lineup_players?.length || match.lineup_2?.lineup_players?.length || 0) + i}`,
-                            }"
-                          />
-                        </td>
-                        <td class="text-center py-3 px-3 text-muted-foreground">
-                          -
-                        </td>
-                        <td class="text-center py-3 px-3 text-muted-foreground">
-                          -
-                        </td>
-                        <td class="text-center py-3 px-3 text-muted-foreground">
-                          -
-                        </td>
-                        <td class="text-center py-3 px-3 text-muted-foreground">
-                          -
-                        </td>
-                        <td class="text-center py-3 px-3 text-muted-foreground">
-                          -
-                        </td>
-                      </tr>
-                    </template>
-                  </tbody>
-                </table>
-              </div>
+              {{ getTeamInitials(match.lineup_2.name) }}
             </div>
           </div>
         </div>
@@ -383,7 +135,7 @@ import PlayerDisplay from "~/components/PlayerDisplay.vue";
 
       <!-- Maps Section: lineup1 picks | deciders | lineup2 picks -->
       <div
-        class="border-t border-border pt-4"
+        class="border-t border-border py-2"
         v-if="match.match_maps.length > 0"
       >
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
@@ -529,6 +281,270 @@ import PlayerDisplay from "~/components/PlayerDisplay.vue";
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Players Section (tables only) now below maps -->
+      <div
+        class="grid grid-cols-1 lg:grid-cols-2 items-stretch overflow-hidden transition-all duration-300 ease-out"
+        :class="
+          showPlayers
+            ? 'gap-6 border-t border-border pt-4 opacity-100 translate-y-0 max-h-[2000px]'
+            : 'gap-0 border-0 pt-0 opacity-0 -translate-y-1 max-h-0'
+        "
+      >
+        <!-- Team 1 players -->
+        <div class="space-y-2">
+          <div
+            v-if="matchStats.lineup_1"
+            class="bg-muted/50 rounded-lg p-4 border border-border min-h-[200px] h-full flex flex-col"
+          >
+            <h5 class="text-sm font-semibold text-foreground mb-3">
+              {{ matchStats.lineup_1.name }} Stats
+            </h5>
+            <div class="overflow-x-auto flex-1">
+              <table class="w-full text-xs min-w-[400px] h-full">
+                <thead>
+                  <tr class="border-b border-border">
+                    <th class="text-left py-2 px-3 font-medium">Player</th>
+                    <th class="text-center py-2 px-3 font-medium w-12">K</th>
+                    <th class="text-center py-2 px-3 font-medium w-12">D</th>
+                    <th class="text-center py-2 px-3 font-medium w-12">A</th>
+                    <th class="text-center py-2 px-3 font-medium w-16">DMG</th>
+                    <th class="text-center py-2 px-3 font-medium w-12">K/D</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template
+                    v-for="lineupPlayer in matchStats.lineup_1.lineup_players"
+                    :key="lineupPlayer.steam_id"
+                  >
+                    <tr class="border-b border-border/50 last:border-b-0">
+                      <td class="py-3 px-3">
+                        <PlayerDisplay
+                          :player="lineupPlayer.player"
+                        ></PlayerDisplay>
+                      </td>
+                      <td class="text-center py-3 px-3">
+                        {{
+                          lineupPlayer.player.kills_aggregate?.aggregate
+                            ?.count || 0
+                        }}
+                      </td>
+                      <td class="text-center py-3 px-3">
+                        {{
+                          lineupPlayer.player.deaths_aggregate?.aggregate
+                            ?.count || 0
+                        }}
+                      </td>
+                      <td class="text-center py-3 px-3">
+                        {{
+                          lineupPlayer.player.assists_aggregate?.aggregate
+                            ?.count || 0
+                        }}
+                      </td>
+                      <td class="text-center py-3 px-3">
+                        {{
+                          Math.round(
+                            lineupPlayer.player.damage_dealt_aggregate
+                              ?.aggregate?.sum?.damage || 0,
+                          )
+                        }}
+                      </td>
+                      <td class="text-center py-3 px-3">
+                        {{
+                          getKDRatio(
+                            lineupPlayer.player.kills_aggregate?.aggregate
+                              ?.count || 0,
+                            lineupPlayer.player.deaths_aggregate?.aggregate
+                              ?.count || 0,
+                          )
+                        }}
+                      </td>
+                    </tr>
+                  </template>
+                  <!-- Empty rows to maintain consistent height -->
+                  <template
+                    v-for="i in Math.max(
+                      0,
+                      5 -
+                        (matchStats.lineup_1?.lineup_players?.length ||
+                          match.lineup_1?.lineup_players?.length ||
+                          0),
+                    )"
+                    :key="`empty-${i}`"
+                  >
+                    <tr class="border-b border-border/50 last:border-b-0">
+                      <td class="py-3 px-3">
+                        <PlayerDisplay
+                          :show-flag="false"
+                          :show-role="false"
+                          :show-elo="false"
+                          :linkable="false"
+                          :player="{
+                            name: `Slot ${(matchStats.lineup_1?.lineup_players?.length || match.lineup_1?.lineup_players?.length || 0) + i}`,
+                          }"
+                        />
+                      </td>
+                      <td class="text-center py-3 px-3 text-muted-foreground">
+                        -
+                      </td>
+                      <td class="text-center py-3 px-3 text-muted-foreground">
+                        -
+                      </td>
+                      <td class="text-center py-3 px-3 text-muted-foreground">
+                        -
+                      </td>
+                      <td class="text-center py-3 px-3 text-muted-foreground">
+                        -
+                      </td>
+                      <td class="text-center py-3 px-3 text-muted-foreground">
+                        -
+                      </td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team 2 players -->
+        <div class="space-y-2">
+          <div
+            v-if="matchStats.lineup_2"
+            class="bg-muted/50 rounded-lg p-4 border border-border min-h-[200px] h-full flex flex-col"
+          >
+            <h5 class="text-sm font-semibold text-foreground mb-3">
+              {{ matchStats.lineup_2.name }} Stats
+            </h5>
+            <div class="overflow-x-auto flex-1">
+              <table class="w-full text-xs min-w-[400px] h-full">
+                <thead>
+                  <tr class="border-b border-border">
+                    <th class="text-left py-2 px-3 font-medium">Player</th>
+                    <th class="text-center py-2 px-3 font-medium w-12">K</th>
+                    <th class="text-center py-2 px-3 font-medium w-12">D</th>
+                    <th class="text-center py-2 px-3 font-medium w-12">A</th>
+                    <th class="text-center py-2 px-3 font-medium w-16">DMG</th>
+                    <th class="text-center py-2 px-3 font-medium w-12">K/D</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template
+                    v-for="lineupPlayer in matchStats.lineup_2.lineup_players"
+                    :key="lineupPlayer.steam_id"
+                  >
+                    <tr class="border-b border-border/50 last:border-b-0">
+                      <td class="py-3 px-3">
+                        <PlayerDisplay
+                          :player="lineupPlayer.player"
+                        ></PlayerDisplay>
+                      </td>
+                      <td class="text-center py-3 px-3">
+                        {{
+                          lineupPlayer.player.kills_aggregate?.aggregate
+                            ?.count || 0
+                        }}
+                      </td>
+                      <td class="text-center py-3 px-3">
+                        {{
+                          lineupPlayer.player.deaths_aggregate?.aggregate
+                            ?.count || 0
+                        }}
+                      </td>
+                      <td class="text-center py-3 px-3">
+                        {{
+                          lineupPlayer.player.assists_aggregate?.aggregate
+                            ?.count || 0
+                        }}
+                      </td>
+                      <td class="text-center py-3 px-3">
+                        {{
+                          Math.round(
+                            lineupPlayer.player.damage_dealt_aggregate
+                              ?.aggregate?.sum?.damage || 0,
+                          )
+                        }}
+                      </td>
+                      <td class="text-center py-3 px-3">
+                        {{
+                          getKDRatio(
+                            lineupPlayer.player.kills_aggregate?.aggregate
+                              ?.count || 0,
+                            lineupPlayer.player.deaths_aggregate?.aggregate
+                              ?.count || 0,
+                          )
+                        }}
+                      </td>
+                    </tr>
+                  </template>
+                  <!-- Empty rows to maintain consistent height -->
+                  <template
+                    v-for="i in Math.max(
+                      0,
+                      5 -
+                        (matchStats.lineup_2?.lineup_players?.length ||
+                          match.lineup_2?.lineup_players?.length ||
+                          0),
+                    )"
+                    :key="`empty-${i}`"
+                  >
+                    <tr class="border-b border-border/50 last:border-b-0">
+                      <td class="py-3 px-3">
+                        <PlayerDisplay
+                          :show-flag="false"
+                          :show-role="false"
+                          :show-elo="false"
+                          :linkable="false"
+                          :player="{
+                            name: `Slot ${(matchStats.lineup_2?.lineup_players?.length || match.lineup_2?.lineup_players?.length || 0) + i}`,
+                          }"
+                        />
+                      </td>
+                      <td class="text-center py-3 px-3 text-muted-foreground">
+                        -
+                      </td>
+                      <td class="text-center py-3 px-3 text-muted-foreground">
+                        -
+                      </td>
+                      <td class="text-center py-3 px-3 text-muted-foreground">
+                        -
+                      </td>
+                      <td class="text-center py-3 px-3 text-muted-foreground">
+                        -
+                      </td>
+                      <td class="text-center py-3 px-3 text-muted-foreground">
+                        -
+                      </td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="flex justify-center transition-all duration-300 ease-out"
+        @click.stop="toggleShowPlayers"
+        :class="{ '-mt-2': !showPlayers, 'mt-2': showPlayers }"
+      >
+        <Separator class="relative">
+          <span
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-1 rounded-full border border-border bg-muted/50 px-2 py-[2px] text-[10px] uppercase tracking-wide text-muted-foreground shadow-sm hover:bg-muted/60 hover:text-foreground transition-colors"
+            role="button"
+            tabindex="0"
+          >
+            <ChevronsDownIcon
+              class="h-3 w-3 transition-transform"
+              :class="{ 'rotate-180': showPlayers }"
+            />
+            <span>{{
+              showPlayers ? $t("match.hide_players") : $t("match.show_players")
+            }}</span>
+          </span>
+        </Separator>
       </div>
     </div>
   </div>
@@ -704,3 +720,7 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+/* no css transitions; using tailwind utility transitions */
+</style>

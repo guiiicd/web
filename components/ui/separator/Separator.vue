@@ -25,7 +25,8 @@ const delegatedProps = computed(() => {
       )
     "
   >
-    <span
+    <slot>
+      <span
       v-if="props.label"
       :class="
         cn(
@@ -34,5 +35,6 @@ const delegatedProps = computed(() => {
         )
       "
     >{{ props.label }}</span>
+    </slot>
   </Separator>
 </template>
