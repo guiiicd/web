@@ -25,6 +25,7 @@ export const useAuthStore = defineStore("auth", () => {
     e_player_roles_enum.streamer,
     e_player_roles_enum.match_organizer,
     e_player_roles_enum.tournament_organizer,
+    e_player_roles_enum.system_administrator,
     e_player_roles_enum.administrator,
   ];
 
@@ -117,6 +118,10 @@ export const useAuthStore = defineStore("auth", () => {
     () => me.value?.role === e_player_roles_enum.match_organizer,
   );
 
+  const isSystemAdmin = computed(
+    () => me.value?.role === e_player_roles_enum.system_administrator,
+  );
+
   const isTournamentOrganizer = computed(
     () => me.value?.role === e_player_roles_enum.tournament_organizer,
   );
@@ -130,6 +135,7 @@ export const useAuthStore = defineStore("auth", () => {
     isMatchOrganizer,
     isTournamentOrganizer,
     isAdmin,
+    isSystemAdmin,
     hasDiscordLinked,
     isRoleAbove,
   };

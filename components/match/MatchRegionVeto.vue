@@ -205,6 +205,7 @@ export default {
         this.match.is_organizer &&
         (useAuthStore().isMatchOrganizer ||
           useAuthStore().isTournamentOrganizer ||
+          useAuthStore().isSystemAdmin ||
           useAuthStore().isAdmin)
       );
     },

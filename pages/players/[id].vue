@@ -50,7 +50,9 @@ import SteamIcon from "~/components/icons/SteamIcon.vue";
             <SanctionPlayer :player="player" />
           </template>
 
-          <template v-if="isAdmin && player.steam_id !== me.steam_id">
+          <template
+            v-if="(isAdmin || isSystemAdmin) && player.steam_id !== me.steam_id"
+          >
             <Popover>
               <PopoverTrigger as-child>
                 <Button variant="outline" class="ml-auto">
@@ -345,6 +347,10 @@ export default {
           value: e_player_roles_enum.tournament_organizer,
           display: "Tournament Organizer",
         },
+        {
+          value: e_player_roles_enum.system_administrator,
+          display: "System Administrator",
+        },
         { value: e_player_roles_enum.administrator, display: "Administrator" },
       ],
     };
@@ -366,7 +372,10 @@ export default {
     canSanction() {
       return (
         this.player.steam_id !== this.me.steam_id &&
-        (this.isAdmin || this.isMatchOrganizer || this.isTournamentOrganizer)
+        (this.isAdmin ||
+          this.isSystemAdmin ||
+          this.isMatchOrganizer ||
+          this.isTournamentOrganizer)
       );
     },
     isMatchOrganizer() {
@@ -377,6 +386,9 @@ export default {
     },
     isAdmin() {
       return useAuthStore().isAdmin;
+    },
+    isSystemAdmin() {
+      return useAuthStore().isSystemAdmin;
     },
     kd() {
       if (this.player?.deaths_aggregate.aggregate.count === 0) {

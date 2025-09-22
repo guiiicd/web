@@ -57,7 +57,10 @@ const teamMenu = ref(false);
       </template>
 
       <template #actions>
-        <DropdownMenu v-model:open="teamMenu" v-if="isOnTeam || isAdmin">
+        <DropdownMenu
+          v-model:open="teamMenu"
+          v-if="isOnTeam || isAdmin || isSystemAdmin"
+        >
           <DropdownMenuTrigger as-child>
             <Button variant="outline" size="icon">
               <MoreHorizontal />
@@ -65,7 +68,13 @@ const teamMenu = ref(false);
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" class="w-[200px]">
             <DropdownMenuGroup>
-              <template v-if="isAdmin || team.owner.steam_id === me.steam_id">
+              <template
+                v-if="
+                  isAdmin ||
+                  isSystemAdmin ||
+                  team.owner.steam_id === me.steam_id
+                "
+              >
                 <DropdownMenuItem @click="editTeamSheet = true">
                   {{ $t("common.actions.edit") }}
                 </DropdownMenuItem>
@@ -226,6 +235,9 @@ export default {
     },
     isAdmin() {
       return useAuthStore().isAdmin;
+    },
+    isSystemAdmin() {
+      return useAuthStore().isSystemAdmin;
     },
   },
   methods: {

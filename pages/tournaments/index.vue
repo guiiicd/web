@@ -90,7 +90,6 @@ import FiveStackToolTip from "~/components/FiveStackToolTip.vue";
 import { mapFields } from "~/graphql/mapGraphql";
 import { generateQuery } from "~/graphql/graphqlGen";
 import { $, order_by, e_tournament_status_enum } from "~/generated/zeus";
-import { e_player_roles_enum } from "~/generated/zeus";
 
 export default {
   data() {

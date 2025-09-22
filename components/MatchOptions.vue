@@ -1086,9 +1086,15 @@ export default {
         return false;
       }
 
-      const { isAdmin, isMatchOrganizer, isTournamentOrganizer } =
-        useAuthStore();
-      return isAdmin || isMatchOrganizer || isTournamentOrganizer;
+      const {
+        isAdmin,
+        isSystemAdmin,
+        isMatchOrganizer,
+        isTournamentOrganizer,
+      } = useAuthStore();
+      return (
+        isAdmin || isSystemAdmin || isMatchOrganizer || isTournamentOrganizer
+      );
     },
   },
   methods: {

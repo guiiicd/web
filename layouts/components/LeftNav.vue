@@ -154,10 +154,16 @@ import Logout from "./Logout.vue";
 
       <Separator
         class="mx-4 w-auto"
-        v-if="isAdmin || isMatchOrganizer || isTournamentOrganizer"
+        v-if="
+          isAdmin || isSystemAdmin || isMatchOrganizer || isTournamentOrganizer
+        "
       />
 
-      <SidebarGroup v-if="isAdmin || isMatchOrganizer || isTournamentOrganizer">
+      <SidebarGroup
+        v-if="
+          isAdmin || isSystemAdmin || isMatchOrganizer || isTournamentOrganizer
+        "
+      >
         <SidebarGroupLabel>{{
           $t("layouts.app_nav.administration.title")
         }}</SidebarGroupLabel>
@@ -184,7 +190,7 @@ import Logout from "./Logout.vue";
               </NuxtLink>
             </SidebarMenuButton>
           </SidebarMenuItem>
-          <template v-if="isAdmin">
+          <template v-if="isAdmin || isSystemAdmin">
             <SidebarMenuItem
               :tooltip="$t('layouts.app_nav.tooltips.map_pools')"
             >
@@ -412,7 +418,12 @@ import Logout from "./Logout.vue";
     </SidebarContent>
     <SidebarFooter>
       <SidebarMenu>
-        <SidebarMenuItem v-if="me?.role === e_player_roles_enum.administrator">
+        <SidebarMenuItem
+          v-if="
+            me?.role === e_player_roles_enum.administrator ||
+            me?.role === e_player_roles_enum.system_administrator
+          "
+        >
           <SidebarMenuButton
             as-child
             :tooltip="$t('layouts.app_nav.tooltips.report_issue')"
@@ -589,6 +600,9 @@ export default {
     },
     isAdmin() {
       return useAuthStore().isAdmin;
+    },
+    isSystemAdmin() {
+      return useAuthStore().isSystemAdmin;
     },
     // TODO - move to global
     inviteLink() {

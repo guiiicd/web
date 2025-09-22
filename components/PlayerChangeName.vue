@@ -14,14 +14,14 @@
       <AlertDialogHeader>
         <AlertDialogTitle>
           {{
-            isAdmin
+            isAdmin || isSystemAdmin
               ? $t("player.change_name.title")
               : $t("player.change_name.request_title")
           }}
         </AlertDialogTitle>
         <AlertDialogDescription>
           {{
-            isAdmin
+            isAdmin || isSystemAdmin
               ? $t("player.change_name.description")
               : $t("player.change_name.request_description")
           }}
@@ -42,7 +42,7 @@
           {{ $t("common.cancel") }}
         </AlertDialogCancel>
         <AlertDialogAction
-          @click="isAdmin ? changeName() : requestNameChange()"
+          @click="isAdmin || isSystemAdmin ? changeName() : requestNameChange()"
         >
           {{ $t("common.confirm") }}
         </AlertDialogAction>
@@ -143,11 +143,18 @@ export default {
     isAdmin() {
       return useAuthStore().isAdmin;
     },
+    isSystemAdmin() {
+      return useAuthStore().isSystemAdmin;
+    },
     canChangeName() {
       if (!this.me) {
         return false;
       }
-      return this.player.steam_id === this.me.steam_id || this.isAdmin;
+      return (
+        this.player.steam_id === this.me.steam_id ||
+        this.isAdmin ||
+        this.isSystemAdmin
+      );
     },
   },
 };

@@ -26,7 +26,7 @@ const { isMobile } = useSidebar();
       <div class="flex gap-4">
         <MatchLobbies></MatchLobbies>
 
-        <SystemUpdate v-if="isAdmin"></SystemUpdate>
+        <SystemUpdate v-if="isAdmin || isSystemAdmin"></SystemUpdate>
 
         <SystemStatus></SystemStatus>
 
@@ -45,8 +45,6 @@ const { isMobile } = useSidebar();
 </template>
 
 <script lang="ts">
-import { e_player_roles_enum } from "~/generated/zeus";
-
 export default {
   computed: {
     me() {
@@ -54,6 +52,9 @@ export default {
     },
     isAdmin() {
       return useAuthStore().isAdmin;
+    },
+    isSystemAdmin() {
+      return useAuthStore().isSystemAdmin;
     },
     lobbies() {
       return useMatchmakingStore().lobbies;

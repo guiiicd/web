@@ -432,10 +432,16 @@ export default {
         return false;
       }
 
-      const { isAdmin, isMatchOrganizer, isTournamentOrganizer } =
-        useAuthStore();
+      const {
+        isAdmin,
+        isSystemAdmin,
+        isMatchOrganizer,
+        isTournamentOrganizer,
+      } = useAuthStore();
 
-      return isAdmin || isMatchOrganizer || isTournamentOrganizer;
+      return (
+        isAdmin || isSystemAdmin || isMatchOrganizer || isTournamentOrganizer
+      );
     },
     canRandomize() {
       if (
