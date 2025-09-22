@@ -66,13 +66,13 @@ import PlayerDisplay from "~/components/PlayerDisplay.vue";
       </div>
 
       <!-- Teams Section -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-4">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-4 items-center">
         <!-- Team 1 -->
         <div class="space-y-3">
           <div class="flex items-center space-x-3">
             <div class="flex-shrink-0">
               <div
-                class="w-14 h-14 bg-gradient-to-br from-primary via-primary/90 to-primary/70 rounded-xl flex items-center justify-center text-primary-foreground font-bold text-lg shadow-lg border-2 border-primary/20"
+                class="uppercase w-10 h-10 bg-gradient-to-br from-primary via-primary/90 to-primary/70 rounded-xl flex items-center justify-center text-primary-foreground font-bold text-lg shadow-lg border-2 border-primary/20"
               >
                 {{ getTeamInitials(match.lineup_1.name) }}
               </div>
@@ -92,16 +92,6 @@ import PlayerDisplay from "~/components/PlayerDisplay.vue";
                   }}
                   players
                 </span>
-              </div>
-            </div>
-            <div class="text-right">
-              <div
-                :class="[
-                  'text-2xl font-bold',
-                  getScoreColorClasses(match.lineup_1.id),
-                ]"
-              >
-                {{ getTeamScore(match, match.lineup_1.id) }}
               </div>
             </div>
           </div>
@@ -227,18 +217,24 @@ import PlayerDisplay from "~/components/PlayerDisplay.vue";
           </div>
         </div>
 
+        <!-- Combined Score (inline between teams) -->
+        <div class="hidden lg:flex items-center justify-center">
+          <div class="text-2xl font-bold">
+            <span :class="getScoreColorClasses(match.lineup_1.id)">{{
+              getTeamScore(match, match.lineup_1.id)
+            }}</span>
+            <span class="mx-2 text-muted-foreground">-</span>
+            <span :class="getScoreColorClasses(match.lineup_2.id)">{{
+              getTeamScore(match, match.lineup_2.id)
+            }}</span>
+          </div>
+        </div>
+
         <!-- Team 2 -->
         <div class="space-y-3">
           <div class="flex items-center space-x-3">
-            <div class="flex-shrink-0">
-              <div
-                class="w-14 h-14 bg-gradient-to-br from-destructive via-destructive/90 to-destructive/70 rounded-xl flex items-center justify-center text-destructive-foreground font-bold text-lg shadow-lg border-2 border-destructive/20"
-              >
-                {{ getTeamInitials(match.lineup_2.name) }}
-              </div>
-            </div>
             <div class="flex-1 min-w-0">
-              <h3 class="font-semibold text-foreground truncate">
+              <h3 class="font-semibold text-foreground truncate text-right">
                 {{ match.lineup_2.name }}
               </h3>
               <div
@@ -254,14 +250,11 @@ import PlayerDisplay from "~/components/PlayerDisplay.vue";
                 </span>
               </div>
             </div>
-            <div class="text-right">
+            <div class="flex-shrink-0">
               <div
-                :class="[
-                  'text-2xl font-bold',
-                  getScoreColorClasses(match.lineup_2.id),
-                ]"
+                class="uppercase w-10 h-10 bg-gradient-to-br from-destructive via-destructive/90 to-destructive/70 rounded-xl flex items-center justify-center text-destructive-foreground font-bold text-lg shadow-lg border-2 border-destructive/20"
               >
-                {{ getTeamScore(match, match.lineup_2.id) }}
+                {{ getTeamInitials(match.lineup_2.name) }}
               </div>
             </div>
           </div>
@@ -388,18 +381,25 @@ import PlayerDisplay from "~/components/PlayerDisplay.vue";
         </div>
       </div>
 
-      <!-- Maps Section -->
+      <!-- Maps Section: lineup1 picks | deciders | lineup2 picks -->
       <div
         class="border-t border-border pt-4"
         v-if="match.match_maps.length > 0"
       >
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-2">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+          <!-- Lineup 1 Picks -->
+          <div class="flex flex-col items-start justify-start gap-2">
+            <div
+              class="hidden lg:block text-xs uppercase tracking-wide text-muted-foreground"
+            >
+              Picks
+            </div>
             <div class="flex flex-wrap gap-2">
               <div
-                v-for="(match_map, index) of match.match_maps"
-                :key="index"
+                v-for="(match_map, index) in getLineupPicks(match.lineup_1.id)"
+                :key="`l1-${index}`"
                 class="flex items-center space-x-2 bg-muted/50 rounded-lg px-3 py-2 border border-border"
+                :class="{ 'opacity-50 grayscale': hasMapStarted(match_map) }"
               >
                 <img
                   :src="match_map.map.patch"
@@ -409,7 +409,7 @@ import PlayerDisplay from "~/components/PlayerDisplay.vue";
                     ($event.target as HTMLImageElement).style.display = 'none'
                   "
                 />
-                <span class="text-sm font-medium">{{
+                <span class="text-sm font-medium first-letter:uppercase">{{
                   cleanMapName(match_map.map.name)
                 }}</span>
                 <div class="flex items-center space-x-1 text-xs">
@@ -427,6 +427,102 @@ import PlayerDisplay from "~/components/PlayerDisplay.vue";
                       getMapScoreColorClasses(match_map, match.lineup_2.id),
                     ]"
                     >{{ match_map.lineup_2_score }}</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Deciders (middle) -->
+          <div
+            class="flex items-center justify-center lg:border-x lg:border-border/60 lg:px-4"
+          >
+            <div class="flex flex-col items-center gap-2 w-full">
+              <div
+                class="text-xs uppercase tracking-wide text-muted-foreground"
+              >
+                Decider
+              </div>
+              <div class="flex flex-wrap gap-2 justify-center">
+                <div
+                  v-for="(match_map, index) in getDeciderMaps()"
+                  :key="`dec-${index}`"
+                  class="flex items-center space-x-2 bg-muted/50 rounded-lg px-3 py-2 border border-border"
+                  :class="{ 'opacity-50 grayscale': hasMapStarted(match_map) }"
+                >
+                  <img
+                    :src="match_map.map.patch"
+                    :alt="match_map.map.name"
+                    class="w-6 h-6"
+                    @error="
+                      ($event.target as HTMLImageElement).style.display = 'none'
+                    "
+                  />
+                  <span class="text-sm font-medium first-letter:uppercase">{{
+                    cleanMapName(match_map.map.name)
+                  }}</span>
+                  <div class="flex items-center space-x-1 text-xs">
+                    <span
+                      :class="[
+                        'font-semibold',
+                        getMapScoreColorClasses(match_map, match.lineup_1.id),
+                      ]"
+                      >{{ match_map.lineup_1_score }}</span
+                    >
+                    <span class="text-muted-foreground">-</span>
+                    <span
+                      :class="[
+                        'font-semibold',
+                        getMapScoreColorClasses(match_map, match.lineup_2.id),
+                      ]"
+                      >{{ match_map.lineup_2_score }}</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lineup 2 Picks -->
+          <div class="flex flex-col items-end justify-start gap-2">
+            <div
+              class="hidden lg:block text-xs uppercase tracking-wide text-muted-foreground"
+            >
+              Picks
+            </div>
+            <div class="flex flex-wrap gap-2 justify-end">
+              <div
+                v-for="(match_map, index) in getLineupPicks(match.lineup_2.id)"
+                :key="`l2-${index}`"
+                class="flex items-center space-x-2 bg-muted/50 rounded-lg px-3 py-2 border border-border"
+                :class="{ 'opacity-50 grayscale': hasMapStarted(match_map) }"
+              >
+                <img
+                  :src="match_map.map.patch"
+                  :alt="match_map.map.name"
+                  class="w-6 h-6"
+                  @error="
+                    ($event.target as HTMLImageElement).style.display = 'none'
+                  "
+                />
+                <span class="text-sm font-medium first-letter:uppercase">{{
+                  cleanMapName(match_map.map.name)
+                }}</span>
+                <div class="flex items-center space-x-1 text-xs">
+                  <span
+                    :class="[
+                      'font-semibold',
+                      getMapScoreColorClasses(match_map, match.lineup_2.id),
+                    ]"
+                    >{{ match_map.lineup_2_score }}</span
+                  >
+                  <span class="text-muted-foreground">-</span>
+                  <span
+                    :class="[
+                      'font-semibold',
+                      getMapScoreColorClasses(match_map, match.lineup_1.id),
+                    ]"
+                    >{{ match_map.lineup_1_score }}</span
                   >
                 </div>
               </div>
@@ -456,6 +552,41 @@ export default {
     };
   },
   methods: {
+    getLineupPicks(lineupId: string) {
+      if (
+        !this.match?.match_maps?.length ||
+        this.match.match_maps.length === 1
+      ) {
+        return [];
+      }
+
+      return this.match.match_maps.filter((match) => {
+        const pick = match.vetos?.find?.((veto) => {
+          return veto.type === "Pick";
+        });
+        return pick && pick.match_lineup_id === lineupId;
+      });
+    },
+    getDeciderMaps() {
+      if (!this.match?.match_maps?.length) {
+        return [];
+      }
+
+      if (this.match.match_maps.length === 1) {
+        return this.match.match_maps;
+      }
+
+      return this.match.match_maps.filter((match) => {
+        // Consider deciders as maps without a 'Pick' veto
+        const hasPick = match.vetos?.some?.((veto) => {
+          return veto.type === "Pick";
+        });
+        return !hasPick;
+      });
+    },
+    hasMapStarted(matchMap: any): boolean {
+      return matchMap.lineup_1_score === 0 && matchMap.lineup_2_score === 0;
+    },
     async getMatchStats() {
       const {
         data: { matches_by_pk },
@@ -497,12 +628,11 @@ export default {
         .split(" ")
         .map((word: string) => word.charAt(0))
         .join("")
-        .toUpperCase()
         .slice(0, 2);
     },
     getTeamScore(match: any, lineupId: string): string | number {
       if (match.status !== e_match_status_enum.Finished) {
-        return "-";
+        return "";
       }
 
       const totalScore = match.match_maps.reduce((total: number, map: any) => {
@@ -524,12 +654,11 @@ export default {
       const durationMs = end.getTime() - start.getTime();
 
       const minutes = Math.floor(durationMs / 60000);
-      const seconds = Math.floor((durationMs % 60000) / 1000);
 
       if (minutes > 0) {
-        return `${minutes}m ${seconds}s`;
+        return `${minutes}m`;
       }
-      return `${seconds}s`;
+      return "0m";
     },
     getKDRatio(kills: number, deaths: number): string {
       if (deaths === 0) {

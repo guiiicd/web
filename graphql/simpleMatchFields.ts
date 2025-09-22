@@ -14,6 +14,9 @@ export const simpleMatchFields = Selector("matches")({
   winning_lineup_id: true,
   lineup_1_id: true,
   lineup_2_id: true,
+  created_at: true,
+  started_at: true,
+  scheduled_at: true,
   options: {
     mr: true,
     best_of: true,
@@ -39,6 +42,11 @@ export const simpleMatchFields = Selector("matches")({
       lineup_1_score: true,
       lineup_2_score: true,
       winning_lineup_id: true,
+      vetos: {
+        side: true,
+        type: true,
+        match_lineup_id: true,
+      },
     },
   ],
   lineup_1: {
@@ -67,9 +75,7 @@ export const simpleMatchFields = Selector("matches")({
       },
     ],
   },
-  created_at: true,
-  started_at: true,
-  scheduled_at: true,
+
   max_players_per_lineup: true,
   min_players_per_lineup: true,
   lineup_counts: [{}, true],
