@@ -29,6 +29,7 @@ ChartJS.register(
 </template>
 
 <script lang="ts">
+import { CPU_USAGE_CHART_COLORS } from "@/utilities/chartColors";
 export default {
   components: {
     Line,
@@ -108,7 +109,7 @@ export default {
   },
   computed: {
     chartData() {
-      const color = "#ef4444";
+      const color = CPU_USAGE_CHART_COLORS.at(0);
 
       const datasets = [
         {

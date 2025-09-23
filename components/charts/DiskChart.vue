@@ -29,6 +29,7 @@ ChartJS.register(
 </template>
 
 <script lang="ts">
+import { DISK_USAGE_CHART_COLORS } from "@/utilities/chartColors";
 export default {
   components: {
     Line,
@@ -80,11 +81,13 @@ export default {
               boxWidth: 10,
               boxHeight: 6,
               padding: 8,
-              // Hide any dataset whose label ends with " Total"
+              // Show only OS and Demos (hide Total and other mounts)
               filter: (item: any, data: any) => {
                 const ds = data?.datasets?.[item.datasetIndex];
                 const label = String(ds?.label || "");
-                return !/ Total$/.test(label);
+                if (/ Total$/.test(label)) return false;
+                const base = label.replace(/\s+(Used|Available)$/i, "");
+                return base === "OS" || base === "Demos";
               },
             },
           },
@@ -96,15 +99,33 @@ export default {
             },
             callbacks: {
               label: (context: any) => {
-                const val = Number(context.parsed.y || 0).toLocaleString();
+                const usedGiB = Number(context.parsed.y || 0);
+                const val = usedGiB.toLocaleString();
 
                 const raw = String(context.dataset.label || "");
-                const isUsed = /\bUsed\b$/i.test(raw);
-                const isAvail = /\bAvailable\b$/i.test(raw);
-                let name = raw.replace(/\s+(Used|Available)$/i, "");
-                const suffix = isUsed ? "Used" : isAvail ? "Available" : "";
-                const label = suffix ? `${name} (${suffix})` : raw;
-                return `${label}: ${val} GiB`;
+                const base = raw.replace(/\s+(Used|Available)$/i, "");
+
+                // Append percent of Total
+                let percent = "";
+                try {
+                  const dataIndex = context.dataIndex;
+                  const expectedTotalLabel = `${base} Total`;
+                  const datasets = context?.chart?.data?.datasets || [];
+                  const totalDs: any = datasets.find(
+                    (ds: any) => String(ds?.label || "") === expectedTotalLabel,
+                  );
+                  const totalGiBVal = Number(
+                    Array.isArray(totalDs?.data)
+                      ? totalDs.data[dataIndex]
+                      : NaN,
+                  );
+                  if (Number.isFinite(totalGiBVal) && totalGiBVal > 0) {
+                    const p = (usedGiB / totalGiBVal) * 100;
+                    percent = ` (${p.toFixed(1)}%)`;
+                  }
+                } catch {}
+
+                return `${base}: ${val} GiB${percent}`;
               },
             },
           },
@@ -169,44 +190,36 @@ export default {
       });
       const mounts = Array.from(mountSet).sort();
 
-      const colorPalette = [
-        "#3b82f6", // blue-500
-        "#10b981", // emerald-500
-        "#f59e0b", // amber-500
-        "#ef4444", // red-500
-        "#8b5cf6", // violet-500
-        "#06b6d4", // cyan-500
-        "#22c55e", // green-500
-        "#eab308", // yellow-500
-        "#f97316", // orange-500
-        "#a855f7", // purple-500
-      ];
       const colorForIndex = (i: number) =>
-        colorPalette[i % colorPalette.length];
+        DISK_USAGE_CHART_COLORS[i % DISK_USAGE_CHART_COLORS.length];
 
       const toGb = (bytes: number) => Number((bytes / 1_048_576).toFixed(2));
 
       const datasets = mounts.flatMap((mount, idx) => {
         const color = colorForIndex(idx);
-        // Compute constant Total from first sample for this mount
-        const first = metricsArr[0];
-        const firstDisks = Array.isArray(first?.disks) ? first.disks : [];
-        const firstForMount = firstDisks.filter(
-          (d: any) => (d?.mountpoint || "unknown") === mount,
-        );
-        const firstUsed = firstForMount.reduce(
-          (sum: number, d: any) => sum + Number(d?.used || 0),
+        // Compute constant Total as the MAX observed (used + available) across samples for this mount
+        const maxTotalBytesForMount = metricsArr.reduce(
+          (max: number, point: any) => {
+            const disks = Array.isArray(point?.disks) ? point.disks : [];
+            const used = disks
+              .filter((d: any) => (d?.mountpoint || "unknown") === mount)
+              .reduce((sum: number, d: any) => sum + Number(d?.used || 0), 0);
+            const avail = disks
+              .filter((d: any) => (d?.mountpoint || "unknown") === mount)
+              .reduce(
+                (sum: number, d: any) => sum + Number(d?.available || 0),
+                0,
+              );
+            const total = used + avail;
+            return total > max ? total : max;
+          },
           0,
         );
-        const firstAvail = firstForMount.reduce(
-          (sum: number, d: any) => sum + Number(d?.available || 0),
-          0,
-        );
-        const totalConstGb = toGb(firstUsed + firstAvail);
-        const labelBase = this.formatMountName(mount);
+        const totalConstGb = toGb(maxTotalBytesForMount);
+        const label = this.formatMountName(mount);
         const used = {
-          label: `${labelBase} Used`,
-          fill: false,
+          label,
+          fill: true,
           borderColor: this.hex2rgba(color, 1),
           backgroundColor: this.hex2rgba(color, 0.15),
           pointRadius: 0,
@@ -220,38 +233,19 @@ export default {
           }),
           spanGaps: true,
         } as any;
-        const available = {
-          label: `${labelBase} Available`,
-          fill: false,
-          borderColor: this.hex2rgba(color, 1),
-          backgroundColor: this.hex2rgba(color, 0.15),
-          borderDash: [6, 4],
-          pointRadius: 0,
-          tension: 0.3,
-          data: metricsArr.map((point: any) => {
-            const disks = Array.isArray(point.disks) ? point.disks : [];
-            const totalAvailBytes = disks
-              .filter((d: any) => (d?.mountpoint || "unknown") === mount)
-              .reduce(
-                (sum: number, d: any) => sum + Number(d?.available || 0),
-                0,
-              );
-            return toGb(totalAvailBytes);
-          }),
-          spanGaps: true,
-        } as any;
         const total = {
-          label: `${labelBase} Total`,
+          label: `${label} Total`,
           fill: false,
-          borderColor: this.hex2rgba(color, 0.5),
+          borderColor: this.hex2rgba(color, 0.75),
           backgroundColor: this.hex2rgba("#9ca3af", 0.2),
-          borderDash: [2, 2],
+          borderDash: idx % 2 === 0 ? [2, 2] : [6, 3],
+          borderWidth: 2,
           pointRadius: 0,
           tension: 0.3,
           data: metricsArr.map(() => totalConstGb),
           spanGaps: true,
         } as any;
-        return [used, available, total];
+        return [used, total];
       });
 
       return {

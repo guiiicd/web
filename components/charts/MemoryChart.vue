@@ -29,6 +29,7 @@ ChartJS.register(
 </template>
 
 <script lang="ts">
+import { MEMORY_USAGE_CHART_COLORS } from "@/utilities/chartColors";
 export default {
   components: {
     Line,
@@ -108,7 +109,7 @@ export default {
   },
   computed: {
     chartData() {
-      const color = "#3b82f6";
+      const color = MEMORY_USAGE_CHART_COLORS.at(0);
 
       const datasets = [
         {

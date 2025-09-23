@@ -29,6 +29,7 @@ ChartJS.register(
 </template>
 
 <script lang="ts">
+import { NETWORK_USAGE_CHART_COLORS } from "@/utilities/chartColors";
 export default {
   components: {
     Line,
@@ -157,22 +158,14 @@ export default {
           nicNameSet.add(name);
         });
       });
-      const nicNames = Array.from(nicNameSet).sort();
+      const nicNames = Array.from(nicNameSet).sort((a, b) => {
+        if (a === "tailscale0" && b !== "tailscale0") return -1;
+        if (b === "tailscale0" && a !== "tailscale0") return 1;
+        return a.localeCompare(b);
+      });
 
-      const colorPalette = [
-        "#3b82f6", // blue-500
-        "#10b981", // emerald-500
-        "#f59e0b", // amber-500
-        "#ef4444", // red-500
-        "#8b5cf6", // violet-500
-        "#06b6d4", // cyan-500
-        "#22c55e", // green-500
-        "#eab308", // yellow-500
-        "#f97316", // orange-500
-        "#a855f7", // purple-500
-      ];
       const colorForIndex = (i: number) =>
-        colorPalette[i % colorPalette.length];
+        NETWORK_USAGE_CHART_COLORS[i % NETWORK_USAGE_CHART_COLORS.length];
 
       const datasets = nicNames.flatMap((name, idx) => {
         const color = colorForIndex(idx);
