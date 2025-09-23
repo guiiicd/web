@@ -11,8 +11,15 @@ import Separator from "@/components/ui/separator/Separator.vue";
   <div>
     <div v-for="node in getNodeStats" :key="node.node" class="mb-8">
       <div class="flex items-center gap-2 mb-4">
-        <h3 class="text-lg font-semibold">
-          {{ $t("pages.system_metrics.node") }}: {{ node.node }}
+        <h3 class="text-lg font-semibold flex items-center gap-2">
+          {{ $t("pages.system_metrics.node") }}:
+          <template v-if="getNodeLabel(node.node)">
+            <span>{{ getNodeLabel(node.node) }}</span>
+            <span class="text-gray-500">({{ node.node }})</span>
+          </template>
+          <template v-else>
+            <span>{{ node.node }}</span>
+          </template>
         </h3>
         <div class="h-px flex-1 bg-gray-200"></div>
       </div>
@@ -89,8 +96,31 @@ import Separator from "@/components/ui/separator/Separator.vue";
 </template>
 
 <script lang="ts">
+import { typedGql } from "~/generated/zeus/typedDocumentNode";
+
 export default {
+  data() {
+    return {
+      gameServerNodes: [],
+    };
+  },
   apollo: {
+    $subscribe: {
+      game_server_nodes: {
+        query: typedGql("subscription")({
+          game_server_nodes: [
+            {},
+            {
+              id: true,
+              label: true,
+            },
+          ],
+        }),
+        result: function ({ data }) {
+          this.gameServerNodes = data.game_server_nodes;
+        },
+      },
+    },
     getNodeStats: {
       query: generateQuery({
         getNodeStats: [
@@ -172,6 +202,13 @@ export default {
         ],
       }),
       pollInterval: 10000,
+    },
+  },
+  methods: {
+    getNodeLabel(nodeId: string) {
+      return this.gameServerNodes.find((node) => {
+        return node.id === nodeId;
+      })?.label;
     },
   },
 };
