@@ -48,8 +48,9 @@ export default {
     metricsArr.forEach((metric: any) => {
       const nics = Array.isArray(metric.nics) ? metric.nics : [];
       nics.forEach((nic: any) => {
-        const rxMbps = (nic.rx || 0) / 1_000_000;
-        const txMbps = (nic.tx || 0) / 1_000_000;
+        // Convert bytes to megabits per second for scale parity with datasets
+        const rxMbps = ((nic.rx || 0) * 8) / 1_000_000;
+        const txMbps = ((nic.tx || 0) * 8) / 1_000_000;
         if (rxMbps > maxMbps) {
           maxMbps = rxMbps;
         }
@@ -77,7 +78,10 @@ export default {
           tooltip: {
             callbacks: {
               label: (context: any) => {
-                const val = Number(context.parsed.y || 0).toLocaleString();
+                const val = Number(context.parsed.y || 0).toLocaleString(
+                  undefined,
+                  { maximumFractionDigits: 2 },
+                );
 
                 const raw = String(context.dataset.label || "");
 
@@ -104,7 +108,9 @@ export default {
             beginAtZero: true,
             ticks: {
               callback: (value: any) => {
-                return `${Number(value).toLocaleString()} Mbps`;
+                return `${Number(value).toLocaleString(undefined, {
+                  maximumFractionDigits: 2,
+                })} Mbps`;
               },
             },
             max: maxThroughput,
