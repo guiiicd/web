@@ -2,6 +2,7 @@
 import { generateQuery } from "~/graphql/graphqlGen";
 import CpuChart from "~/components/charts/CpuChart.vue";
 import MemoryChart from "~/components/charts/MemoryChart.vue";
+import NetworkChart from "~/components/charts/NetworkChart.vue";
 import Separator from "@/components/ui/separator/Separator.vue";
 </script>
 
@@ -14,7 +15,7 @@ import Separator from "@/components/ui/separator/Separator.vue";
         </h3>
         <div class="h-px flex-1 bg-gray-200"></div>
       </div>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card class="p-4 rounded-lg border border-gray-200">
           <h4 class="text-sm font-medium mb-2">
             {{ $t("pages.system_metrics.cpu_usage") }}
@@ -29,6 +30,14 @@ import Separator from "@/components/ui/separator/Separator.vue";
           </h4>
           <div class="h-[350px]">
             <MemoryChart :metrics="node.memory" />
+          </div>
+        </Card>
+        <Card class="p-4 rounded-lg border border-gray-200">
+          <h4 class="text-sm font-medium mb-2">
+            {{ $t("pages.system_metrics.network") }}
+          </h4>
+          <div class="h-[350px]">
+            <NetworkChart :metrics="node.network" />
           </div>
         </Card>
       </div>
@@ -96,6 +105,30 @@ export default {
                 time: true,
                 total: true,
                 used: true,
+              },
+            ],
+            disks: [
+              {
+                time: true,
+                disks: {
+                  filesystem: true,
+                  size: true,
+                  used: true,
+                  available: true,
+                  usedPercent: true,
+                  mountpoint: true,
+                },
+              },
+            ],
+            network: [
+              {},
+              {
+                time: true,
+                nics: {
+                  name: true,
+                  rx: true,
+                  tx: true,
+                },
               },
             ],
           },

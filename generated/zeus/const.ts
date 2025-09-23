@@ -13959,6 +13959,18 @@ export const ReturnTypes: Record<string,any> = {
 		used:"bigint",
 		window:"Float"
 	},
+	DiskStat:{
+		available:"String",
+		filesystem:"String",
+		mountpoint:"String",
+		size:"String",
+		used:"String",
+		usedPercent:"String"
+	},
+	DiskStats:{
+		disks:"DiskStat",
+		time:"timestamp"
+	},
 	GetTestUploadResponse:{
 		error:"String",
 		link:"String"
@@ -13979,9 +13991,20 @@ export const ReturnTypes: Record<string,any> = {
 		total:"bigint",
 		used:"bigint"
 	},
+	NetworkStats:{
+		nics:"NicStat",
+		time:"timestamp"
+	},
+	NicStat:{
+		name:"String",
+		rx:"bigint",
+		tx:"bigint"
+	},
 	NodeStats:{
 		cpu:"CpuStat",
+		disks:"DiskStats",
 		memory:"MemoryStat",
+		network:"NetworkStats",
 		node:"String"
 	},
 	PodStats:{
