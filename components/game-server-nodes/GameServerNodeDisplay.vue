@@ -70,6 +70,36 @@ import { e_game_server_node_statuses_enum } from "~/generated/zeus";
       >
         {{ $t("pages.game_server_nodes.status.not_accepting") }}
       </template>
+
+      <div
+        class="flex items-center gap-4 text-xs"
+        v-if="gameServerNode.status !== e_game_server_node_statuses_enum.Setup"
+      >
+        <div class="flex items-center gap-1">
+          <div class="font-medium">
+            {{ $t("game_server.cpu_cores_per_socket") }}:
+          </div>
+          <div class="text-muted-foreground">
+            {{ gameServerNode.cpu_cores_per_socket || "-" }}
+          </div>
+        </div>
+        <span class="text-muted-foreground">|</span>
+        <div class="flex items-center gap-1">
+          <div class="font-medium">
+            {{ $t("game_server.cpu_threads_per_core") }}:
+          </div>
+          <div class="text-muted-foreground">
+            {{ gameServerNode.cpu_threads_per_core || "-" }}
+          </div>
+        </div>
+        <span class="text-muted-foreground">|</span>
+        <div class="flex items-center gap-1">
+          <div class="font-medium">{{ $t("game_server.gpu") }}:</div>
+          <div class="text-muted-foreground">
+            {{ gameServerNode.gpu ? "Yes" : "No" }}
+          </div>
+        </div>
+      </div>
     </FiveStackToolTip>
 
     <span class="truncate">

@@ -31,7 +31,6 @@ import {
 import UpdateGameServerLabel from "~/components/game-server-nodes/UpdateGameServerLabel.vue";
 import FiveStackToolTip from "../FiveStackToolTip.vue";
 import NodeMetrics from "@/components/system-metrics/NodeMetrics.vue";
-import { Alert } from "@/components/ui/alert";
 </script>
 
 <template>
@@ -248,30 +247,41 @@ import { Alert } from "@/components/ui/alert";
               })
             }}
           </div>
-          <div>
-            <span class="font-medium">
-              {{ $t("game_server.cpu_cores_per_socket") }}:
-            </span>
-            <span class="text-muted-foreground">
-              {{ gameServerNode.cpu_cores_per_socket }}
-            </span>
-            <span class="mx-1">|</span>
-            <span class="font-medium">
-              {{ $t("game_server.cpu_threads_per_core") }}:
-            </span>
-            <span class="text-muted-foreground">
-              {{ gameServerNode.cpu_threads_per_core }}
-            </span>
 
+          <div>
+            <div
+              class="flex items-center gap-4 text-xs"
+              v-if="
+                gameServerNode.status !== e_game_server_node_statuses_enum.Setup
+              "
+            >
+              <div class="flex items-center gap-1">
+                <div class="font-medium">
+                  {{ $t("game_server.cpu_cores_per_socket") }}:
+                </div>
+                <div class="text-muted-foreground">
+                  {{ gameServerNode.cpu_cores_per_socket || "-" }}
+                </div>
+              </div>
+              <span class="text-muted-foreground">|</span>
+              <div class="flex items-center gap-1">
+                <div class="font-medium">
+                  {{ $t("game_server.cpu_threads_per_core") }}:
+                </div>
+                <div class="text-muted-foreground">
+                  {{ gameServerNode.cpu_threads_per_core || "-" }}
+                </div>
+              </div>
+            </div>
             <div class="p-2 flex items-center gap-2 text-xs mt-2">
-              <span class="flex items-center justify-center h-5 w-5">
+              <div class="flex items-center justify-center h-5 w-5">
                 <AlertCircle class="h-3 w-3" />
-              </span>
-              <span>
+              </div>
+              <div>
                 <span class="font-semibold">Note:</span>
                 The panel reserves <span class="font-bold">1 CPU core</span> for
                 Kubernetes to run.
-              </span>
+              </div>
             </div>
           </div>
         </div>
