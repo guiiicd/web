@@ -9418,6 +9418,9 @@ export const AllTypesProps: Record<string,any> = {
 		game_versions_by_pk:{
 
 		},
+		getNodeStats:{
+
+		},
 		lobbies:{
 			distinct_on:"lobbies_select_column",
 			order_by:"lobbies_order_by",

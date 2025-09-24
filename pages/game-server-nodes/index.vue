@@ -7,6 +7,7 @@ import { PlusCircle } from "lucide-vue-next";
 import ClipBoard from "~/components/ClipBoard.vue";
 import { Alert, AlertTitle, AlertDescription } from "~/components/ui/alert";
 import { Info, ExternalLink } from "lucide-vue-next";
+import { Switch } from "~/components/ui/switch";
 </script>
 
 <template>
@@ -18,57 +19,71 @@ import { Info, ExternalLink } from "lucide-vue-next";
         $t("pages.game_server_nodes.description")
       }}</template>
       <template #actions>
-        <Popover>
-          <PopoverTrigger class="flex gap-4">
-            <template v-if="!supportsGameServerNodes">
-              <Alert class="bg-background text-lg">
-                <Info class="h-4 w-4" />
-                <AlertTitle>{{
-                  $t("pages.game_server_nodes.not_supported.title")
-                }}</AlertTitle>
-                <AlertDescription>
-                  {{ $t("pages.game_server_nodes.not_supported.description") }}
-                  <a
-                    target="_blank"
-                    class="underline"
-                    href="https://docs.5stack.gg/servers/game-server-nodes/"
-                    >Game Server Nodes</a
-                  >.
-                </AlertDescription>
-              </Alert>
-            </template>
-
-            <Button
-              size="lg"
-              @click="createGameServerNode"
-              :disabled="!supportsGameServerNodes"
-            >
-              <PlusCircle class="w-4 h-4" />
-              <span class="hidden md:inline ml-2">{{
-                $t("pages.game_server_nodes.create")
-              }}</span>
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent>
-            <div
-              class="relative bg-gray-900 rounded-lg p-4"
-              v-if="setupGameServer"
-            >
-              <div class="flex justify-between items-start">
-                <h3 class="text-white text-sm font-semibold">
-                  {{ $t("pages.game_server_nodes.installation_script") }}
-                </h3>
-                <ClipBoard
-                  :data="setupGameServer.link"
-                  class="text-white hover:text-gray-300 transition-colors"
-                ></ClipBoard>
-              </div>
-              <div class="text-sm mt-2">
-                {{ setupGameServer.gameServerId }}
-              </div>
+        <div class="flex items-center gap-2">
+          <div
+            class="flex items-center gap-2"
+            @click="displayMetrics = !displayMetrics"
+          >
+            <div class="flex items-center gap-1">
+              {{ $t("pages.game_server_nodes.display_metrics") }}
             </div>
-          </PopoverContent>
-        </Popover>
+            <Switch :model-value="displayMetrics" />
+          </div>
+
+          <Popover>
+            <PopoverTrigger class="flex gap-4">
+              <template v-if="!supportsGameServerNodes">
+                <Alert class="bg-background text-lg">
+                  <Info class="h-4 w-4" />
+                  <AlertTitle>{{
+                    $t("pages.game_server_nodes.not_supported.title")
+                  }}</AlertTitle>
+                  <AlertDescription>
+                    {{
+                      $t("pages.game_server_nodes.not_supported.description")
+                    }}
+                    <a
+                      target="_blank"
+                      class="underline"
+                      href="https://docs.5stack.gg/servers/game-server-nodes/"
+                      >Game Server Nodes</a
+                    >.
+                  </AlertDescription>
+                </Alert>
+              </template>
+
+              <Button
+                size="lg"
+                @click="createGameServerNode"
+                :disabled="!supportsGameServerNodes"
+              >
+                <PlusCircle class="w-4 h-4" />
+                <span class="hidden md:inline ml-2">{{
+                  $t("pages.game_server_nodes.create")
+                }}</span>
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <div
+                class="relative bg-gray-900 rounded-lg p-4"
+                v-if="setupGameServer"
+              >
+                <div class="flex justify-between items-start">
+                  <h3 class="text-white text-sm font-semibold">
+                    {{ $t("pages.game_server_nodes.installation_script") }}
+                  </h3>
+                  <ClipBoard
+                    :data="setupGameServer.link"
+                    class="text-white hover:text-gray-300 transition-colors"
+                  ></ClipBoard>
+                </div>
+                <div class="text-sm mt-2">
+                  {{ setupGameServer.gameServerId }}
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
       </template>
     </PageHeading>
 
@@ -172,6 +187,7 @@ import { Info, ExternalLink } from "lucide-vue-next";
               :game-server-node="gameServerNode"
               :key="gameServerNode.id"
               v-for="gameServerNode of gameServerNodes"
+              :display-metrics="displayMetrics"
             ></GameServerNodeRow>
           </template>
         </TableBody>
@@ -191,6 +207,7 @@ export default {
       gameVersions: [],
       gameServerNodes: [],
       setupGameServer: undefined,
+      displayMetrics: false,
     };
   },
   apollo: {

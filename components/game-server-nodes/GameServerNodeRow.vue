@@ -27,13 +27,15 @@ import {
   CircleFadingArrowUp,
   AlertCircle,
   Plus,
+  ChevronsDownIcon,
 } from "lucide-vue-next";
 import UpdateGameServerLabel from "~/components/game-server-nodes/UpdateGameServerLabel.vue";
 import FiveStackToolTip from "../FiveStackToolTip.vue";
+import NodeMetrics from "@/components/system-metrics/NodeMetrics.vue";
 </script>
 
 <template>
-  <TableRow>
+  <TableRow class="border-b-0">
     <TableCell>
       <GameServerNodeDisplay
         :game-server-node="gameServerNode"
@@ -298,6 +300,13 @@ import FiveStackToolTip from "../FiveStackToolTip.vue";
     </TableCell>
   </TableRow>
 
+  <!-- Expandable metrics row -->
+  <TableRow class="border-t-0" v-if="displayMetrics">
+    <TableCell :colspan="11">
+      <NodeMetrics :game-server-node="gameServerNode" />
+    </TableCell>
+  </TableRow>
+
   <UpdateGameServerLabel
     :game-server-node="gameServerNode"
     :open="editLabelSheet"
@@ -335,6 +344,7 @@ interface GameServerNode {
   label?: string;
   supports_low_latency?: boolean;
   supports_cpu_pinning?: boolean;
+  plugin_supported?: boolean;
   update_status?: string;
   e_region?: {
     description: string;
@@ -365,7 +375,13 @@ export default defineComponent({
       type: Object as () => GameServerNode,
       required: true,
     },
+    displayMetrics: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
+  emits: ["toggle-metrics"],
   apollo: {
     server_regions: {
       query: generateQuery({
@@ -421,6 +437,7 @@ export default defineComponent({
         },
       },
     },
+    // metrics now fetched inside NodeMetrics component
   },
   data(): ComponentData {
     return {
@@ -430,6 +447,7 @@ export default defineComponent({
         region: undefined,
       },
       editLabelSheet: false,
+      server_regions: [],
       pinBuildIdForm: useForm({
         validationSchema: toTypedSchema(
           z.object({

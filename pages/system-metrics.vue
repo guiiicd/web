@@ -2,60 +2,31 @@
 import { generateQuery } from "~/graphql/graphqlGen";
 import CpuChart from "~/components/charts/CpuChart.vue";
 import MemoryChart from "~/components/charts/MemoryChart.vue";
-import NetworkChart from "~/components/charts/NetworkChart.vue";
-import DiskChart from "~/components/charts/DiskChart.vue";
 import Separator from "@/components/ui/separator/Separator.vue";
+import NodeMetrics from "@/components/system-metrics/NodeMetrics.vue";
 </script>
 
 <template>
   <div>
-    <div v-for="node in getNodeStats" :key="node.node" class="mb-8">
+    <template
+      v-for="gameServerNode in gameServerNodes"
+      :key="gameServerNode.id"
+    >
       <div class="flex items-center gap-2 mb-4">
         <h3 class="text-lg font-semibold flex items-center gap-2">
           {{ $t("pages.system_metrics.node") }}:
-          <template v-if="getNodeLabel(node.node)">
-            <span>{{ getNodeLabel(node.node) }}</span>
-            <span class="text-gray-500">({{ node.node }})</span>
+          <template v-if="gameServerNode?.label">
+            <span>{{ gameServerNode?.label }}</span>
+            <span class="text-gray-500">({{ gameServerNode.id }})</span>
           </template>
           <template v-else>
-            <span>{{ node.node }}</span>
+            <span>{{ gameServerNode.id }}</span>
           </template>
         </h3>
         <div class="h-px flex-1 bg-gray-200"></div>
       </div>
-      <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
-        <Card class="p-4 rounded-lg border border-gray-200">
-          <h4 class="text-sm font-medium mb-2">
-            {{ $t("pages.system_metrics.cpu_usage") }}
-          </h4>
-          <div class="h-[350px]">
-            <CpuChart :metrics="node.cpu" />
-          </div>
-        </Card>
-        <Card class="p-4 rounded-lg border border-gray-200">
-          <h4 class="text-sm font-medium mb-2">
-            {{ $t("pages.system_metrics.memory_usage") }}
-          </h4>
-          <div class="h-[350px]">
-            <MemoryChart :metrics="node.memory" />
-          </div>
-        </Card>
-        <Card class="p-4 rounded-lg border border-gray-200">
-          <h4 class="text-sm font-medium mb-2">
-            {{ $t("pages.system_metrics.network") }}
-          </h4>
-          <div class="h-[350px]">
-            <NetworkChart :metrics="node.network" />
-          </div>
-        </Card>
-        <Card class="p-4 rounded-lg border border-gray-200">
-          <h4 class="text-sm font-medium mb-2">Disks</h4>
-          <div class="h-[350px]">
-            <DiskChart :metrics="node.disks" />
-          </div>
-        </Card>
-      </div>
-    </div>
+      <NodeMetrics :game-server-node="gameServerNode" />
+    </template>
 
     <Separator :label="$t('pages.system_metrics.services')" class="my-8" />
 
@@ -64,32 +35,34 @@ import Separator from "@/components/ui/separator/Separator.vue";
         v-for="service in getServiceStats"
         :key="`${service.node}-${service.name}`"
       >
-        <Card class="p-4 rounded-lg border border-gray-200">
-          <div class="flex items-center gap-2 mb-4">
-            <div class="text-lg font-semibold">
-              {{ service.name }}
-              <div class="text-xs text-gray-500">{{ service.node }}</div>
-            </div>
-          </div>
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <h4 class="text-sm font-medium mb-2">
-                {{ $t("pages.system_metrics.cpu_usage") }}
-              </h4>
-              <div class="h-[350px]">
-                <CpuChart :metrics="service.cpu" />
+        <template v-if="hasServiceMetrics(service)">
+          <Card class="p-4 rounded-lg border border-gray-200">
+            <div class="flex items-center gap-2 mb-4">
+              <div class="text-lg font-semibold">
+                {{ service.name }}
+                <div class="text-xs text-gray-500">{{ service.node }}</div>
               </div>
             </div>
-            <div>
-              <h4 class="text-sm font-medium mb-2">
-                {{ $t("pages.system_metrics.memory_usage") }}
-              </h4>
-              <div class="h-[350px]">
-                <MemoryChart :metrics="service.memory" label="MB" />
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <h4 class="text-sm font-medium mb-2">
+                  {{ $t("pages.system_metrics.cpu_usage") }}
+                </h4>
+                <div class="h-[350px]">
+                  <CpuChart :metrics="service.cpu" />
+                </div>
+              </div>
+              <div>
+                <h4 class="text-sm font-medium mb-2">
+                  {{ $t("pages.system_metrics.memory_usage") }}
+                </h4>
+                <div class="h-[350px]">
+                  <MemoryChart :metrics="service.memory" label="MB" />
+                </div>
               </div>
             </div>
-          </div>
-        </Card>
+          </Card>
+        </template>
       </template>
     </div>
   </div>
@@ -103,6 +76,11 @@ export default {
     return {
       gameServerNodes: [],
     };
+  },
+  methods: {
+    hasServiceMetrics(service: any): boolean {
+      return service.cpu.length > 0 || service.memory.length > 0;
+    },
   },
   apollo: {
     $subscribe: {
@@ -120,59 +98,6 @@ export default {
           this.gameServerNodes = data.game_server_nodes;
         },
       },
-    },
-    getNodeStats: {
-      query: generateQuery({
-        getNodeStats: [
-          {},
-          {
-            node: true,
-            cpu: [
-              {},
-              {
-                time: true,
-                total: true,
-                used: true,
-                window: true,
-              },
-            ],
-            memory: [
-              {},
-              {
-                time: true,
-                total: true,
-                used: true,
-              },
-            ],
-            disks: [
-              {},
-              {
-                time: true,
-                disks: {
-                  filesystem: true,
-                  size: true,
-                  used: true,
-                  available: true,
-                  usedPercent: true,
-                  mountpoint: true,
-                },
-              },
-            ],
-            network: [
-              {},
-              {
-                time: true,
-                nics: {
-                  name: true,
-                  rx: true,
-                  tx: true,
-                },
-              },
-            ],
-          },
-        ],
-      }),
-      pollInterval: 10000,
     },
     getServiceStats: {
       query: generateQuery({
@@ -202,13 +127,6 @@ export default {
         ],
       }),
       pollInterval: 10000,
-    },
-  },
-  methods: {
-    getNodeLabel(nodeId: string) {
-      return this.gameServerNodes.find((node) => {
-        return node.id === nodeId;
-      })?.label;
     },
   },
 };
