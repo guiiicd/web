@@ -70,7 +70,7 @@ export default {
       form: useForm({
         validationSchema: toTypedSchema(
           z.object({
-            number_of_cpus_per_server: z.number().min(1).default(2),
+            number_of_cpus_per_server: z.number().min(1).default(1),
           }),
         ),
       }),

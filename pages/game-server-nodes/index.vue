@@ -254,6 +254,9 @@ export default {
               supports_low_latency: true,
               supports_cpu_pinning: true,
               update_status: true,
+              gpu: true,
+              cpu_cores_per_socket: true,
+              cpu_threads_per_core: true,
               e_region: {
                 description: true,
               },

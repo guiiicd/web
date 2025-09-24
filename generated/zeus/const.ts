@@ -1683,6 +1683,8 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	game_server_nodes_avg_order_by:{
 		build_id:"order_by",
+		cpu_cores_per_socket:"order_by",
+		cpu_threads_per_core:"order_by",
 		end_port_range:"order_by",
 		pin_build_id:"order_by",
 		start_port_range:"order_by"
@@ -1693,10 +1695,13 @@ export const AllTypesProps: Record<string,any> = {
 		_or:"game_server_nodes_bool_exp",
 		available_server_count:"Int_comparison_exp",
 		build_id:"Int_comparison_exp",
+		cpu_cores_per_socket:"Int_comparison_exp",
+		cpu_threads_per_core:"Int_comparison_exp",
 		e_region:"server_regions_bool_exp",
 		e_status:"e_game_server_node_statuses_bool_exp",
 		enabled:"Boolean_comparison_exp",
 		end_port_range:"Int_comparison_exp",
+		gpu:"Boolean_comparison_exp",
 		id:"String_comparison_exp",
 		label:"String_comparison_exp",
 		lan_ip:"inet_comparison_exp",
@@ -1735,6 +1740,8 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	game_server_nodes_max_order_by:{
 		build_id:"order_by",
+		cpu_cores_per_socket:"order_by",
+		cpu_threads_per_core:"order_by",
 		end_port_range:"order_by",
 		id:"order_by",
 		label:"order_by",
@@ -1747,6 +1754,8 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	game_server_nodes_min_order_by:{
 		build_id:"order_by",
+		cpu_cores_per_socket:"order_by",
+		cpu_threads_per_core:"order_by",
 		end_port_range:"order_by",
 		id:"order_by",
 		label:"order_by",
@@ -1769,10 +1778,13 @@ export const AllTypesProps: Record<string,any> = {
 	game_server_nodes_order_by:{
 		available_server_count:"order_by",
 		build_id:"order_by",
+		cpu_cores_per_socket:"order_by",
+		cpu_threads_per_core:"order_by",
 		e_region:"server_regions_order_by",
 		e_status:"e_game_server_node_statuses_order_by",
 		enabled:"order_by",
 		end_port_range:"order_by",
+		gpu:"order_by",
 		id:"order_by",
 		label:"order_by",
 		lan_ip:"order_by",
@@ -1807,18 +1819,24 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	game_server_nodes_stddev_order_by:{
 		build_id:"order_by",
+		cpu_cores_per_socket:"order_by",
+		cpu_threads_per_core:"order_by",
 		end_port_range:"order_by",
 		pin_build_id:"order_by",
 		start_port_range:"order_by"
 	},
 	game_server_nodes_stddev_pop_order_by:{
 		build_id:"order_by",
+		cpu_cores_per_socket:"order_by",
+		cpu_threads_per_core:"order_by",
 		end_port_range:"order_by",
 		pin_build_id:"order_by",
 		start_port_range:"order_by"
 	},
 	game_server_nodes_stddev_samp_order_by:{
 		build_id:"order_by",
+		cpu_cores_per_socket:"order_by",
+		cpu_threads_per_core:"order_by",
 		end_port_range:"order_by",
 		pin_build_id:"order_by",
 		start_port_range:"order_by"
@@ -1835,6 +1853,8 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	game_server_nodes_sum_order_by:{
 		build_id:"order_by",
+		cpu_cores_per_socket:"order_by",
+		cpu_threads_per_core:"order_by",
 		end_port_range:"order_by",
 		pin_build_id:"order_by",
 		start_port_range:"order_by"
@@ -1847,18 +1867,24 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	game_server_nodes_var_pop_order_by:{
 		build_id:"order_by",
+		cpu_cores_per_socket:"order_by",
+		cpu_threads_per_core:"order_by",
 		end_port_range:"order_by",
 		pin_build_id:"order_by",
 		start_port_range:"order_by"
 	},
 	game_server_nodes_var_samp_order_by:{
 		build_id:"order_by",
+		cpu_cores_per_socket:"order_by",
+		cpu_threads_per_core:"order_by",
 		end_port_range:"order_by",
 		pin_build_id:"order_by",
 		start_port_range:"order_by"
 	},
 	game_server_nodes_variance_order_by:{
 		build_id:"order_by",
+		cpu_cores_per_socket:"order_by",
+		cpu_threads_per_core:"order_by",
 		end_port_range:"order_by",
 		pin_build_id:"order_by",
 		start_port_range:"order_by"
@@ -14802,10 +14828,13 @@ export const ReturnTypes: Record<string,any> = {
 	game_server_nodes:{
 		available_server_count:"Int",
 		build_id:"Int",
+		cpu_cores_per_socket:"Int",
+		cpu_threads_per_core:"Int",
 		e_region:"server_regions",
 		e_status:"e_game_server_node_statuses",
 		enabled:"Boolean",
 		end_port_range:"Int",
+		gpu:"Boolean",
 		id:"String",
 		label:"String",
 		lan_ip:"inet",
@@ -14847,6 +14876,8 @@ export const ReturnTypes: Record<string,any> = {
 	game_server_nodes_avg_fields:{
 		available_server_count:"Int",
 		build_id:"Float",
+		cpu_cores_per_socket:"Float",
+		cpu_threads_per_core:"Float",
 		end_port_range:"Float",
 		pin_build_id:"Float",
 		start_port_range:"Float",
@@ -14855,6 +14886,8 @@ export const ReturnTypes: Record<string,any> = {
 	game_server_nodes_max_fields:{
 		available_server_count:"Int",
 		build_id:"Int",
+		cpu_cores_per_socket:"Int",
+		cpu_threads_per_core:"Int",
 		end_port_range:"Int",
 		id:"String",
 		label:"String",
@@ -14869,6 +14902,8 @@ export const ReturnTypes: Record<string,any> = {
 	game_server_nodes_min_fields:{
 		available_server_count:"Int",
 		build_id:"Int",
+		cpu_cores_per_socket:"Int",
+		cpu_threads_per_core:"Int",
 		end_port_range:"Int",
 		id:"String",
 		label:"String",
@@ -14887,6 +14922,8 @@ export const ReturnTypes: Record<string,any> = {
 	game_server_nodes_stddev_fields:{
 		available_server_count:"Int",
 		build_id:"Float",
+		cpu_cores_per_socket:"Float",
+		cpu_threads_per_core:"Float",
 		end_port_range:"Float",
 		pin_build_id:"Float",
 		start_port_range:"Float",
@@ -14895,6 +14932,8 @@ export const ReturnTypes: Record<string,any> = {
 	game_server_nodes_stddev_pop_fields:{
 		available_server_count:"Int",
 		build_id:"Float",
+		cpu_cores_per_socket:"Float",
+		cpu_threads_per_core:"Float",
 		end_port_range:"Float",
 		pin_build_id:"Float",
 		start_port_range:"Float",
@@ -14903,6 +14942,8 @@ export const ReturnTypes: Record<string,any> = {
 	game_server_nodes_stddev_samp_fields:{
 		available_server_count:"Int",
 		build_id:"Float",
+		cpu_cores_per_socket:"Float",
+		cpu_threads_per_core:"Float",
 		end_port_range:"Float",
 		pin_build_id:"Float",
 		start_port_range:"Float",
@@ -14911,6 +14952,8 @@ export const ReturnTypes: Record<string,any> = {
 	game_server_nodes_sum_fields:{
 		available_server_count:"Int",
 		build_id:"Int",
+		cpu_cores_per_socket:"Int",
+		cpu_threads_per_core:"Int",
 		end_port_range:"Int",
 		pin_build_id:"Int",
 		start_port_range:"Int",
@@ -14919,6 +14962,8 @@ export const ReturnTypes: Record<string,any> = {
 	game_server_nodes_var_pop_fields:{
 		available_server_count:"Int",
 		build_id:"Float",
+		cpu_cores_per_socket:"Float",
+		cpu_threads_per_core:"Float",
 		end_port_range:"Float",
 		pin_build_id:"Float",
 		start_port_range:"Float",
@@ -14927,6 +14972,8 @@ export const ReturnTypes: Record<string,any> = {
 	game_server_nodes_var_samp_fields:{
 		available_server_count:"Int",
 		build_id:"Float",
+		cpu_cores_per_socket:"Float",
+		cpu_threads_per_core:"Float",
 		end_port_range:"Float",
 		pin_build_id:"Float",
 		start_port_range:"Float",
@@ -14935,6 +14982,8 @@ export const ReturnTypes: Record<string,any> = {
 	game_server_nodes_variance_fields:{
 		available_server_count:"Int",
 		build_id:"Float",
+		cpu_cores_per_socket:"Float",
+		cpu_threads_per_core:"Float",
 		end_port_range:"Float",
 		pin_build_id:"Float",
 		start_port_range:"Float",

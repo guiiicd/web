@@ -27,11 +27,11 @@ import {
   CircleFadingArrowUp,
   AlertCircle,
   Plus,
-  ChevronsDownIcon,
 } from "lucide-vue-next";
 import UpdateGameServerLabel from "~/components/game-server-nodes/UpdateGameServerLabel.vue";
 import FiveStackToolTip from "../FiveStackToolTip.vue";
 import NodeMetrics from "@/components/system-metrics/NodeMetrics.vue";
+import { Alert } from "@/components/ui/alert";
 </script>
 
 <template>
@@ -229,7 +229,54 @@ import NodeMetrics from "@/components/system-metrics/NodeMetrics.vue";
         </SelectContent>
       </Select>
     </TableCell>
-    <TableCell>
+    <TableCell class="flex items-center gap-2">
+      <FiveStackToolTip v-if="overPrevisionedServers">
+        <template #trigger>
+          <AlertCircle class="h-4 w-4 animate-pulse text-red-500" />
+        </template>
+        <div class="space-y-1">
+          <div>
+            <span class="font-semibold text-red-600">
+              {{ $t("game_server.overprovisioned_warning") }}
+            </span>
+          </div>
+          <div>
+            {{
+              $t("game_server.overprovisioned_warning_description", {
+                total_server_count: gameServerNode.total_server_count,
+                max_servers: maxServers,
+              })
+            }}
+          </div>
+          <div>
+            <span class="font-medium">
+              {{ $t("game_server.cpu_cores_per_socket") }}:
+            </span>
+            <span class="text-muted-foreground">
+              {{ gameServerNode.cpu_cores_per_socket }}
+            </span>
+            <span class="mx-1">|</span>
+            <span class="font-medium">
+              {{ $t("game_server.cpu_threads_per_core") }}:
+            </span>
+            <span class="text-muted-foreground">
+              {{ gameServerNode.cpu_threads_per_core }}
+            </span>
+
+            <div class="p-2 flex items-center gap-2 text-xs mt-2">
+              <span class="flex items-center justify-center h-5 w-5">
+                <AlertCircle class="h-3 w-3" />
+              </span>
+              <span>
+                <span class="font-semibold">Note:</span>
+                The panel reserves <span class="font-bold">1 CPU core</span> for
+                Kubernetes to run.
+              </span>
+            </div>
+          </div>
+        </div>
+      </FiveStackToolTip>
+
       {{ gameServerNode.available_server_count }} /
       {{ gameServerNode.total_server_count }}
     </TableCell>
@@ -735,6 +782,34 @@ export default defineComponent({
     },
     supportsGameServerVersionPinning() {
       return useApplicationSettingsStore().supportsGameServerVersionPinning;
+    },
+    settings() {
+      return useApplicationSettingsStore().settings;
+    },
+    overPrevisionedServers() {
+      if (!this.cpuPinningEnabled || !this.gameServerNode.enabled) {
+        return false;
+      }
+      return this.maxServers < this.gameServerNode.total_server_count;
+    },
+    maxServers() {
+      return (
+        this.gameServerNode.cpu_cores_per_socket *
+          this.gameServerNode.cpu_threads_per_core -
+        1
+      );
+    },
+    cpuPinningEnabled() {
+      return (
+        this.settings.find((setting) => {
+          return setting.name === "enable_cpu_pinning";
+        })?.value === "true"
+      );
+    },
+    numberOfCpusPerServer() {
+      return this.settings.find((setting) => {
+        return setting.name === "number_of_cpus_per_server";
+      })?.value;
     },
   },
 });
