@@ -20,10 +20,7 @@ import { Switch } from "~/components/ui/switch";
       }}</template>
       <template #actions>
         <div class="flex items-center gap-2">
-          <div
-            class="flex items-center gap-2"
-            @click="displayMetrics = !displayMetrics"
-          >
+          <div class="flex items-center gap-2" @click="toggleNodeMetrics()">
             <div class="flex items-center gap-1">
               {{ $t("pages.game_server_nodes.display_metrics") }}
             </div>
@@ -206,7 +203,7 @@ export default {
     return {
       gameVersions: [],
       gameServerNodes: [],
-      setupGameServer: undefined,
+      setupGameServer: localStorage.getItem("displayMetrics") === "true",
       displayMetrics: false,
     };
   },
@@ -275,6 +272,10 @@ export default {
     },
   },
   methods: {
+    toggleNodeMetrics() {
+      this.displayMetrics = !this.displayMetrics;
+      localStorage.setItem("displayMetrics", String(this.displayMetrics));
+    },
     async createGameServerNode() {
       const { data } = await this.$apollo.mutate({
         mutation: generateMutation({
@@ -297,6 +298,18 @@ export default {
     supportsGameServerNodes() {
       return useApplicationSettingsStore().supportsGameServerNodes;
     },
+  },
+  created() {
+    if (process.client) {
+      try {
+        const stored = localStorage.getItem("displayMetrics");
+        if (stored !== null) {
+          this.displayMetrics = stored === "true";
+        }
+      } catch (e) {
+        // ignore storage errors
+      }
+    }
   },
 };
 </script>
