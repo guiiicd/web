@@ -787,17 +787,25 @@ export default defineComponent({
       return useApplicationSettingsStore().settings;
     },
     overPrevisionedServers() {
-      if (!this.cpuPinningEnabled || !this.gameServerNode.enabled) {
+      if (!this.gameServerNode.enabled) {
         return false;
       }
       return this.maxServers < this.gameServerNode.total_server_count;
     },
     maxServers() {
-      return (
+      const virtualCPUsAvailable =
         this.gameServerNode.cpu_cores_per_socket *
           this.gameServerNode.cpu_threads_per_core -
-        1
-      );
+        1;
+
+      if (
+        !this.gameServerNode.supports_cpu_pinning ||
+        !this.cpuPinningEnabled
+      ) {
+        return virtualCPUsAvailable;
+      }
+
+      return Math.floor(virtualCPUsAvailable / this.numberOfCpusPerServer);
     },
     cpuPinningEnabled() {
       return (
