@@ -126,7 +126,7 @@ export default {
           },
         ],
       }),
-      pollInterval: 10000,
+      pollInterval: 30 * 1000,
     },
   },
 };

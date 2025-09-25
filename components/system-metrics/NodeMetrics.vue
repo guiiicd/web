@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 </script>
 
 <template>
+  {{  metricsData.cpu.length }}
   <div class="my-2" v-if="metricsData && showCharts">
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
       <Card class="p-4 rounded-lg border border-gray-200">
@@ -134,7 +135,7 @@ export default {
           },
         ],
       }),
-      pollInterval: 10000,
+      pollInterval: 30 * 1000,
       variables: function () {
         return {
           node: this.gameServerNode.id,
