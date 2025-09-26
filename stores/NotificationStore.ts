@@ -5,9 +5,17 @@ export const useNotificationStore = defineStore("notifaicationStore", () => {
   const notificationsGranted = ref(false);
   const notificationsEnabled = ref(false);
 
-  const sendNotification = async (title: string, tag: string, options: NotificationOptions, force: boolean = false) => {
+  const sendNotification = async (
+    title: string,
+    tag: string,
+    options: NotificationOptions,
+    force: boolean = false,
+  ) => {
     if (notificationsEnabled.value) {
-      if ((document.visibilityState !== "hidden" && !force ) || Notification.permission !== "granted") {
+      if (
+        (document.visibilityState !== "hidden" && !force) ||
+        Notification.permission !== "granted"
+      ) {
         return;
       }
       new Notification(title, {
@@ -19,7 +27,7 @@ export const useNotificationStore = defineStore("notifaicationStore", () => {
 
   const setupNotifications = async () => {
     if ("Notification" in window) {
-      if(Notification.permission === "granted") {
+      if (Notification.permission === "granted") {
         notificationsGranted.value = true;
         notificationsEnabled.value = true;
         return;

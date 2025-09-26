@@ -137,6 +137,7 @@ export default {
       }>,
       logListener: undefined as { stop: () => void } | undefined,
       nodes: new Set<string>(),
+      retryTimeout: undefined as NodeJS.Timeout | undefined,
     };
   },
   methods: {
@@ -194,8 +195,19 @@ export default {
           this.logListener.stop();
           this.logListener = undefined;
         }
+
         this.logListener = socket.listen(`logs:${this.service}`, (log) => {
           const _log = JSON.parse(log);
+
+          if (_log.end) {
+            this.retryTimeout = setTimeout(() => {
+              socket.event("logs", {
+                service: this.service,
+              });
+            }, 5000);
+            return;
+          }
+
           this.logs.push(_log);
 
           this.$nextTick(() => {
@@ -210,6 +222,7 @@ export default {
     },
   },
   unmounted() {
+    clearTimeout(this.retryTimeout);
     this.logListener?.stop();
   },
 };

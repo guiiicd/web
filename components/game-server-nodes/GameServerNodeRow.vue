@@ -31,6 +31,7 @@ import {
 import UpdateGameServerLabel from "~/components/game-server-nodes/UpdateGameServerLabel.vue";
 import FiveStackToolTip from "../FiveStackToolTip.vue";
 import NodeMetrics from "@/components/system-metrics/NodeMetrics.vue";
+import ServiceLogs from "~/components/ServiceLogs.vue";
 </script>
 
 <template>
@@ -41,7 +42,9 @@ import NodeMetrics from "@/components/system-metrics/NodeMetrics.vue";
       ></GameServerNodeDisplay>
     </TableCell>
     <TableCell>
-      {{ gameServerNode.lan_ip }}
+      <a :href="`http://${gameServerNode.lan_ip}:8080`" target="_blank">
+        {{ gameServerNode.lan_ip }}
+      </a>
       {{ gameServerNode.lan_ip && gameServerNode.public_ip ? "/" : "" }}
       {{ gameServerNode.public_ip }}
     </TableCell>
@@ -57,9 +60,19 @@ import NodeMetrics from "@/components/system-metrics/NodeMetrics.vue";
     </TableCell>
     <TableCell>
       <template v-if="gameServerNode.update_status">
-        <span class="capitalize">
-          {{ gameServerNode.update_status }}
-        </span>
+        <FiveStackToolTip>
+          <template #trigger>
+            <div class="flex items-center gap-1">
+              <span class="capitalize">
+                {{ gameServerNode.update_status }}
+              </span>
+              <Button variant="outline" size="sm" @click="toggleLogs">
+                <Activity class="h-2 w-2" />
+              </Button>
+            </div>
+          </template>
+          {{ $t("game_server.show_update_logs") }}
+        </FiveStackToolTip>
       </template>
 
       <div class="flex items-center gap-2" v-else>
@@ -357,6 +370,15 @@ import NodeMetrics from "@/components/system-metrics/NodeMetrics.vue";
     </TableCell>
   </TableRow>
 
+  <TableRow class="border-t-0" v-if="showLogs">
+    <TableCell :colspan="11">
+      <ServiceLogs
+        :service="`cs-update:${gameServerNode.id}`"
+        :compact="true"
+      />
+    </TableCell>
+  </TableRow>
+
   <!-- Expandable metrics row -->
   <TableRow class="border-t-0" v-if="displayMetrics">
     <TableCell :colspan="11">
@@ -414,6 +436,8 @@ interface GameServerNode {
 }
 
 interface ComponentData {
+  showUpdateLogs: boolean;
+  showLogs: boolean;
   gameVersions: any[];
   pluginVersions: any[];
   regionForm: {
@@ -498,6 +522,8 @@ export default defineComponent({
   },
   data(): ComponentData {
     return {
+      showUpdateLogs: false,
+      showLogs: false,
       gameVersions: [],
       pluginVersions: [],
       regionForm: {
@@ -620,6 +646,9 @@ export default defineComponent({
           ],
         }),
       });
+
+      this.showUpdateLogs = true;
+      this.showLogs = true;
 
       toast({
         title: this.$t("game_server.toast.cs_updating"),
@@ -775,6 +804,9 @@ export default defineComponent({
           ],
         }),
       });
+    },
+    toggleLogs() {
+      this.showLogs = !this.showLogs;
     },
   },
   computed: {
