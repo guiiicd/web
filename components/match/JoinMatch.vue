@@ -25,19 +25,19 @@ import { AlertTriangle } from "lucide-vue-next";
       </CardTitle>
     </CardHeader>
     <CardContent>
-      <QuickServerConnect :match="match"></QuickServerConnect>
+      <QuickMatchConnect :match="match"></QuickMatchConnect>
     </CardContent>
   </Card>
 </template>
 
 <script lang="ts">
 import TimeAgo from "~/components/TimeAgo.vue";
-import QuickServerConnect from "~/components/match/QuickServerConnect.vue";
+import QuickMatchConnect from "~/components/match/QuickMatchConnect.vue";
 import { e_match_status_enum } from "~/generated/zeus";
 import { generateMutation } from "~/graphql/graphqlGen";
 
 export default {
-  components: { QuickServerConnect, TimeAgo },
+  components: { QuickMatchConnect, TimeAgo },
   props: {
     match: {
       type: Object,

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { AlertTriangle, Settings2 } from "lucide-vue-next";
-import QuickServerConnect from "~/components/match/QuickServerConnect.vue";
+import QuickMatchConnect from "~/components/match/QuickMatchConnect.vue";
 import MatchmakingSettings from "~/components/matchmaking/MatchmakingSettings.vue";
 import { Collapsible, CollapsibleContent } from "~/components/ui/collapsible";
 import { Button } from "~/components/ui/button";
@@ -187,7 +187,7 @@ import FiveStackToolTip from "../FiveStackToolTip.vue";
             {{ match.status }}
           </Badge>
 
-          <QuickServerConnect :match="match" />
+          <QuickMatchConnect :match="match" />
         </div>
 
         <Button>

@@ -37,6 +37,7 @@ import { Eye, EyeOff } from "lucide-vue-next";
 import { Copy } from "lucide-vue-next";
 import Clipboard from "~/components/ClipBoard.vue";
 import ServerStatus from "~/components/servers/ServerStatus.vue";
+import QuickServerConnect from "~/components/match/QuickServerConnect.vue";
 
 const serverMenu = ref(false);
 </script>
@@ -150,6 +151,10 @@ const serverMenu = ref(false);
     </template>
   </PageHeading>
 
+  <div class="my-4" v-if="server">
+    <QuickServerConnect :server="server" />
+  </div>
+
   <RconCommander :server-id="$route.params.id as string" :online="true" />
 
   <Sheet
@@ -218,6 +223,8 @@ export default {
               plugin_version: true,
               rcon_status: true,
               game_server_node_id: true,
+              connection_link: true,
+              connection_string: true,
             },
           ],
         }),
