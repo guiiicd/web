@@ -4,7 +4,10 @@ import { AlertTriangle } from "lucide-vue-next";
 
 <template>
   <Card
-    v-if="match.connection_string && match.status === e_match_status_enum.Live"
+    v-if="
+      match.connection_string ||
+      (match.tv_connection_string && match.status === e_match_status_enum.Live)
+    "
     class="overflow-hidden"
   >
     <CardHeader class="p-4">
