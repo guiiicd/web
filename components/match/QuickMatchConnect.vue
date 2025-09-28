@@ -57,7 +57,7 @@ export default {
     >
       <ClipBoard
         :data="match.tv_connection_string"
-        class="grow shrink-0 p-3 rounded-md"
+        class="grow shrink-0 p-3 rounded-md h-12 w-12"
       >
         <div class="flex items-center justify-center gap-2">
           <Tv class="w-4 h-4" />
@@ -87,7 +87,7 @@ export default {
       >
         <ClipBoard
           :data="match.connection_string"
-          class="shrink-0 p-3 rounded-md"
+          class="shrink-0 p-3 h-12 w-12"
           :class="{
             grow: !match.connection_link,
           }"

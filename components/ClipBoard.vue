@@ -2,20 +2,18 @@
 import { Copy } from "lucide-vue-next";
 </script>
 <template>
-  <div
+  <Button
+    variant="outline"
+    size="icon"
     class="copy bg-background hover:bg-background/50 transition-colors"
     @click="copyToClipboard"
   >
-    <div
-      ref="copy"
-      class="icon--btn icon--btn-small"
-      :data-clipboard-text="data"
-    >
+    <div ref="copy" :data-clipboard-text="data">
       <slot>
         <Copy></Copy>
       </slot>
     </div>
-  </div>
+  </Button>
 </template>
 
 <script lang="ts">
@@ -80,15 +78,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.copy {
-  cursor: pointer;
-  margin: 0 10px;
-  display: inline;
-  svg {
-    width: 22px;
-    height: auto;
-  }
-}
-</style>

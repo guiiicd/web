@@ -119,6 +119,23 @@ import Logout from "./Logout.vue";
           <SidebarMenuItem>
             <SidebarMenuButton
               as-child
+              :tooltip="$t('layouts.app_nav.tooltips.public_servers')"
+            >
+              <NuxtLink
+                :to="{ name: 'public-servers' }"
+                :class="{
+                  'router-link-active': isRouteActive('public-servers'),
+                }"
+              >
+                <Server />
+                {{ $t("layouts.app_nav.navigation.public_servers") }}
+              </NuxtLink>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              as-child
               :tooltip="$t('layouts.app_nav.tooltips.players')"
             >
               <NuxtLink

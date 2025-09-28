@@ -113,12 +113,7 @@ const serverMenu = ref(false);
               >{{ config }}</pre
             >
             <div class="absolute top-2 right-2">
-              <Clipboard :data="config">
-                <Button variant="ghost" size="sm">
-                  <Copy class="mr-2 h-4 w-4" />
-                  {{ $t("pages.dedicated_servers.detail.copy") }}
-                </Button>
-              </Clipboard>
+              <Clipboard :data="config"></Clipboard>
             </div>
           </div>
         </div>

@@ -93,6 +93,16 @@ const { isMobile } = useSidebar();
                       </NuxtLink>
                     </NavigationMenuLink>
                   </li>
+                  <li>
+                    <NavigationMenuLink as-child>
+                      <NuxtLink
+                        to="/public-servers"
+                        class="block w-full text-left px-4 py-2 uppercase font-bold text-sm transition-colors duration-150 border-none outline-none hover:text-green-300"
+                      >
+                        {{ $t("layouts.top_nav.play.public_servers") }}
+                      </NuxtLink>
+                    </NavigationMenuLink>
+                  </li>
                   <NavigationMenuItem class="block md:hidden">
                     <NavigationMenuLink as-child>
                       <NuxtLink
