@@ -323,6 +323,7 @@
                 "connection_details": "Connection Details",
                 "label": "Label",
                 "region": "Region",
+                "type": "Type",
                 "tv_port": "TV Port",
                 "plugin_version": "Plugin Version", 
                 "enabled": "Enabled",
@@ -485,7 +486,7 @@
                 "metrics": "System Metrics",
                 "app_settings": "App Settings",
                 "map_pools": "Map Pools",
-                "manage_matches": "Manage Matches"
+                "manage_matches": "Manage Matches",
             },
             "profile": {
                 "my_profile": "My Profile",

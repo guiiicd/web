@@ -48,6 +48,9 @@ import ServerStatus from "~/components/servers/ServerStatus.vue";
               $t("pages.dedicated_servers.table.label")
             }}</TableHead>
             <TableHead>{{
+              $t("pages.dedicated_servers.table.type")
+            }}</TableHead>
+            <TableHead>{{
               $t("pages.dedicated_servers.table.region")
             }}</TableHead>
             <TableHead>{{
@@ -80,6 +83,11 @@ import ServerStatus from "~/components/servers/ServerStatus.vue";
                 </div>
               </TableCell>
               <TableCell>{{ server.label }}</TableCell>
+              <TableCell>
+                <Badge variant="secondary">
+                  {{ server.type }}
+                </Badge>
+              </TableCell>
               <TableCell>{{ server.region }}</TableCell>
               <TableCell>
                 <template v-if="server.plugin_version">
@@ -137,6 +145,7 @@ export default {
             {
               id: true,
               host: true,
+              type: true,
               port: true,
               label: true,
               region: true,

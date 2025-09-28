@@ -61,9 +61,7 @@ import { e_server_types_enum } from "~/generated/zeus";
               <Badge variant="outline">{{ server.region }}</Badge>
             </TableCell>
             <TableCell>
-              <Badge
-                :variant="server.type === 'Ranked' ? 'default' : 'secondary'"
-              >
+              <Badge variant="secondary">
                 {{ server.type }}
               </Badge>
             </TableCell>
