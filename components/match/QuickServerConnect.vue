@@ -36,19 +36,18 @@ export default {
 <template>
   <div v-if="server.connection_string" class="flex items-center gap-1">
     <ClipBoard :data="server.connection_string"></ClipBoard>
-    <template v-if="server.connection_link">
-      <Button
-        variant="outline"
-        class="min-w-32"
-        @click="handleClick"
-        :disabled="isLoading"
-      >
+    <a
+      :href="server.connection_link"
+      v-if="server.connection_link"
+      @click="handleClick"
+    >
+      <Button variant="outline" class="min-w-32" :disabled="isLoading">
         <template v-if="!isLoading">
           <ExternalLink class="w-4 h-4 mr-1" />
           {{ $t("server.join_server") }}
         </template>
         <Loader v-else class="w-4 h-4 animate-spin" />
       </Button>
-    </template>
+    </a>
   </div>
 </template>

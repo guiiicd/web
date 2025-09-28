@@ -53,7 +53,10 @@ import { e_server_types_enum } from "~/generated/zeus";
                 </span>
               </div>
             </TableCell>
-            <TableCell> 0 / {{ server.max_players }} </TableCell>
+            <TableCell>
+              {{ getDedicatedServerPlayers(server.id) }} /
+              {{ server.max_players }}
+            </TableCell>
             <TableCell>
               <Badge variant="outline">{{ server.region }}</Badge>
             </TableCell>
@@ -90,6 +93,18 @@ export default {
     };
   },
   apollo: {
+    getDedicatedServerPlayerCounts: {
+      query: generateQuery({
+        getDedicatedServerPlayerCounts: [
+          {},
+          {
+            id: true,
+            players: true,
+          },
+        ],
+      }),
+      pollInterval: 60 * 1000,
+    },
     $subscribe: {
       servers: {
         query: generateQuery({
@@ -149,6 +164,15 @@ export default {
           this.servers = data.servers;
         },
       },
+    },
+  },
+  methods: {
+    getDedicatedServerPlayers(id: string) {
+      return (
+        this.getDedicatedServerPlayerCounts?.find(
+          (player: any) => player.id === id,
+        )?.players || 0
+      );
     },
   },
 };
