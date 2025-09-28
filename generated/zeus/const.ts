@@ -14158,8 +14158,9 @@ export const ReturnTypes: Record<string,any> = {
 		used:"bigint",
 		window:"Float"
 	},
-	DedicatedSeverStats:{
+	DedicatedSeverInfo:{
 		id:"String",
+		map:"String",
 		players:"Int"
 	},
 	DiskStat:{
@@ -18500,7 +18501,7 @@ export const ReturnTypes: Record<string,any> = {
 		game_versions:"game_versions",
 		game_versions_aggregate:"game_versions_aggregate",
 		game_versions_by_pk:"game_versions",
-		getDedicatedServerPlayerCounts:"DedicatedSeverStats",
+		getDedicatedServerInfo:"DedicatedSeverInfo",
 		getNodeStats:"NodeStats",
 		getServiceStats:"PodStats",
 		lobbies:"lobbies",

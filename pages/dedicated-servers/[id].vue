@@ -34,7 +34,6 @@ import { ref } from "vue";
 import ServerForm from "~/components/servers/ServerForm.vue";
 import RconCommander from "~/components/servers/RconCommander.vue";
 import { Eye, EyeOff } from "lucide-vue-next";
-import { Copy } from "lucide-vue-next";
 import Clipboard from "~/components/ClipBoard.vue";
 import ServerStatus from "~/components/servers/ServerStatus.vue";
 import QuickServerConnect from "~/components/match/QuickServerConnect.vue";

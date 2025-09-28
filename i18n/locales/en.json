@@ -355,6 +355,7 @@
         },
         "public_servers": {
             "title": "Public Servers",
+            "lan_servers_title": "LAN Servers",
             "description": "Browse and join public servers",
             "table": {
                 "connection_details": "Connection Details",
