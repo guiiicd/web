@@ -33,6 +33,7 @@ import { e_server_types_enum } from "~/generated/zeus";
               <TableHead>{{
                 $t("pages.public_servers.table.label")
               }}</TableHead>
+              <TableHead>{{ $t("pages.public_servers.table.map") }}</TableHead>
               <TableHead>{{
                 $t("pages.public_servers.table.players")
               }}</TableHead>
@@ -118,6 +119,7 @@ import { e_server_types_enum } from "~/generated/zeus";
               <TableHead>{{
                 $t("pages.public_servers.table.label")
               }}</TableHead>
+              <TableHead>{{ $t("pages.public_servers.table.map") }}</TableHead>
               <TableHead>{{
                 $t("pages.public_servers.table.players")
               }}</TableHead>
@@ -280,15 +282,15 @@ export default {
   },
   methods: {
     getDedicatedServerMap(id: string) {
-      return (
-        this.getDedicatedServerInfo?.find((player: any) => player.id === id)
-          ?.map || 0
-      );
+      return this.getDedicatedServerInfo?.find((server) => {
+        return server.id === id;
+      })?.map;
     },
     getDedicatedServerPlayers(id: string) {
       return (
-        this.getDedicatedServerInfo?.find((player: any) => player.id === id)
-          ?.players || 0
+        this.getDedicatedServerInfo?.find((server) => {
+          return server.id === id;
+        })?.players || 0
       );
     },
   },

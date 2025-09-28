@@ -359,6 +359,7 @@
             "description": "Browse and join public servers",
             "table": {
                 "connection_details": "Connection Details",
+                "map": "Map",
                 "label": "Label",
                 "region": "Region",
                 "type": "Type",
