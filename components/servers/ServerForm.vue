@@ -492,7 +492,7 @@ export default {
                 type: formValues.type,
                 label: formValues.label,
                 region: formValues.use_game_server_node
-                  ? null
+                  ? ""
                   : formValues.region,
                 game_server_node_id: formValues.use_game_server_node
                   ? formValues.game_server_node_id
