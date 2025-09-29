@@ -136,6 +136,16 @@ import { Switch } from "~/components/ui/switch";
                 <ExternalLink class="w-4 h-4" />
               </a>
             </TableHead>
+            <TableHead>
+              <a
+                href="https://docs.5stack.gg/servers/cpu-governance"
+                target="_blank"
+                class="flex items-center gap-1 hover:text-white transition-colors"
+              >
+                {{ $t("pages.game_server_nodes.table.cpu_governor") }}
+                <ExternalLink class="w-4 h-4" />
+              </a>
+            </TableHead>
             <TableHead
               >{{ $t("pages.game_server_nodes.table.cs_build_id") }}
             </TableHead>
@@ -255,6 +265,7 @@ export default {
               supports_cpu_pinning: true,
               update_status: true,
               gpu: true,
+              cpu_governor_info: true,
               cpu_cores_per_socket: true,
               cpu_threads_per_core: true,
               e_region: {

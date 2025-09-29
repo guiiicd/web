@@ -32,6 +32,7 @@ import UpdateGameServerLabel from "~/components/game-server-nodes/UpdateGameServ
 import FiveStackToolTip from "../FiveStackToolTip.vue";
 import NodeMetrics from "@/components/system-metrics/NodeMetrics.vue";
 import ServiceLogs from "~/components/ServiceLogs.vue";
+import { AlertTriangle } from "lucide-vue-next";
 </script>
 
 <template>
@@ -57,6 +58,30 @@ import ServiceLogs from "~/components/ServiceLogs.vue";
       <template v-if="gameServerNode.supports_cpu_pinning">
         <Cpu class="h-4 w-4" />
       </template>
+    </TableCell>
+    <TableCell class="flex items-center gap-2">
+      <FiveStackToolTip>
+        <template #trigger>
+          <Badge class="flex items-center gap-2" variant="outline">
+            <AlertTriangle
+              class="h-3 w-3"
+              v-if="
+                gameServerNode.cpu_governor_info.governor !== 'unknown' &&
+                gameServerNode.cpu_governor_info.governor !== 'performance'
+              "
+            />
+            <span class="capitalize">
+              {{ gameServerNode.cpu_governor_info.governor }}
+            </span>
+          </Badge>
+        </template>
+        <div
+          v-for="(governor, core) of gameServerNode.cpu_governor_info.cpus"
+          :key="governor"
+        >
+          Core #{{ core }} {{ governor }}
+        </div>
+      </FiveStackToolTip>
     </TableCell>
     <TableCell>
       <template v-if="gameServerNode.update_status">
@@ -423,6 +448,7 @@ interface GameServerNode {
   label?: string;
   supports_low_latency?: boolean;
   supports_cpu_pinning?: boolean;
+  cpu_governor_info?: string;
   plugin_supported?: boolean;
   update_status?: string;
   e_region?: {

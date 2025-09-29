@@ -305,6 +305,7 @@
                 "no_nodes": "No Game Server Nodes",
                 "supports_low_latency": "Supports Low Latency",
                 "supports_cpu_pinning": "Supports CPU Pinning",
+                "cpu_governor": "CPU Governor",
                 "pin_build_id": "Pin Build",
                 "pin_build_id_tooltip": "Pin the build ID of the CS2 server",
                 "pin_plugin_version": "Pin Plugin",

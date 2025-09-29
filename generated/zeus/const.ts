@@ -1694,6 +1694,9 @@ export const AllTypesProps: Record<string,any> = {
 		where:"friends_bool_exp"
 	},
 	game_server_nodes:{
+		cpu_governor_info:{
+
+		},
 		servers:{
 			distinct_on:"servers_select_column",
 			order_by:"servers_order_by",
@@ -1743,6 +1746,9 @@ export const AllTypesProps: Record<string,any> = {
 		var_samp:"game_server_nodes_var_samp_order_by",
 		variance:"game_server_nodes_variance_order_by"
 	},
+	game_server_nodes_append_input:{
+		cpu_governor_info:"jsonb"
+	},
 	game_server_nodes_arr_rel_insert_input:{
 		data:"game_server_nodes_insert_input",
 		on_conflict:"game_server_nodes_on_conflict"
@@ -1762,6 +1768,7 @@ export const AllTypesProps: Record<string,any> = {
 		available_server_count:"Int_comparison_exp",
 		build_id:"Int_comparison_exp",
 		cpu_cores_per_socket:"Int_comparison_exp",
+		cpu_governor_info:"jsonb_comparison_exp",
 		cpu_threads_per_core:"Int_comparison_exp",
 		e_region:"server_regions_bool_exp",
 		e_status:"e_game_server_node_statuses_bool_exp",
@@ -1790,10 +1797,20 @@ export const AllTypesProps: Record<string,any> = {
 		version:"game_versions_bool_exp"
 	},
 	game_server_nodes_constraint: "enum" as const,
+	game_server_nodes_delete_at_path_input:{
+
+	},
+	game_server_nodes_delete_elem_input:{
+
+	},
+	game_server_nodes_delete_key_input:{
+
+	},
 	game_server_nodes_inc_input:{
 
 	},
 	game_server_nodes_insert_input:{
+		cpu_governor_info:"jsonb",
 		e_region:"server_regions_obj_rel_insert_input",
 		e_status:"e_game_server_node_statuses_obj_rel_insert_input",
 		lan_ip:"inet",
@@ -1845,6 +1862,7 @@ export const AllTypesProps: Record<string,any> = {
 		available_server_count:"order_by",
 		build_id:"order_by",
 		cpu_cores_per_socket:"order_by",
+		cpu_governor_info:"order_by",
 		cpu_threads_per_core:"order_by",
 		e_region:"server_regions_order_by",
 		e_status:"e_game_server_node_statuses_order_by",
@@ -1874,10 +1892,14 @@ export const AllTypesProps: Record<string,any> = {
 	game_server_nodes_pk_columns_input:{
 
 	},
+	game_server_nodes_prepend_input:{
+		cpu_governor_info:"jsonb"
+	},
 	game_server_nodes_select_column: "enum" as const,
 	game_server_nodes_select_column_game_server_nodes_aggregate_bool_exp_bool_and_arguments_columns: "enum" as const,
 	game_server_nodes_select_column_game_server_nodes_aggregate_bool_exp_bool_or_arguments_columns: "enum" as const,
 	game_server_nodes_set_input:{
+		cpu_governor_info:"jsonb",
 		lan_ip:"inet",
 		node_ip:"inet",
 		public_ip:"inet",
@@ -1912,6 +1934,7 @@ export const AllTypesProps: Record<string,any> = {
 		ordering:"cursor_ordering"
 	},
 	game_server_nodes_stream_cursor_value_input:{
+		cpu_governor_info:"jsonb",
 		lan_ip:"inet",
 		node_ip:"inet",
 		public_ip:"inet",
@@ -1927,7 +1950,12 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	game_server_nodes_update_column: "enum" as const,
 	game_server_nodes_updates:{
+		_append:"game_server_nodes_append_input",
+		_delete_at_path:"game_server_nodes_delete_at_path_input",
+		_delete_elem:"game_server_nodes_delete_elem_input",
+		_delete_key:"game_server_nodes_delete_key_input",
 		_inc:"game_server_nodes_inc_input",
+		_prepend:"game_server_nodes_prepend_input",
 		_set:"game_server_nodes_set_input",
 		where:"game_server_nodes_bool_exp"
 	},
@@ -6106,12 +6134,22 @@ export const AllTypesProps: Record<string,any> = {
 			updates:"friends_updates"
 		},
 		update_game_server_nodes:{
+			_append:"game_server_nodes_append_input",
+			_delete_at_path:"game_server_nodes_delete_at_path_input",
+			_delete_elem:"game_server_nodes_delete_elem_input",
+			_delete_key:"game_server_nodes_delete_key_input",
 			_inc:"game_server_nodes_inc_input",
+			_prepend:"game_server_nodes_prepend_input",
 			_set:"game_server_nodes_set_input",
 			where:"game_server_nodes_bool_exp"
 		},
 		update_game_server_nodes_by_pk:{
+			_append:"game_server_nodes_append_input",
+			_delete_at_path:"game_server_nodes_delete_at_path_input",
+			_delete_elem:"game_server_nodes_delete_elem_input",
+			_delete_key:"game_server_nodes_delete_key_input",
 			_inc:"game_server_nodes_inc_input",
+			_prepend:"game_server_nodes_prepend_input",
 			_set:"game_server_nodes_set_input",
 			pk_columns:"game_server_nodes_pk_columns_input"
 		},
@@ -14160,6 +14198,7 @@ export const ReturnTypes: Record<string,any> = {
 	},
 	DedicatedSeverInfo:{
 		id:"String",
+		lastPing:"String",
 		map:"String",
 		players:"Int"
 	},
@@ -15031,6 +15070,7 @@ export const ReturnTypes: Record<string,any> = {
 		available_server_count:"Int",
 		build_id:"Int",
 		cpu_cores_per_socket:"Int",
+		cpu_governor_info:"jsonb",
 		cpu_threads_per_core:"Int",
 		e_region:"server_regions",
 		e_status:"e_game_server_node_statuses",
