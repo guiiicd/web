@@ -265,6 +265,7 @@ provide("commander", commander);
           <MatchOptionsDisplay
             :options="match.options"
             :show-details-by-default="true"
+            v-if="!showMatchSettingsForm"
           ></MatchOptionsDisplay>
 
           <template v-if="displayServerInformation">
@@ -297,7 +298,7 @@ provide("commander", commander);
           </template>
         </CardContent>
       </Card>
-      <Card class="p-3" v-if="match.is_organizer">
+      <Card class="p-3" v-if="match.is_organizer && showMatchSettingsForm">
         <MatchForm :match="match" />
       </Card>
     </TabsContent>
@@ -379,6 +380,14 @@ export default {
         e_match_status_enum.Scheduled,
         e_match_status_enum.Veto,
         e_match_status_enum.WaitingForCheckIn,
+      ].includes(this.match.status);
+    },
+    showMatchSettingsForm() {
+      return ![
+        e_match_status_enum.Finished,
+        e_match_status_enum.Forfeit,
+        e_match_status_enum.Surrendered,
+        e_match_status_enum.Tie,
       ].includes(this.match.status);
     },
     currentMap() {
