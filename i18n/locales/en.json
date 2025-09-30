@@ -107,6 +107,7 @@
                 "dark": "Dark"
             },
             "application": {
+                "update_success": "Updated",
                 "telemetry": {
                     "title": "Telemetry",
                     "telemetry": "Telemetry",
@@ -142,6 +143,8 @@
                 "create_matches_role_description": "This role will be able to create matches.",
                 "create_tournaments_role": "Minimum Role Allowed to Create Tournaments",
                 "create_tournaments_role_description": "This role will be able to create tournaments.",
+                "dedicated_servers_min_role_to_connect": "Minimum Role to Connect to Dedicated Password-Protected Servers",
+                "dedicated_servers_min_role_to_connect_description": "Only players at or above this role may connect to dedicated servers that require a password.",
                 "matchmaking_min_role": "Minimum Role Allowed to Join Matchmaking",
                 "matchmaking_min_role_description": "This role will be able to join matchmaking.",
                 "max_acceptable_latency": "Maximum Acceptable Latency",

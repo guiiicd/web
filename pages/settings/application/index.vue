@@ -94,75 +94,6 @@ definePageMeta({
       </FormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="public.create_matches_role">
-      <FormItem>
-        <FormLabel class="text-lg font-semibold">{{
-          $t("pages.settings.application.create_matches_role")
-        }}</FormLabel>
-        <FormDescription>
-          {{ $t("pages.settings.application.create_matches_role_description") }}
-        </FormDescription>
-        <FormControl>
-          <Select v-bind="componentField">
-            <FormControl>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-            </FormControl>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem
-                  :value="role.value"
-                  v-for="role in roles"
-                  :key="role.value"
-                >
-                  <span>{{ role.display }}</span>
-                </SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </FormControl>
-        <FormMessage />
-      </FormItem>
-    </FormField>
-
-    <FormField
-      v-slot="{ componentField }"
-      name="public.create_tournaments_role"
-    >
-      <FormItem>
-        <FormLabel class="text-lg font-semibold">{{
-          $t("pages.settings.application.create_tournaments_role")
-        }}</FormLabel>
-        <FormDescription>
-          {{
-            $t("pages.settings.application.create_tournaments_role_description")
-          }}
-        </FormDescription>
-        <FormControl>
-          <Select v-bind="componentField">
-            <FormControl>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-            </FormControl>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem
-                  :value="role.value"
-                  v-for="role in roles"
-                  :key="role.value"
-                >
-                  <span class="capitalize">{{ role.display }}</span>
-                </SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </FormControl>
-        <FormMessage />
-      </FormItem>
-    </FormField>
-
     <div class="flex justify-start">
       <Button
         type="submit"
@@ -209,10 +140,6 @@ export default {
           z.object({
             auto_cancel_duration: z.number().default(15),
             public: z.object({
-              create_matches_role: z.string().default(e_player_roles_enum.user),
-              create_tournaments_role: z
-                .string()
-                .default(e_player_roles_enum.user),
               matchmaking_min_role: z
                 .string()
                 .default(e_player_roles_enum.user),
@@ -226,15 +153,18 @@ export default {
   watch: {
     settings: {
       immediate: true,
-      handler(newVal) {
+      handler(newVal: Array<{ name: string; value: string | null }>) {
         for (const setting of newVal) {
           if (
             setting.name === "public.max_acceptable_latency" ||
             setting.name === "auto_cancel_duration"
           ) {
-            this.form.setFieldValue(setting.name, Number(setting.value) || 100);
+            (this.form.setFieldValue as any)(
+              setting.name,
+              Number(setting.value) || 100,
+            );
           } else {
-            this.form.setFieldValue(setting.name, setting.value || "");
+            (this.form.setFieldValue as any)(setting.name, setting.value || "");
           }
         }
       },
@@ -242,7 +172,7 @@ export default {
   },
   methods: {
     async toggleMatchmaking() {
-      await this.$apollo.mutate({
+      await (this as any).$apollo.mutate({
         mutation: generateMutation({
           insert_settings_one: [
             {
@@ -263,31 +193,24 @@ export default {
       });
     },
     async updateSettings() {
-      await this.$apollo.mutate({
+      await (this as any).$apollo.mutate({
         mutation: generateMutation({
           insert_settings: [
             {
               objects: [
                 {
-                  name: "public.create_matches_role",
-                  value: this.form.values.public.create_matches_role,
-                },
-                {
-                  name: "public.create_tournaments_role",
-                  value: this.form.values.public.create_tournaments_role,
-                },
-                {
                   name: "public.matchmaking_min_role",
-                  value: this.form.values.public.matchmaking_min_role,
+                  value: (this.form.values as any).public.matchmaking_min_role,
                 },
                 {
                   name: "public.max_acceptable_latency",
-                  value:
-                    this.form.values.public.max_acceptable_latency.toString(),
+                  value: String(
+                    (this.form.values as any).public.max_acceptable_latency,
+                  ),
                 },
                 {
                   name: "auto_cancel_duration",
-                  value: this.form.values.auto_cancel_duration.toString(),
+                  value: String((this.form.values as any).auto_cancel_duration),
                 },
               ],
               on_conflict: {
@@ -313,7 +236,8 @@ export default {
     },
     matchMakingAllowed() {
       const matchMakingSetting = this.settings.find(
-        (setting) => setting.name === "public.matchmaking",
+        (setting: { name: string; value: string | null }) =>
+          setting.name === "public.matchmaking",
       );
 
       if (matchMakingSetting) {
