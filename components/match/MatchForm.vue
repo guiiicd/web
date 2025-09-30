@@ -6,9 +6,9 @@ import { Info } from "lucide-vue-next";
 
 <template>
   <form @submit.prevent="updateMatch">
-    <match-options :form="form">
+    <match-options :form="form" :match="match">
       <template #left>
-        <FormField v-slot="{ value, handleChange }" name="pug">
+        <FormField v-if="!match" v-slot="{ value, handleChange }" name="pug">
           <FormItem
             class="flex flex-col space-y-3 rounded-lg border p-4 cursor-pointer hover:bg-accent"
             @click="handleChange(!value)"
@@ -176,7 +176,7 @@ export default {
               break;
             case "mr":
               this.form.setFieldValue(key, matchOptions.mr.toString());
-            break;
+              break;
             case "best_of":
               this.form.setFieldValue(key, matchOptions.best_of.toString());
               break;

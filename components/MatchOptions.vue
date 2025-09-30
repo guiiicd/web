@@ -43,9 +43,14 @@ import FiveStackToolTip from "./FiveStackToolTip.vue";
                   v-for="type in e_match_types"
                   :key="type.value"
                   class="flex items-center space-x-2 p-8 cursor-pointer"
-                  @click="form.setFieldValue('type', type.value)"
+                  :class="{ 'cursor-not-allowed opacity-60': isLocked }"
+                  @click="!isLocked && form.setFieldValue('type', type.value)"
                 >
-                  <RadioGroupItem :id="type.value" :value="type.value" />
+                  <RadioGroupItem
+                    :id="type.value"
+                    :value="type.value"
+                    :disabled="isLocked"
+                  />
                   <Label :for="type.value" class="flex flex-col cursor-pointer">
                     <span>{{ type.value }}</span>
                     <span class="text-xs text-muted-foreground">
@@ -66,9 +71,9 @@ import FiveStackToolTip from "./FiveStackToolTip.vue";
               <FormDescription>
                 {{ $t("match.options.best_of.description") }}
               </FormDescription>
-              <Select v-bind="componentField">
+              <Select v-bind="componentField" :disabled="isLocked">
                 <FormControl>
-                  <SelectTrigger>
+                  <SelectTrigger :disabled="isLocked">
                     <SelectValue
                       :placeholder="$t('match.options.best_of.placeholder')"
                     />
@@ -80,6 +85,7 @@ import FiveStackToolTip from "./FiveStackToolTip.vue";
                       :value="bestOf.value"
                       v-for="bestOf in bestOfOptions"
                       :key="bestOf.value"
+                      :disabled="isLocked"
                     >
                       {{ bestOf.display }}
                     </SelectItem>
@@ -98,7 +104,8 @@ import FiveStackToolTip from "./FiveStackToolTip.vue";
         >
           <FormItem
             class="flex flex-col space-y-3 rounded-lg border p-4 cursor-pointer hover:bg-accent"
-            @click="handleChange(!value)"
+            :class="{ 'cursor-not-allowed opacity-60': isLocked }"
+            @click="!isLocked && handleChange(!value)"
           >
             <div class="flex justify-between items-center">
               <FormLabel class="text-lg font-semibold">{{
@@ -109,6 +116,7 @@ import FiveStackToolTip from "./FiveStackToolTip.vue";
                   class="pointer-events-none"
                   :model-value="value"
                   @update:model-value="handleChange"
+                  :disabled="isLocked"
                 />
               </FormControl>
             </div>
@@ -166,6 +174,7 @@ import FiveStackToolTip from "./FiveStackToolTip.vue";
                         <Switch
                           :model-value="value"
                           @update:model-value="handleChange"
+                          :disabled="isLocked"
                         />
                       </div>
                     </FormControl>
@@ -185,6 +194,8 @@ import FiveStackToolTip from "./FiveStackToolTip.vue";
                       type="text"
                       :placeholder="$t('match.options.filter_maps')"
                       class="pl-10"
+                      :readonly="isLocked"
+                      :disabled="isLocked"
                     />
                     <Search
                       class="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5"
@@ -210,7 +221,7 @@ import FiveStackToolTip from "./FiveStackToolTip.vue";
                       <template v-for="map in maps" :key="map.id">
                         <div
                           class="relative rounded-lg overflow-hidden transition-all duration-200 ease-in-out"
-                          @click="updateMapPool(map.id)"
+                          @click="!isLocked && updateMapPool(map.id)"
                           :class="{
                             'opacity-40':
                               form.values.custom_map_pool &&
@@ -376,9 +387,9 @@ import FiveStackToolTip from "./FiveStackToolTip.vue";
                   <FormDescription>
                     {{ $t("match.options.advanced.max_rounds.description") }}
                   </FormDescription>
-                  <Select v-bind="componentField">
+                  <Select v-bind="componentField" :disabled="isLive">
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger :disabled="isLive">
                         <SelectValue
                           :placeholder="
                             $t('match.options.advanced.max_rounds.placeholder')
@@ -392,6 +403,7 @@ import FiveStackToolTip from "./FiveStackToolTip.vue";
                           :value="rounds"
                           v-for="rounds in ['8', '12', '15']"
                           :key="rounds"
+                          :disabled="isLive"
                         >
                           {{ rounds }}
                         </SelectItem>
@@ -429,8 +441,11 @@ import FiveStackToolTip from "./FiveStackToolTip.vue";
                     class="flex flex-col space-y-3 rounded-lg border p-4 cursor-pointer hover:bg-accent"
                     :class="{
                       'cursor-not-allowed': form.values.lan,
+                      'opacity-60': isLocked,
                     }"
-                    @click="!form.values.lan && handleChange(!value)"
+                    @click="
+                      !form.values.lan && !isLocked && handleChange(!value)
+                    "
                   >
                     <div class="flex justify-between items-center">
                       <FormLabel class="text-lg font-semibold">{{
@@ -443,7 +458,7 @@ import FiveStackToolTip from "./FiveStackToolTip.vue";
                           @update:model-value="
                             form.values.lan === false && handleChange
                           "
-                          :disabled="form.values.lan"
+                          :disabled="form.values.lan || isLocked"
                         />
                       </FormControl>
                     </div>
@@ -476,9 +491,10 @@ import FiveStackToolTip from "./FiveStackToolTip.vue";
                           option-label="description"
                           option-value="value"
                           class="w-full"
+                          :disabled="isLocked"
                         >
                           <FormControl>
-                            <SelectTrigger>
+                            <SelectTrigger :disabled="isLocked">
                               <SelectValue
                                 :placeholder="
                                   $t(
@@ -494,6 +510,7 @@ import FiveStackToolTip from "./FiveStackToolTip.vue";
                                 v-for="region in regions"
                                 :key="region.value"
                                 :value="region.value"
+                                :disabled="isLocked"
                               >
                                 {{ region.description || region.value }}
                               </SelectItem>
@@ -507,6 +524,7 @@ import FiveStackToolTip from "./FiveStackToolTip.vue";
                             variant="outline"
                             role="combobox"
                             class="justify-between w-full"
+                            :disabled="isLocked"
                           >
                             <span
                               v-if="
@@ -543,6 +561,9 @@ import FiveStackToolTip from "./FiveStackToolTip.vue";
                                   :value="region.value"
                                   @select="
                                     () => {
+                                      if (isLocked) {
+                                        return;
+                                      }
                                       const currentRegions =
                                         form.values.regions || [];
                                       const index = currentRegions.indexOf(
@@ -573,6 +594,7 @@ import FiveStackToolTip from "./FiveStackToolTip.vue";
                                       }
                                     }
                                   "
+                                  :disabled="isLocked"
                                 >
                                   {{ region.description || region.value }}
                                   <Check
@@ -784,6 +806,7 @@ import FiveStackToolTip from "./FiveStackToolTip.vue";
 import { generateQuery } from "~/graphql/graphqlGen";
 import {
   e_match_types_enum,
+  e_match_status_enum,
   e_ready_settings_enum,
   e_timeout_settings_enum,
 } from "~/generated/zeus";
@@ -821,6 +844,11 @@ export default {
     form: {
       required: true,
       type: Object,
+    },
+    match: {
+      required: false,
+      type: Object,
+      default: null,
     },
     forceVeto: {
       required: false,
@@ -986,6 +1014,17 @@ export default {
     },
   },
   computed: {
+    isLocked(): boolean {
+      return (
+        !!this.match &&
+        [e_match_status_enum.Veto, e_match_status_enum.Live].includes(
+          this.match.status,
+        )
+      );
+    },
+    isLive(): boolean {
+      return !!this.match && this.match.status === e_match_status_enum.Live;
+    },
     bestOfOptions(): EnumSetting[] {
       return [1, 3, 5].map((rounds) => {
         return {
