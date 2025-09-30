@@ -755,9 +755,13 @@
             }
         },
         "members": {
-            "title": "Team Members",
+            "title": "Starters",
             "invite_player": "Invite Player",
-            "pending_invites": "Pending Invites"
+            "pending_invites": "Pending Invites",
+            "player": "Player",
+            "role": "Role",
+            "coaches": "Coaches",
+            "substitutes": "Substitutes"
         },
         "form": {
             "name": "Team Name",
@@ -781,7 +785,12 @@
             "confirm_cancel_invite": "Are you sure you want to cancel this invite?",
             "confirm_remove": "Are you sure you want to remove this member?",
             "cancel_invite_description": "This will cancel the invite for this member",
-            "remove_description": "This will remove the member from the team"
+            "remove_description": "This will remove the member from the team",
+            "coach": "Coach",
+            "substitute": "Substitute",
+            "starter": "Starter",
+            "benched": "Benched",
+            "status": "Status"
         }
     },
     "match": {

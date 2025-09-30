@@ -25,63 +25,116 @@ import {
 } from "@/components/ui/alert-dialog";
 import PlayerDisplay from "~/components/PlayerDisplay.vue";
 import Separator from "../ui/separator/Separator.vue";
+import { Switch } from "~/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
+import { e_team_roster_statuses_enum } from "~/generated/zeus";
 </script>
 
 <template>
-  <PlayerDisplay :player="member.player" :linkable="true">
-    <template v-slot:avatar-sub>
-      <badge v-if="memberRole">{{ memberRole }}</badge>
-    </template>
-  </PlayerDisplay>
-  <Popover
-    v-if="
-      !isInvite &&
-      (team.can_change_role || team.can_remove) &&
-      member.player.steam_id != me.steam_id
-    "
-  >
-    <PopoverTrigger as-child>
-      <Button variant="outline" class="ml-auto">
-        {{ member.role }}
-        <ChevronDownIcon class="ml-2 h-4 w-4 text-muted-foreground" />
-      </Button>
-    </PopoverTrigger>
-    <PopoverContent class="p-0" align="end">
-      <Command v-model="memberRole">
-        <CommandList>
-          <CommandGroup>
-            <template v-if="team.can_change_role">
+  <div :class="[team.can_change_role ? 'col-span-5' : 'col-span-7', 'min-w-0']">
+    <PlayerDisplay :player="member.player" :linkable="true"></PlayerDisplay>
+  </div>
+
+  <div class="col-span-2" v-if="!isInvite && team.can_change_role">
+    <Popover
+      v-if="
+        !isInvite &&
+        (team.can_change_role || team.can_remove) &&
+        member.player.steam_id != me.steam_id
+      "
+    >
+      <PopoverTrigger as-child>
+        <Button variant="outline" class="w-full justify-between">
+          <span class="truncate">{{ member.role }}</span>
+          <ChevronDownIcon class="ml-2 h-4 w-4 text-muted-foreground" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent class="p-0" align="start">
+        <Command v-model="memberRole">
+          <CommandList>
+            <CommandGroup>
+              <template v-if="team.can_change_role">
+                <CommandItem
+                  :value="role.value"
+                  class="flex flex-col items-start px-4 py-2 cursor-pointer"
+                  v-for="role of roles"
+                >
+                  <p>{{ role.value }}</p>
+                  <p class="text-sm text-muted-foreground">
+                    {{ role.description }}
+                  </p>
+                </CommandItem>
+
+                <Separator></Separator>
+              </template>
+
               <CommandItem
-                :value="role.value"
+                :value="'remove'"
                 class="flex flex-col items-start px-4 py-2 cursor-pointer"
-                v-for="role of roles"
+                @click.stop="removeMemberDialog = true"
+                v-if="team.can_remove"
               >
-                <p>{{ role.value }}</p>
-                <p class="text-sm text-muted-foreground">
-                  {{ role.description }}
-                </p>
+                <div class="text-red-600">{{ $t("team.member.remove") }}</div>
               </CommandItem>
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  </div>
 
-              <Separator></Separator>
-            </template>
+  <div class="col-span-2" v-if="!isInvite && team.can_change_role">
+    <label
+      v-if="team.can_change_role"
+      class="flex items-center gap-2 cursor-pointer select-none"
+      @click.stop.prevent="toggleCoach"
+    >
+      <span class="text-sm text-muted-foreground">{{
+        $t("team.member.coach")
+      }}</span>
+      <Switch :model-value="member.coach" class="pointer-events-none" />
+    </label>
+  </div>
 
-            <CommandItem
-              :value="false"
-              class="flex flex-col items-start px-4 py-2 cursor-pointer"
-              @click.stop="removeMemberDialog = true"
-              v-if="team.can_remove"
-            >
-              <div class="text-red-600">{{ $t("team.member.remove") }}</div>
-            </CommandItem>
-          </CommandGroup>
-        </CommandList>
-      </Command>
-    </PopoverContent>
-  </Popover>
-  <template v-else-if="isInvite">
+  <div class="col-span-3" v-if="!isInvite && team.can_change_role">
+    <div class="flex items-center">
+      <Select
+        :model-value="member.status"
+        @update:modelValue="
+          (v: any) => updateMemberStatus(v as e_team_roster_statuses_enum)
+        "
+      >
+        <SelectTrigger class="w-full">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectItem :value="e_team_roster_statuses_enum.Starter">{{
+              $t("team.member.starter")
+            }}</SelectItem>
+            <SelectItem :value="e_team_roster_statuses_enum.Benched">{{
+              $t("team.member.benched")
+            }}</SelectItem>
+            <SelectItem :value="e_team_roster_statuses_enum.Substitute">{{
+              $t("team.member.substitute")
+            }}</SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </div>
+  </div>
+
+  <div class="col-span-12" v-else>
     <AlertDialog>
       <AlertDialogTrigger>
-        <Button>{{ $t("team.member.cancel_invite") }}</Button>
+        <Button size="sm">{{ $t("team.member.cancel_invite") }}</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -105,7 +158,7 @@ import Separator from "../ui/separator/Separator.vue";
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  </template>
+  </div>
 
   <AlertDialog :open="removeMemberDialog">
     <AlertDialogContent>
@@ -145,6 +198,11 @@ interface Role {
 
 interface Member {
   role: string;
+  coach?: boolean;
+  core?: boolean;
+  substitute?: boolean;
+  status?: e_team_roster_statuses_enum;
+  id?: string;
   team_id: string;
   player: {
     name: string;
@@ -199,9 +257,29 @@ export default {
     },
   },
   methods: {
+    async updateMemberStatus(value: e_team_roster_statuses_enum) {
+      await (this as any).$apollo.mutate({
+        mutation: generateMutation({
+          update_team_roster_by_pk: [
+            {
+              _set: {
+                status: value,
+              } as any,
+              pk_columns: {
+                team_id: this.member.team_id,
+                player_steam_id: this.member.player.steam_id,
+              },
+            },
+            {
+              __typename: true,
+            },
+          ],
+        }),
+      });
+    },
     async removeMember() {
       this.removeMemberDialog = false;
-      await this.$apollo.mutate({
+      await (this as any).$apollo.mutate({
         mutation: generateMutation({
           delete_team_roster_by_pk: [
             {
@@ -216,7 +294,7 @@ export default {
       });
     },
     async removeInvite() {
-      await this.$apollo.mutate({
+      await (this as any).$apollo.mutate({
         mutation: generateMutation({
           delete_team_invites_by_pk: [
             {
@@ -230,12 +308,32 @@ export default {
       });
     },
     async publishRole() {
-      await this.$apollo.mutate({
+      await (this as any).$apollo.mutate({
         mutation: generateMutation({
           update_team_roster_by_pk: [
             {
               _set: {
-                role: this.memberRole as e_team_roles_enum,
+                role: this.memberRole as unknown as e_team_roles_enum,
+              },
+              pk_columns: {
+                team_id: this.member.team_id,
+                player_steam_id: this.member.player.steam_id,
+              },
+            },
+            {
+              __typename: true,
+            },
+          ],
+        }),
+      });
+    },
+    async toggleCoach() {
+      await (this as any).$apollo.mutate({
+        mutation: generateMutation({
+          update_team_roster_by_pk: [
+            {
+              _set: {
+                coach: !this.member.coach,
               },
               pk_columns: {
                 team_id: this.member.team_id,

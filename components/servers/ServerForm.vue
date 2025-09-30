@@ -280,9 +280,6 @@ export default {
                 build_id: {
                   _is_null: false,
                 },
-                enabled: {
-                  _eq: true,
-                },
               },
               order_by: [
                 {},

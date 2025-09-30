@@ -1298,6 +1298,57 @@ export const AllTypesProps: Record<string,any> = {
 		_set:"e_team_roles_set_input",
 		where:"e_team_roles_bool_exp"
 	},
+	e_team_roster_statuses_aggregate_fields:{
+		count:{
+			columns:"e_team_roster_statuses_select_column"
+		}
+	},
+	e_team_roster_statuses_bool_exp:{
+		_and:"e_team_roster_statuses_bool_exp",
+		_not:"e_team_roster_statuses_bool_exp",
+		_or:"e_team_roster_statuses_bool_exp",
+		description:"String_comparison_exp",
+		value:"String_comparison_exp"
+	},
+	e_team_roster_statuses_constraint: "enum" as const,
+	e_team_roster_statuses_enum: "enum" as const,
+	e_team_roster_statuses_enum_comparison_exp:{
+		_eq:"e_team_roster_statuses_enum",
+		_in:"e_team_roster_statuses_enum",
+		_neq:"e_team_roster_statuses_enum",
+		_nin:"e_team_roster_statuses_enum"
+	},
+	e_team_roster_statuses_insert_input:{
+
+	},
+	e_team_roster_statuses_on_conflict:{
+		constraint:"e_team_roster_statuses_constraint",
+		update_columns:"e_team_roster_statuses_update_column",
+		where:"e_team_roster_statuses_bool_exp"
+	},
+	e_team_roster_statuses_order_by:{
+		description:"order_by",
+		value:"order_by"
+	},
+	e_team_roster_statuses_pk_columns_input:{
+
+	},
+	e_team_roster_statuses_select_column: "enum" as const,
+	e_team_roster_statuses_set_input:{
+
+	},
+	e_team_roster_statuses_stream_cursor_input:{
+		initial_value:"e_team_roster_statuses_stream_cursor_value_input",
+		ordering:"cursor_ordering"
+	},
+	e_team_roster_statuses_stream_cursor_value_input:{
+
+	},
+	e_team_roster_statuses_update_column: "enum" as const,
+	e_team_roster_statuses_updates:{
+		_set:"e_team_roster_statuses_set_input",
+		where:"e_team_roster_statuses_bool_exp"
+	},
 	e_timeout_settings_aggregate_fields:{
 		count:{
 			columns:"e_timeout_settings_select_column"
@@ -4935,6 +4986,12 @@ export const AllTypesProps: Record<string,any> = {
 		delete_e_team_roles_by_pk:{
 
 		},
+		delete_e_team_roster_statuses:{
+			where:"e_team_roster_statuses_bool_exp"
+		},
+		delete_e_team_roster_statuses_by_pk:{
+
+		},
 		delete_e_timeout_settings:{
 			where:"e_timeout_settings_bool_exp"
 		},
@@ -5401,6 +5458,14 @@ export const AllTypesProps: Record<string,any> = {
 		insert_e_team_roles_one:{
 			object:"e_team_roles_insert_input",
 			on_conflict:"e_team_roles_on_conflict"
+		},
+		insert_e_team_roster_statuses:{
+			objects:"e_team_roster_statuses_insert_input",
+			on_conflict:"e_team_roster_statuses_on_conflict"
+		},
+		insert_e_team_roster_statuses_one:{
+			object:"e_team_roster_statuses_insert_input",
+			on_conflict:"e_team_roster_statuses_on_conflict"
 		},
 		insert_e_timeout_settings:{
 			objects:"e_timeout_settings_insert_input",
@@ -6064,6 +6129,17 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		update_e_team_roles_many:{
 			updates:"e_team_roles_updates"
+		},
+		update_e_team_roster_statuses:{
+			_set:"e_team_roster_statuses_set_input",
+			where:"e_team_roster_statuses_bool_exp"
+		},
+		update_e_team_roster_statuses_by_pk:{
+			_set:"e_team_roster_statuses_set_input",
+			pk_columns:"e_team_roster_statuses_pk_columns_input"
+		},
+		update_e_team_roster_statuses_many:{
+			updates:"e_team_roster_statuses_updates"
 		},
 		update_e_timeout_settings:{
 			_set:"e_timeout_settings_set_input",
@@ -9481,6 +9557,19 @@ export const AllTypesProps: Record<string,any> = {
 		e_team_roles_by_pk:{
 
 		},
+		e_team_roster_statuses:{
+			distinct_on:"e_team_roster_statuses_select_column",
+			order_by:"e_team_roster_statuses_order_by",
+			where:"e_team_roster_statuses_bool_exp"
+		},
+		e_team_roster_statuses_aggregate:{
+			distinct_on:"e_team_roster_statuses_select_column",
+			order_by:"e_team_roster_statuses_order_by",
+			where:"e_team_roster_statuses_bool_exp"
+		},
+		e_team_roster_statuses_by_pk:{
+
+		},
 		e_timeout_settings:{
 			distinct_on:"e_timeout_settings_select_column",
 			order_by:"e_timeout_settings_order_by",
@@ -10954,6 +11043,23 @@ export const AllTypesProps: Record<string,any> = {
 			cursor:"e_team_roles_stream_cursor_input",
 			where:"e_team_roles_bool_exp"
 		},
+		e_team_roster_statuses:{
+			distinct_on:"e_team_roster_statuses_select_column",
+			order_by:"e_team_roster_statuses_order_by",
+			where:"e_team_roster_statuses_bool_exp"
+		},
+		e_team_roster_statuses_aggregate:{
+			distinct_on:"e_team_roster_statuses_select_column",
+			order_by:"e_team_roster_statuses_order_by",
+			where:"e_team_roster_statuses_bool_exp"
+		},
+		e_team_roster_statuses_by_pk:{
+
+		},
+		e_team_roster_statuses_stream:{
+			cursor:"e_team_roster_statuses_stream_cursor_input",
+			where:"e_team_roster_statuses_bool_exp"
+		},
 		e_timeout_settings:{
 			distinct_on:"e_timeout_settings_select_column",
 			order_by:"e_timeout_settings_order_by",
@@ -12084,7 +12190,19 @@ export const AllTypesProps: Record<string,any> = {
 		steam_id:"order_by"
 	},
 	team_roster_aggregate_bool_exp:{
+		bool_and:"team_roster_aggregate_bool_exp_bool_and",
+		bool_or:"team_roster_aggregate_bool_exp_bool_or",
 		count:"team_roster_aggregate_bool_exp_count"
+	},
+	team_roster_aggregate_bool_exp_bool_and:{
+		arguments:"team_roster_select_column_team_roster_aggregate_bool_exp_bool_and_arguments_columns",
+		filter:"team_roster_bool_exp",
+		predicate:"Boolean_comparison_exp"
+	},
+	team_roster_aggregate_bool_exp_bool_or:{
+		arguments:"team_roster_select_column_team_roster_aggregate_bool_exp_bool_or_arguments_columns",
+		filter:"team_roster_bool_exp",
+		predicate:"Boolean_comparison_exp"
 	},
 	team_roster_aggregate_bool_exp_count:{
 		arguments:"team_roster_select_column",
@@ -12120,9 +12238,11 @@ export const AllTypesProps: Record<string,any> = {
 		_and:"team_roster_bool_exp",
 		_not:"team_roster_bool_exp",
 		_or:"team_roster_bool_exp",
+		coach:"Boolean_comparison_exp",
 		player:"players_bool_exp",
 		player_steam_id:"bigint_comparison_exp",
 		role:"e_team_roles_enum_comparison_exp",
+		status:"e_team_roster_statuses_enum_comparison_exp",
 		team:"teams_bool_exp",
 		team_id:"uuid_comparison_exp"
 	},
@@ -12134,6 +12254,7 @@ export const AllTypesProps: Record<string,any> = {
 		player:"players_obj_rel_insert_input",
 		player_steam_id:"bigint",
 		role:"e_team_roles_enum",
+		status:"e_team_roster_statuses_enum",
 		team:"teams_obj_rel_insert_input",
 		team_id:"uuid"
 	},
@@ -12151,9 +12272,11 @@ export const AllTypesProps: Record<string,any> = {
 		where:"team_roster_bool_exp"
 	},
 	team_roster_order_by:{
+		coach:"order_by",
 		player:"players_order_by",
 		player_steam_id:"order_by",
 		role:"order_by",
+		status:"order_by",
 		team:"teams_order_by",
 		team_id:"order_by"
 	},
@@ -12162,9 +12285,12 @@ export const AllTypesProps: Record<string,any> = {
 		team_id:"uuid"
 	},
 	team_roster_select_column: "enum" as const,
+	team_roster_select_column_team_roster_aggregate_bool_exp_bool_and_arguments_columns: "enum" as const,
+	team_roster_select_column_team_roster_aggregate_bool_exp_bool_or_arguments_columns: "enum" as const,
 	team_roster_set_input:{
 		player_steam_id:"bigint",
 		role:"e_team_roles_enum",
+		status:"e_team_roster_statuses_enum",
 		team_id:"uuid"
 	},
 	team_roster_stddev_order_by:{
@@ -12183,6 +12309,7 @@ export const AllTypesProps: Record<string,any> = {
 	team_roster_stream_cursor_value_input:{
 		player_steam_id:"bigint",
 		role:"e_team_roles_enum",
+		status:"e_team_roster_statuses_enum",
 		team_id:"uuid"
 	},
 	team_roster_sum_order_by:{
@@ -13088,7 +13215,19 @@ export const AllTypesProps: Record<string,any> = {
 		steam_id:"order_by"
 	},
 	tournament_team_roster_aggregate_bool_exp:{
+		bool_and:"tournament_team_roster_aggregate_bool_exp_bool_and",
+		bool_or:"tournament_team_roster_aggregate_bool_exp_bool_or",
 		count:"tournament_team_roster_aggregate_bool_exp_count"
+	},
+	tournament_team_roster_aggregate_bool_exp_bool_and:{
+		arguments:"tournament_team_roster_select_column_tournament_team_roster_aggregate_bool_exp_bool_and_arguments_columns",
+		filter:"tournament_team_roster_bool_exp",
+		predicate:"Boolean_comparison_exp"
+	},
+	tournament_team_roster_aggregate_bool_exp_bool_or:{
+		arguments:"tournament_team_roster_select_column_tournament_team_roster_aggregate_bool_exp_bool_or_arguments_columns",
+		filter:"tournament_team_roster_bool_exp",
+		predicate:"Boolean_comparison_exp"
 	},
 	tournament_team_roster_aggregate_bool_exp_count:{
 		arguments:"tournament_team_roster_select_column",
@@ -13124,10 +13263,13 @@ export const AllTypesProps: Record<string,any> = {
 		_and:"tournament_team_roster_bool_exp",
 		_not:"tournament_team_roster_bool_exp",
 		_or:"tournament_team_roster_bool_exp",
+		coach:"Boolean_comparison_exp",
+		core:"Boolean_comparison_exp",
 		e_team_role:"e_team_roles_bool_exp",
 		player:"players_bool_exp",
 		player_steam_id:"bigint_comparison_exp",
 		role:"e_team_roles_enum_comparison_exp",
+		substitute:"Boolean_comparison_exp",
 		tournament:"tournaments_bool_exp",
 		tournament_id:"uuid_comparison_exp",
 		tournament_team:"tournament_teams_bool_exp",
@@ -13163,10 +13305,13 @@ export const AllTypesProps: Record<string,any> = {
 		where:"tournament_team_roster_bool_exp"
 	},
 	tournament_team_roster_order_by:{
+		coach:"order_by",
+		core:"order_by",
 		e_team_role:"e_team_roles_order_by",
 		player:"players_order_by",
 		player_steam_id:"order_by",
 		role:"order_by",
+		substitute:"order_by",
 		tournament:"tournaments_order_by",
 		tournament_id:"order_by",
 		tournament_team:"tournament_teams_order_by",
@@ -13177,6 +13322,8 @@ export const AllTypesProps: Record<string,any> = {
 		tournament_id:"uuid"
 	},
 	tournament_team_roster_select_column: "enum" as const,
+	tournament_team_roster_select_column_tournament_team_roster_aggregate_bool_exp_bool_and_arguments_columns: "enum" as const,
+	tournament_team_roster_select_column_tournament_team_roster_aggregate_bool_exp_bool_or_arguments_columns: "enum" as const,
 	tournament_team_roster_set_input:{
 		player_steam_id:"bigint",
 		role:"e_team_roles_enum",
@@ -14864,6 +15011,31 @@ export const ReturnTypes: Record<string,any> = {
 	e_team_roles_mutation_response:{
 		affected_rows:"Int",
 		returning:"e_team_roles"
+	},
+	e_team_roster_statuses:{
+		description:"String",
+		value:"String"
+	},
+	e_team_roster_statuses_aggregate:{
+		aggregate:"e_team_roster_statuses_aggregate_fields",
+		nodes:"e_team_roster_statuses"
+	},
+	e_team_roster_statuses_aggregate_fields:{
+		count:"Int",
+		max:"e_team_roster_statuses_max_fields",
+		min:"e_team_roster_statuses_min_fields"
+	},
+	e_team_roster_statuses_max_fields:{
+		description:"String",
+		value:"String"
+	},
+	e_team_roster_statuses_min_fields:{
+		description:"String",
+		value:"String"
+	},
+	e_team_roster_statuses_mutation_response:{
+		affected_rows:"Int",
+		returning:"e_team_roster_statuses"
 	},
 	e_timeout_settings:{
 		description:"String",
@@ -16637,6 +16809,8 @@ export const ReturnTypes: Record<string,any> = {
 		delete_e_sides_by_pk:"e_sides",
 		delete_e_team_roles:"e_team_roles_mutation_response",
 		delete_e_team_roles_by_pk:"e_team_roles",
+		delete_e_team_roster_statuses:"e_team_roster_statuses_mutation_response",
+		delete_e_team_roster_statuses_by_pk:"e_team_roster_statuses",
 		delete_e_timeout_settings:"e_timeout_settings_mutation_response",
 		delete_e_timeout_settings_by_pk:"e_timeout_settings",
 		delete_e_tournament_stage_types:"e_tournament_stage_types_mutation_response",
@@ -16777,6 +16951,8 @@ export const ReturnTypes: Record<string,any> = {
 		insert_e_sides_one:"e_sides",
 		insert_e_team_roles:"e_team_roles_mutation_response",
 		insert_e_team_roles_one:"e_team_roles",
+		insert_e_team_roster_statuses:"e_team_roster_statuses_mutation_response",
+		insert_e_team_roster_statuses_one:"e_team_roster_statuses",
 		insert_e_timeout_settings:"e_timeout_settings_mutation_response",
 		insert_e_timeout_settings_one:"e_timeout_settings",
 		insert_e_tournament_stage_types:"e_tournament_stage_types_mutation_response",
@@ -16959,6 +17135,9 @@ export const ReturnTypes: Record<string,any> = {
 		update_e_team_roles:"e_team_roles_mutation_response",
 		update_e_team_roles_by_pk:"e_team_roles",
 		update_e_team_roles_many:"e_team_roles_mutation_response",
+		update_e_team_roster_statuses:"e_team_roster_statuses_mutation_response",
+		update_e_team_roster_statuses_by_pk:"e_team_roster_statuses",
+		update_e_team_roster_statuses_many:"e_team_roster_statuses_mutation_response",
 		update_e_timeout_settings:"e_timeout_settings_mutation_response",
 		update_e_timeout_settings_by_pk:"e_timeout_settings",
 		update_e_timeout_settings_many:"e_timeout_settings_mutation_response",
@@ -18517,6 +18696,9 @@ export const ReturnTypes: Record<string,any> = {
 		e_team_roles:"e_team_roles",
 		e_team_roles_aggregate:"e_team_roles_aggregate",
 		e_team_roles_by_pk:"e_team_roles",
+		e_team_roster_statuses:"e_team_roster_statuses",
+		e_team_roster_statuses_aggregate:"e_team_roster_statuses_aggregate",
+		e_team_roster_statuses_by_pk:"e_team_roster_statuses",
 		e_timeout_settings:"e_timeout_settings",
 		e_timeout_settings_aggregate:"e_timeout_settings_aggregate",
 		e_timeout_settings_by_pk:"e_timeout_settings",
@@ -19020,6 +19202,10 @@ export const ReturnTypes: Record<string,any> = {
 		e_team_roles_aggregate:"e_team_roles_aggregate",
 		e_team_roles_by_pk:"e_team_roles",
 		e_team_roles_stream:"e_team_roles",
+		e_team_roster_statuses:"e_team_roster_statuses",
+		e_team_roster_statuses_aggregate:"e_team_roster_statuses_aggregate",
+		e_team_roster_statuses_by_pk:"e_team_roster_statuses",
+		e_team_roster_statuses_stream:"e_team_roster_statuses",
 		e_timeout_settings:"e_timeout_settings",
 		e_timeout_settings_aggregate:"e_timeout_settings_aggregate",
 		e_timeout_settings_by_pk:"e_timeout_settings",
@@ -19323,9 +19509,11 @@ export const ReturnTypes: Record<string,any> = {
 		steam_id:"Float"
 	},
 	team_roster:{
+		coach:"Boolean",
 		player:"players",
 		player_steam_id:"bigint",
 		role:"e_team_roles_enum",
+		status:"e_team_roster_statuses_enum",
 		team:"teams",
 		team_id:"uuid"
 	},
@@ -19801,10 +19989,13 @@ export const ReturnTypes: Record<string,any> = {
 		steam_id:"Float"
 	},
 	tournament_team_roster:{
+		coach:"Boolean",
+		core:"Boolean",
 		e_team_role:"e_team_roles",
 		player:"players",
 		player_steam_id:"bigint",
 		role:"e_team_roles_enum",
+		substitute:"Boolean",
 		tournament:"tournaments",
 		tournament_id:"uuid",
 		tournament_team:"tournament_teams",

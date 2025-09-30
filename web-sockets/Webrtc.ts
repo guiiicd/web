@@ -18,22 +18,47 @@ class WebRTCClient {
   private peers: Map<string, ExtendedPeer> = new Map();
   private dataChannels: Map<string, RTCDataChannel> = new Map();
   private hasSetupSocketListeners: boolean = false;
+  private answeredPeers: Set<string> = new Set();
 
   private setupSocketListeners() {
-    socket.listen("candidate", (async (data: {
-      peerId: string;
-      signal: SignalData;
-    }) => {
+    const handleSignal = (data: { peerId: string; signal: SignalData }) => {
       const peer = this.peers.get(data.peerId);
-      if (!peer) {
+      if (!peer || (peer as any).destroyed) {
         console.warn(
-          `[WebRTC] Received signal for unknown peer: ${data.peerId}`,
+          `[WebRTC] Ignoring signal for ${data.peerId}: peer missing or destroyed`,
         );
         return;
       }
 
-      peer.signal(data.signal);
-    }) as unknown as SocketCallback);
+      try {
+        const signalType = (data.signal as any)?.type;
+        const signalingState = peer._pc?.signalingState;
+        if (
+          signalType === "answer" &&
+          (signalingState === "stable" ||
+            signalingState === "have-local-pranswer")
+        ) {
+          return;
+        }
+
+        if (signalType === "answer") {
+          if (this.answeredPeers.has(data.peerId)) {
+            return;
+          }
+          this.answeredPeers.add(data.peerId);
+        }
+
+        peer.signal(data.signal);
+      } catch (err) {
+        console.error(
+          `[WebRTC] Failed to apply signal for peer ${data.peerId}:`,
+          err,
+        );
+      }
+    };
+
+    socket.listen("answer", handleSignal as unknown as SocketCallback);
+    socket.listen("candidate", handleSignal as unknown as SocketCallback);
   }
 
   public async connect(
@@ -53,6 +78,7 @@ class WebRTCClient {
         ordered: true,
       },
     );
+    this.dataChannels.set(peer.id, dataChannel);
 
     return new Promise((resolve, reject) => {
       dataChannel.onopen = () => {
@@ -70,6 +96,9 @@ class WebRTCClient {
           error: error,
         });
         reject(error);
+      };
+      dataChannel.onclose = () => {
+        this.cleanupPeer(peer.id);
       };
     });
   }
@@ -177,11 +206,16 @@ class WebRTCClient {
         connectionState: peer._pc.connectionState,
         iceConnectionState: peer._pc.iceConnectionState,
       });
-      peer.destroy();
+      try {
+        peer.destroy();
+      } catch (err) {
+        console.warn(`[WebRTC] Error during peer.destroy for ${peerId}:`, err);
+      }
       this.peers.delete(peerId);
     }
 
     console.log(`[WebRTC] Cleanup completed for peer ${peerId}`);
+    this.answeredPeers.delete(peerId);
   }
 
   public dispose() {

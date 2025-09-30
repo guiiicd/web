@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TeamMember } from "~/components/teams";
 import { Separator } from "~/components/ui/separator";
 import PlayerSearch from "~/components/PlayerSearch.vue";
+import PlayerDisplay from "~/components/PlayerDisplay.vue";
 </script>
 
 <template>
@@ -10,10 +11,29 @@ import PlayerSearch from "~/components/PlayerSearch.vue";
     <CardHeader>
       <CardTitle>{{ $t("team.members.title") }}</CardTitle>
     </CardHeader>
-    <CardContent class="grid gap-6">
+    <CardContent class="grid gap-3">
       <div
-        class="flex items-center justify-between space-x-4"
-        v-for="member of members"
+        class="grid grid-cols-12 items-center gap-4 px-3 text-xs uppercase tracking-wide text-muted-foreground"
+      >
+        <div :class="team?.can_change_role ? 'col-span-5' : 'col-span-12'">
+          {{ $t("team.members.player") }}
+        </div>
+        <div v-if="team?.can_change_role" class="col-span-2">
+          {{ $t("team.members.role") }}
+        </div>
+        <div v-if="team?.can_change_role" class="col-span-2">
+          {{ $t("team.member.coach") }}
+        </div>
+        <div v-if="team?.can_change_role" class="col-span-3">
+          {{ $t("team.member.status") }}
+        </div>
+      </div>
+
+      <div class="h-px bg-border" />
+
+      <div
+        class="grid grid-cols-12 items-center gap-4 rounded-lg px-3 py-2 hover:bg-muted/40"
+        v-for="member of membersMain"
       >
         <TeamMember
           :key="member.player.steam_id"
@@ -23,6 +43,25 @@ import PlayerSearch from "~/components/PlayerSearch.vue";
           :is-invite="false"
         ></TeamMember>
       </div>
+
+      <template v-if="substitutes.length">
+        <Separator class="my-3" />
+        <div class="px-3 text-sm font-medium">
+          {{ $t("team.members.substitutes") }}
+        </div>
+        <div
+          class="grid grid-cols-12 items-center gap-4 rounded-lg px-3 py-2 hover:bg-muted/40"
+          v-for="member of substitutes"
+        >
+          <TeamMember
+            :key="member.player.steam_id"
+            :team="team"
+            :member="member"
+            :roles="roles"
+            :is-invite="false"
+          ></TeamMember>
+        </div>
+      </template>
 
       <template v-if="team.can_invite">
         <Separator class="my-3" />
@@ -34,10 +73,20 @@ import PlayerSearch from "~/components/PlayerSearch.vue";
         ></PlayerSearch>
 
         <template v-if="team?.invites.length > 0">
-          <h1>{{ $t("team.members.pending_invites") }}</h1>
+          <h1 class="text-base font-medium">
+            {{ $t("team.members.pending_invites") }}
+          </h1>
 
           <div
-            class="flex items-center justify-between space-x-4"
+            class="grid grid-cols-12 items-center gap-4 px-3 text-xs uppercase tracking-wide text-muted-foreground mt-2"
+          >
+            <div class="col-span-7">{{ $t("team.members.player") }}</div>
+            <div class="col-span-5">{{ $t("common.actions") }}</div>
+          </div>
+          <div class="h-px bg-border" />
+
+          <div
+            class="grid grid-cols-12 items-center gap-4 rounded-lg px-3 py-2 hover:bg-muted/40"
             v-for="member of team?.invites"
           >
             <TeamMember
@@ -48,6 +97,28 @@ import PlayerSearch from "~/components/PlayerSearch.vue";
           </div>
         </template>
       </template>
+    </CardContent>
+  </Card>
+  <Card v-if="team && coaches.length" class="mt-6">
+    <CardHeader>
+      <CardTitle>{{ $t("team.members.coaches") }}</CardTitle>
+    </CardHeader>
+    <CardContent class="grid gap-3">
+      <div
+        class="grid grid-cols-12 items-center gap-4 px-3 text-xs uppercase tracking-wide text-muted-foreground"
+      >
+        <div class="col-span-7">{{ $t("team.members.player") }}</div>
+      </div>
+      <div class="h-px bg-border" />
+      <div
+        class="grid grid-cols-12 items-center gap-4 rounded-lg px-3 py-2"
+        v-for="coach of coaches"
+        :key="coach.player.steam_id"
+      >
+        <div class="col-span-7 min-w-0">
+          <PlayerDisplay :player="coach.player" :linkable="true" />
+        </div>
+      </div>
     </CardContent>
   </Card>
 </template>
@@ -92,6 +163,8 @@ export default {
                 },
                 {
                   role: true,
+                  coach: true,
+                  status: true,
                   team_id: true,
                   player: playerFields,
                 },
@@ -140,9 +213,28 @@ export default {
   computed: {
     members() {
       return (this.team?.roster || []).sort((a, b) => {
-        const roleOrder = { Admin: 1, Invite: 2, Member: 3 };
+        const roleOrder = { Admin: 1, Invite: 2, Member: 3 } as Record<
+          string,
+          number
+        >;
         return (roleOrder[a.role] || 4) - (roleOrder[b.role] || 4);
       });
+    },
+    membersMain() {
+      const starters = (this.members || []).filter(
+        (m: any) => m.status === "Starter",
+      );
+      const benched = (this.members || []).filter(
+        (m: any) => m.status === "Benched",
+      );
+      // Coaches should also show up here regardless of coach flag as long as they are Starter or Benched
+      return [...starters, ...benched];
+    },
+    substitutes() {
+      return (this.members || []).filter((m: any) => m.status === "Substitute");
+    },
+    coaches() {
+      return (this.members || []).filter((m: any) => m.coach);
     },
   },
   methods: {
