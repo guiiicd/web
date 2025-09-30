@@ -29,7 +29,6 @@ import { e_player_roles_enum } from "~/generated/zeus";
 export default {
   computed: {
     containContent() {
-      console.info(`i am route name`, this.$route.name);
       switch (this.$route.name) {
         case "matches-id":
           return false;
