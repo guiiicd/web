@@ -8,10 +8,21 @@ import {
   TableRow,
   TableCell,
 } from "~/components/ui/table";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogClose,
+} from "~/components/ui/dialog";
 import AssignPlayerToLineup from "~/components/match/AssignPlayerToLineup.vue";
 import { e_lobby_access_enum, e_match_status_enum } from "~/generated/zeus";
 import PlayerDisplay from "../PlayerDisplay.vue";
-import { UserPlusIcon } from "lucide-vue-next";
+import { PencilIcon } from "lucide-vue-next";
+import JoinLineupForm from "~/components/match/JoinLineupForm.vue";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { FormItem, FormControl, FormMessage } from "~/components/ui/form";
 </script>
 
 <template>
@@ -40,6 +51,47 @@ import { UserPlusIcon } from "lucide-vue-next";
               ></span>
             </div>
             <span>{{ lineup.name }}</span>
+            <Dialog
+              v-if="lineup.can_update_lineup"
+              v-model:open="editModalOpen"
+            >
+              <DialogTrigger as-child>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  class="h-6 w-6"
+                  @click="prepareEditName()"
+                >
+                  <PencilIcon class="h-3 w-3" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogTitle>{{
+                  $t("match.overview.update_team_name")
+                }}</DialogTitle>
+                <form @submit.prevent="saveTeamName" class="space-y-4 pt-2">
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        v-model="editName"
+                        :placeholder="$t('match.overview.team_name') as string"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                  <div class="flex justify-end gap-2">
+                    <DialogClose as-child>
+                      <Button type="button" variant="outline">{{
+                        $t("common.cancel")
+                      }}</Button>
+                    </DialogClose>
+                    <Button type="submit" :disabled="!editName?.trim()">{{
+                      $t("common.save")
+                    }}</Button>
+                  </div>
+                </form>
+              </DialogContent>
+            </Dialog>
           </div>
         </TableHead>
         <template v-if="showStats">
@@ -125,7 +177,7 @@ import { UserPlusIcon } from "lucide-vue-next";
               }"
             />
             <div v-if="slot === 1" class="flex gap-4">
-              <template v-if="lineup.can_update_lineup && canAddToLineup">
+              <template v-if="canAddToLineup">
                 <AssignPlayerToLineup
                   :lineup="lineup"
                   :exclude="excludePlayers"
@@ -140,26 +192,11 @@ import { UserPlusIcon } from "lucide-vue-next";
                   match.status === e_match_status_enum.PickingPlayers
                 "
               >
-                <form @submit.prevent="joinLineup" class="flex gap-4">
-                  <FormField
-                    v-slot="{ componentField }"
-                    name="code"
-                    v-if="
-                      match.options.lobby_access === e_lobby_access_enum.Invite
-                    "
-                  >
-                    <FormItem>
-                      <FormControl>
-                        <Input v-bind="componentField"></Input>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  </FormField>
-                  <Button variant="outline" class="flex gap-4">
-                    <UserPlusIcon class="h-4 w-4" />
-                    {{ $t("match.overview.join") }}
-                  </Button>
-                </form>
+                <JoinLineupForm
+                  :match="match"
+                  :lineup="lineup"
+                  @joined="$emit('joined')"
+                ></JoinLineupForm>
               </template>
             </div>
           </div>
@@ -171,6 +208,7 @@ import { UserPlusIcon } from "lucide-vue-next";
 
 <script lang="ts">
 import { generateMutation } from "~/graphql/graphqlGen";
+import { $ } from "~/generated/zeus";
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
@@ -196,22 +234,13 @@ export default {
       form: useForm({
         validationSchema: toTypedSchema(
           z.object({
-            code: z.string(),
+            team_name: z.string(),
           }),
         ),
       }),
+      editModalOpen: false as boolean,
+      editName: "" as string,
     };
-  },
-  watch: {
-    $route: {
-      immediate: true,
-      handler() {
-        if (!this.$route.query.invite) {
-          return;
-        }
-        this.form.setFieldValue("code", this.$route.query.invite);
-      },
-    },
   },
   computed: {
     canAddToLineup() {
@@ -248,28 +277,35 @@ export default {
     },
   },
   methods: {
-    async joinLineup() {
-      await this.$apollo.mutate({
+    async updateLineupName(lineup_id: string, name: string) {
+      await (this.$apollo as any).mutate({
         mutation: generateMutation({
-          joinLineup: [
+          update_match_lineups_by_pk: [
             {
-              match_id: this.match.id,
-              lineup_id: this.lineup.id,
-              code: this.form.values.code,
+              pk_columns: { id: lineup_id },
+              _set: { team_name: $("name", "String!") },
             },
             {
               __typename: true,
             },
           ],
         }),
+        variables: {
+          name,
+        },
       });
-
-      this.$emit("joined");
-
-      if (this.$route.query.invite) {
-        const { invite, ...queryWithoutInvite } = this.$route.query;
-        this.$router.replace({ query: queryWithoutInvite });
+    },
+    prepareEditName() {
+      this.editName = this.lineup?.name ?? "";
+    },
+    async saveTeamName() {
+      const newName = this.editName?.trim();
+      if (!newName) {
+        return;
       }
+      await this.updateLineupName(this.lineup.id, newName);
+      this.editModalOpen = false;
+      this.$emit("joined");
     },
   },
 };

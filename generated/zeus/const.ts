@@ -2988,6 +2988,7 @@ export const AllTypesProps: Record<string,any> = {
 		name:"String_comparison_exp",
 		team:"teams_bool_exp",
 		team_id:"uuid_comparison_exp",
+		team_name:"String_comparison_exp",
 		v_match_lineup:"v_match_lineups_bool_exp"
 	},
 	match_lineups_constraint: "enum" as const,
@@ -3008,12 +3009,14 @@ export const AllTypesProps: Record<string,any> = {
 	match_lineups_max_order_by:{
 		coach_steam_id:"order_by",
 		id:"order_by",
-		team_id:"order_by"
+		team_id:"order_by",
+		team_name:"order_by"
 	},
 	match_lineups_min_order_by:{
 		coach_steam_id:"order_by",
 		id:"order_by",
-		team_id:"order_by"
+		team_id:"order_by",
+		team_name:"order_by"
 	},
 	match_lineups_obj_rel_insert_input:{
 		data:"match_lineups_insert_input",
@@ -3041,6 +3044,7 @@ export const AllTypesProps: Record<string,any> = {
 		name:"order_by",
 		team:"teams_order_by",
 		team_id:"order_by",
+		team_name:"order_by",
 		v_match_lineup:"v_match_lineups_order_by"
 	},
 	match_lineups_pk_columns_input:{
@@ -15824,6 +15828,7 @@ export const ReturnTypes: Record<string,any> = {
 		name:"String",
 		team:"teams",
 		team_id:"uuid",
+		team_name:"String",
 		v_match_lineup:"v_match_lineups"
 	},
 	match_lineups_aggregate:{
@@ -15850,13 +15855,15 @@ export const ReturnTypes: Record<string,any> = {
 		coach_steam_id:"bigint",
 		id:"uuid",
 		name:"String",
-		team_id:"uuid"
+		team_id:"uuid",
+		team_name:"String"
 	},
 	match_lineups_min_fields:{
 		coach_steam_id:"bigint",
 		id:"uuid",
 		name:"String",
-		team_id:"uuid"
+		team_id:"uuid",
+		team_name:"String"
 	},
 	match_lineups_mutation_response:{
 		affected_rows:"Int",
