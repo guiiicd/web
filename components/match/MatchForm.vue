@@ -175,6 +175,8 @@ export default {
               }
               break;
             case "mr":
+              this.form.setFieldValue(key, matchOptions.mr.toString());
+            break;
             case "best_of":
               this.form.setFieldValue(key, matchOptions.best_of.toString());
               break;

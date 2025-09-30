@@ -306,7 +306,6 @@ provide("commander", commander);
           <MatchOptionsDisplay
             :options="match.options"
             :show-details-by-default="true"
-            v-if="!showMatchSettingsForm"
           ></MatchOptionsDisplay>
 
           <template v-if="displayServerInformation">
