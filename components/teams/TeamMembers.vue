@@ -81,7 +81,7 @@ import PlayerDisplay from "~/components/PlayerDisplay.vue";
             class="grid grid-cols-12 items-center gap-4 px-3 text-xs uppercase tracking-wide text-muted-foreground mt-2"
           >
             <div class="col-span-7">{{ $t("team.members.player") }}</div>
-            <div class="col-span-5">{{ $t("common.actions") }}</div>
+            <div class="col-span-5">{{ $t("common.actions_label") }}</div>
           </div>
           <div class="h-px bg-border" />
 

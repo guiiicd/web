@@ -69,10 +69,6 @@ provide("commander", commander);
       </TabsTrigger>
     </TabsList>
     <TabsContent value="overview" class="grid gap-4">
-      <Button v-if="canRandomize" variant="destructive" @click="randomizeTeams">
-        {{ $t("match.tabs.randomize_teams") }}
-      </Button>
-
       <Card class="w-fit">
         <CardHeader></CardHeader>
         <CardContent>
@@ -140,6 +136,15 @@ provide("commander", commander);
           </ScrollArea>
         </DrawerContent>
       </Drawer>
+
+      <div class="flex gap-4" v-if="canAdjustLineups">
+        <Button variant="destructive" @click="randomizeTeams">
+          {{ $t("match.tabs.randomize_teams") }}
+        </Button>
+        <Button variant="destructive" @click="swapLineups">
+          {{ $t("match.tabs.swap_lineups") }}
+        </Button>
+      </div>
     </TabsContent>
     <TabsContent value="utility">
       <Card>
@@ -452,7 +457,7 @@ export default {
         isAdmin || isSystemAdmin || isMatchOrganizer || isTournamentOrganizer
       );
     },
-    canRandomize() {
+    canAdjustLineups() {
       if (
         this.match.status !== e_match_status_enum.PickingPlayers ||
         !this.match.is_organizer
@@ -473,6 +478,20 @@ export default {
     },
   },
   methods: {
+    async swapLineups() {
+      await this.$apollo.mutate({
+        mutation: generateMutation({
+          swapLineups: [
+            {
+              match_id: this.match.id,
+            },
+            {
+              success: true,
+            },
+          ],
+        }),
+      });
+    },
     async randomizeTeams() {
       await this.$apollo.mutate({
         mutation: generateMutation({

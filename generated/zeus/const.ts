@@ -5888,6 +5888,9 @@ export const AllTypesProps: Record<string,any> = {
 		requestNameChange:{
 			steam_id:"bigint"
 		},
+		restartService:{
+
+		},
 		scheduleMatch:{
 			match_id:"uuid",
 			time:"timestamptz"
@@ -5899,6 +5902,9 @@ export const AllTypesProps: Record<string,any> = {
 		startMatch:{
 			match_id:"uuid",
 			server_id:"uuid"
+		},
+		swapLineups:{
+			match_id:"uuid"
 		},
 		switchLineup:{
 
@@ -17065,10 +17071,12 @@ export const ReturnTypes: Record<string,any> = {
 		randomizeTeams:"SuccessOutput",
 		registerName:"SuccessOutput",
 		requestNameChange:"SuccessOutput",
+		restartService:"SuccessOutput",
 		scheduleMatch:"SuccessOutput",
 		setMatchWinner:"SuccessOutput",
 		setupGameServer:"SetupGameServeOutput",
 		startMatch:"SuccessOutput",
+		swapLineups:"SuccessOutput",
 		switchLineup:"SuccessOutput",
 		syncSteamFriends:"SuccessOutput",
 		testUpload:"TestUploadResponse",
