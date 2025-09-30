@@ -31,6 +31,10 @@ export default {
     containContent() {
       switch (this.$route.name) {
         case "matches-id":
+        case "map-pools":
+        case "game-server-nodes":
+        case "system-metrics":
+        case "system-logs":
           return false;
         default:
           return true;
