@@ -2,20 +2,15 @@
 import SimpleMatchDisplay from "~/components/SimpleMatchDisplay.vue";
 </script>
 <template>
-  <div class="flex gap-4 overflow-x-auto">
+  <div class="flex gap-4 overflow-x-auto" v-if="matches?.length > 0">
     <SimpleMatchDisplay
       :match="match"
       v-for="match of matches"
       :key="match.id"
       class="flex-shrink-0"
-      v-if="matches?.length > 0"
     ></SimpleMatchDisplay>
-    <template v-else>
-      <div class="text-center w-full p-4">
-        <p class="text-muted-foreground">{{ $t("match.recent.no_matches") }}</p>
-      </div>
-    </template>
   </div>
+  <Separator class="my-4" v-if="matches?.length > 0" />
 </template>
 
 <script lang="ts">

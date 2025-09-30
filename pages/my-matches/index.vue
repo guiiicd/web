@@ -29,6 +29,8 @@ import { PlusCircle } from "lucide-vue-next";
     </template>
   </PageHeading>
 
+  <MyRecentMatches></MyRecentMatches>
+
   <div class="hidden md:grid grid-cols-2 gap-4 my-4">
     <Card class="flex justify-center items-center p-4">
       <div class="text-center">
@@ -55,10 +57,6 @@ import { PlusCircle } from "lucide-vue-next";
       </div>
     </Card>
   </div>
-
-  <Separator class="my-4" />
-
-  <MyRecentMatches></MyRecentMatches>
 
   <Separator class="my-4" />
 

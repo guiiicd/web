@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Search } from "lucide-vue-next";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FormItem, FormControl, Form } from "@/components/ui/form";
+import { FormItem, FormControl } from "@/components/ui/form";
 import { Button } from "~/components/ui/button";
 import TeamsTable from "~/components/TeamsTable.vue";
 import PageHeading from "~/components/PageHeading.vue";
@@ -26,57 +25,54 @@ import Pagination from "@/components/Pagination.vue";
       </template>
     </PageHeading>
 
+    <div
+      class="flex items-center space-x-2 mb-4 justify-end cursor-pointer"
+      @click="showOnlyMyTeams = !showOnlyMyTeams"
+    >
+      <Switch :model-value="showOnlyMyTeams" />
+      <Label class="text-sm">
+        {{ $t("team.search.my_teams_only") }}
+      </Label>
+    </div>
+
     <Card class="p-4">
-      <Tabs default-value="my-teams">
-        <TabsList>
-          <TabsTrigger value="my-teams">{{
-            $t("pages.teams.tabs.my_teams")
-          }}</TabsTrigger>
-          <TabsTrigger value="teams">{{
-            $t("pages.teams.tabs.other_teams")
-          }}</TabsTrigger>
-        </TabsList>
+      <form class="flex justify-end" @submit.prevent="viewTopTeam">
+        <FormField v-slot="{ componentField }" name="teamQuery">
+          <FormItem>
+            <FormControl>
+              <div class="relative w-full max-w-sm">
+                <Input
+                  type="text"
+                  :placeholder="$t('pages.teams.search')"
+                  class="pl-10"
+                  v-bind="componentField"
+                />
+                <Search
+                  class="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5"
+                />
+              </div>
+            </FormControl>
+          </FormItem>
+        </FormField>
+      </form>
 
-        <TabsContent value="teams">
-          <form class="flex justify-end" @submit.prevent="viewTopTeam">
-            <FormField v-slot="{ componentField }" name="teamQuery">
-              <FormItem>
-                <FormControl>
-                  <div class="relative w-full max-w-sm">
-                    <Input
-                      type="text"
-                      :placeholder="$t('pages.teams.search')"
-                      class="pl-10"
-                      v-bind="componentField"
-                    />
-                    <Search
-                      class="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5"
-                    />
-                  </div>
-                </FormControl>
-              </FormItem>
-            </FormField>
-          </form>
-
-          <teams-table :teams="teams" v-if="teams"></teams-table>
-          <Teleport defer to="#pagination">
-            <pagination
-              :page="page"
-              :per-page="perPage"
-              @page="
-                (_page) => {
-                  page = _page;
-                }
-              "
-              :total="teams_aggregate.aggregate.count"
-              v-if="teams_aggregate"
-            ></pagination>
-          </Teleport>
-        </TabsContent>
-        <TabsContent value="my-teams">
-          <teams-table :teams="myTeams" v-if="myTeams"></teams-table>
-        </TabsContent>
-      </Tabs>
+      <teams-table
+        :teams="showOnlyMyTeams ? myTeams : teams"
+        v-if="showOnlyMyTeams ? myTeams : teams"
+      ></teams-table>
+      <Teleport defer to="#pagination">
+        <pagination
+          :page="page"
+          :per-page="perPage"
+          @page="
+            (_page) => {
+              page = _page;
+            }
+          "
+          :total="teams_aggregate.aggregate.count"
+          v-if="!showOnlyMyTeams && teams_aggregate"
+        ></pagination>
+      </Teleport>
     </Card>
 
     <div id="pagination"></div>
@@ -97,7 +93,11 @@ export default {
     return {
       page: 1,
       perPage: 10,
-      myTeams: undefined,
+      // Provide initial shapes so template type inference knows these exist
+      teams: undefined as any,
+      teams_aggregate: undefined as any,
+      myTeams: undefined as any,
+      showOnlyMyTeams: false,
       form: useForm({
         validationSchema: toTypedSchema(
           z.object({
@@ -118,7 +118,7 @@ export default {
   apollo: {
     teams: {
       fetchPolicy: "network-only",
-      query: function () {
+      query: function (this: any) {
         return generateQuery({
           teams: [
             {
@@ -130,13 +130,15 @@ export default {
                   name: order_by.asc,
                 },
               ],
-              ...(this.form.values.teamQuery?.length >= 3 && {
-                where: {
-                  name: {
-                    _ilike: $("teamQuery", "String"),
-                  },
-                },
-              }),
+              ...(this.form.values.teamQuery?.length >= 3
+                ? {
+                    where: {
+                      name: {
+                        _ilike: $("teamQuery", "String"),
+                      },
+                    },
+                  }
+                : {}),
             },
             {
               id: true,
@@ -145,7 +147,7 @@ export default {
           ],
         });
       },
-      variables: function () {
+      variables: function (this: any): Record<string, any> {
         return {
           teamQuery: `%${this.form.values.teamQuery}%`,
           limit: this.perPage,
@@ -160,7 +162,7 @@ export default {
           {},
           {
             aggregate: {
-              count: true,
+              count: [{}, true],
             },
           },
         ],
@@ -174,7 +176,7 @@ export default {
               {
                 where: {
                   steam_id: {
-                    _eq: useAuthStore().me.steam_id,
+                    _eq: useAuthStore().me?.steam_id,
                   },
                 },
               },

@@ -14,9 +14,6 @@ import {
     <TableHeader>
       <TableRow>
         <TableHead>{{ $t("team.table.team") }}</TableHead>
-        <TableHead>{{ $t("team.table.wins") }}</TableHead>
-        <TableHead>{{ $t("team.table.losses") }}</TableHead>
-        <TableHead>{{ $t("team.table.overtime_losses") }}</TableHead>
       </TableRow>
     </TableHeader>
     <TableBody>
@@ -42,9 +39,6 @@ import {
             <TableCell class="font-medium">
               {{ team.name }}
             </TableCell>
-            <TableCell>{{ team.wins }}</TableCell>
-            <TableCell>{{ team.losses }}</TableCell>
-            <TableCell>{{ team.overtimeLosses }}</TableCell>
           </NuxtLink>
         </TableRow>
       </template>
