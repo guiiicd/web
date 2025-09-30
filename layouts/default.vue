@@ -9,11 +9,37 @@ import PlayerNameRegistration from "~/components/PlayerNameRegistration.vue";
   <MatchmakingConfirm></MatchmakingConfirm>
   <div class="flex min-h-screen w-full flex-col">
     <AppNav>
-      <slot></slot>
+      <div
+        :class="{
+          'mx-auto': !showLeftNav,
+          'lg:max-w-7xl': containContent,
+        }"
+      >
+        <slot></slot>
+      </div>
     </AppNav>
   </div>
 
   <div id="global-chat-container"></div>
 </template>
 
-<script lang="ts"></script>
+<script lang="ts">
+import { e_player_roles_enum } from "~/generated/zeus";
+
+export default {
+  computed: {
+    containContent() {
+      console.info(`i am route name`, this.$route.name);
+      switch (this.$route.name) {
+        case "matches-id":
+          return false;
+        default:
+          return true;
+      }
+    },
+    showLeftNav() {
+      return useAuthStore().isRoleAbove(e_player_roles_enum.match_organizer);
+    },
+  },
+};
+</script>
