@@ -5,7 +5,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (process.server) return;
 
   if (to.query.error) {
-    console.info(to.query.error);
     const errorMessage = Array.isArray(to.query.error)
       ? to.query.error[0]
       : to.query.error;

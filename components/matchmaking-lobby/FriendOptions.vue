@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Plus, Trash2 } from "lucide-vue-next";
+import { Plus, Trash2, Users, Gamepad2 } from "lucide-vue-next";
 import FiveStackToolTip from "../FiveStackToolTip.vue";
 </script>
 
@@ -19,6 +19,25 @@ import FiveStackToolTip from "../FiveStackToolTip.vue";
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
+
+    <Badge
+      variant="outline"
+      class="flex items-center gap-1 p-2"
+      v-if="player.player.is_in_another_match"
+    >
+      <Gamepad2 class="h-3 w-3" />
+      <span>{{ $t("matchmaking.friends.in_match") }}</span>
+    </Badge>
+
+    <Badge
+      variant="outline"
+      class="flex items-center gap-1 p-2"
+      v-else-if="player.player.is_in_lobby"
+    >
+      <Users class="h-3 w-3" />
+      <span>{{ $t("matchmaking.friends.in_lobby") }}</span>
+    </Badge>
+
     <template v-if="canInviteToMatch || canInviteToLobby">
       <template v-if="canInviteToMatch && canInviteToLobby">
         <DropdownMenu>

@@ -87,6 +87,8 @@ export const useMatchmakingStore = defineStore("matchmaking", () => {
             status: true,
             invited_by_steam_id: true,
             player: {
+              is_in_lobby: true,
+              is_in_another_match: true,
               lobby_players: [
                 {
                   limit: 1,

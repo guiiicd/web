@@ -9099,6 +9099,7 @@ export const AllTypesProps: Record<string,any> = {
 		is_banned:"Boolean_comparison_exp",
 		is_gagged:"Boolean_comparison_exp",
 		is_in_another_match:"Boolean_comparison_exp",
+		is_in_lobby:"Boolean_comparison_exp",
 		is_muted:"Boolean_comparison_exp",
 		kills:"player_kills_bool_exp",
 		kills_aggregate:"player_kills_aggregate_bool_exp",
@@ -9205,6 +9206,7 @@ export const AllTypesProps: Record<string,any> = {
 		is_banned:"order_by",
 		is_gagged:"order_by",
 		is_in_another_match:"order_by",
+		is_in_lobby:"order_by",
 		is_muted:"order_by",
 		kills_aggregate:"player_kills_aggregate_order_by",
 		language:"order_by",
@@ -13882,7 +13884,8 @@ export const AllTypesProps: Record<string,any> = {
 		lineup:"match_lineups_bool_exp",
 		match:"matches_bool_exp",
 		match_id:"uuid_comparison_exp",
-		team_id:"uuid_comparison_exp"
+		team_id:"uuid_comparison_exp",
+		team_name:"String_comparison_exp"
 	},
 	v_match_lineups_insert_input:{
 		coach_steam_id:"bigint",
@@ -13901,7 +13904,8 @@ export const AllTypesProps: Record<string,any> = {
 		lineup:"match_lineups_order_by",
 		match:"matches_order_by",
 		match_id:"order_by",
-		team_id:"order_by"
+		team_id:"order_by",
+		team_name:"order_by"
 	},
 	v_match_lineups_select_column: "enum" as const,
 	v_match_lineups_stream_cursor_input:{
@@ -18461,6 +18465,7 @@ export const ReturnTypes: Record<string,any> = {
 		is_banned:"Boolean",
 		is_gagged:"Boolean",
 		is_in_another_match:"Boolean",
+		is_in_lobby:"Boolean",
 		is_muted:"Boolean",
 		kills:"player_kills",
 		kills_aggregate:"player_kills_aggregate",
@@ -20347,7 +20352,8 @@ export const ReturnTypes: Record<string,any> = {
 		lineup:"match_lineups",
 		match:"matches",
 		match_id:"uuid",
-		team_id:"uuid"
+		team_id:"uuid",
+		team_name:"String"
 	},
 	v_match_lineups_aggregate:{
 		aggregate:"v_match_lineups_aggregate_fields",
@@ -20373,13 +20379,15 @@ export const ReturnTypes: Record<string,any> = {
 		coach_steam_id:"bigint",
 		id:"uuid",
 		match_id:"uuid",
-		team_id:"uuid"
+		team_id:"uuid",
+		team_name:"String"
 	},
 	v_match_lineups_min_fields:{
 		coach_steam_id:"bigint",
 		id:"uuid",
 		match_id:"uuid",
-		team_id:"uuid"
+		team_id:"uuid",
+		team_name:"String"
 	},
 	v_match_lineups_stddev_fields:{
 		coach_steam_id:"Float"

@@ -131,8 +131,6 @@ export default {
           typeof chatMessagesRef.scrollToBottom === "function"
         ) {
           chatMessagesRef.scrollToBottom(force);
-        } else {
-          console.error("ChatMessagesRef not found");
         }
       });
     },
