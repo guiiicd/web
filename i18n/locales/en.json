@@ -585,6 +585,7 @@
             "yes": "Yes",
             "no": "No"
         },
+        "are_you_sure": "Are you sure you want to run this command?",
         "actions": {
             "edit": "Edit",
             "delete": "Delete"
@@ -927,7 +928,7 @@
             "map_veto_tab": "Map Veto",
             "settings": "Match Settings",
             "streams": "Match Live Streams",
-            "server_console": "Server Console",
+            "admin": "Admin",
             "randomize_teams": "Randomize Teams",
             "swap_lineups": "Swap Lineups",
             "invited_to_match": "Invited to Match",

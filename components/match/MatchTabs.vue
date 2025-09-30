@@ -63,9 +63,9 @@ provide("commander", commander);
       <TabsTrigger
         :disabled="!match.server_id"
         value="server"
-        v-if="canViewServerConsole"
+        v-if="canViewAdmin"
       >
-        {{ $t("match.tabs.server_console") }}
+        {{ $t("match.tabs.admin") }}
       </TabsTrigger>
     </TabsList>
     <TabsContent value="overview" class="grid gap-4">
@@ -207,6 +207,38 @@ provide("commander", commander);
         v-if="match.server_type === 'On Demand'"
       />
 
+      <AlertDialog :open="showConfirmDialog">
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{{ $t("common.confirm") }}</AlertDialogTitle>
+            <AlertDialogDescription class="flex flex-col gap-2">
+              <span>
+                {{
+                  $t("common.are_you_sure") ||
+                  "Are you sure you want to run this command?"
+                }}
+              </span>
+              <Badge variant="secondary" class="w-fit">
+                {{ pendingCommand.display }}
+              </Badge>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel @click="showConfirmDialog = false">
+              {{ $t("common.cancel") }}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              @click="
+                executePending && executePending();
+                showConfirmDialog = false;
+              "
+            >
+              {{ $t("common.confirm") }}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <RconCommander
         :server-id="match.server_id"
         :online="match.is_server_online"
@@ -215,7 +247,11 @@ provide("commander", commander);
         <template v-for="command of availableCommands">
           <DropdownMenuItem
             :disabled="!match.is_server_online"
-            @click="commander(command.value, '')"
+            @click="
+              command.confirm
+                ? confirmCommand(command)
+                : commander(command.value, '')
+            "
           >
             {{ command.display }}
           </DropdownMenuItem>
@@ -325,6 +361,8 @@ enum AvailableCommands {
   Resume = "css_resume",
   SkipKnife = "skip_knife",
   ForceReady = "force_ready",
+  Knife = "match_state Knife",
+  Warmup = "match_state Warmup",
 }
 
 const CommandDetails = {
@@ -344,6 +382,16 @@ const CommandDetails = {
     display: "Force Ready",
     value: AvailableCommands.ForceReady,
   },
+  [AvailableCommands.Knife]: {
+    display: "Reset to Knife",
+    value: AvailableCommands.Knife,
+    confirm: true,
+  },
+  [AvailableCommands.Warmup]: {
+    display: "Reset to Warmup",
+    value: AvailableCommands.Warmup,
+    confirm: true,
+  },
 };
 
 export default {
@@ -356,6 +404,11 @@ export default {
   data() {
     return {
       inviteDialog: false,
+      showConfirmDialog: false,
+      pendingCommand: null as
+        | undefined
+        | { value: string; display: string; confirm: boolean },
+      executePending: undefined as undefined | (() => void),
       form: useForm({
         validationSchema: toTypedSchema(
           z.object({
@@ -410,6 +463,7 @@ export default {
           break;
         case e_match_map_status_enum.Knife:
           commands.push(CommandDetails[AvailableCommands.SkipKnife]);
+          commands.push(CommandDetails[AvailableCommands.Warmup]);
           break;
         case e_match_map_status_enum.Paused:
           commands.push(CommandDetails[AvailableCommands.Resume]);
@@ -417,6 +471,8 @@ export default {
         case e_match_map_status_enum.Live:
         case e_match_map_status_enum.Overtime:
           commands.push(CommandDetails[AvailableCommands.Pause]);
+          commands.push(CommandDetails[AvailableCommands.Warmup]);
+          commands.push(CommandDetails[AvailableCommands.Knife]);
           break;
       }
 
@@ -432,7 +488,7 @@ export default {
         e_match_status_enum.PickingPlayers,
       ].includes(this.match.status);
     },
-    canViewServerConsole() {
+    canViewAdmin() {
       if (
         ![
           e_match_status_enum.Live,
@@ -478,6 +534,15 @@ export default {
     },
   },
   methods: {
+    async confirmCommand(command: {
+      value: string;
+      display: string;
+      confirm: boolean;
+    }) {
+      this.pendingCommand = command;
+      this.executePending = () => commander(this.pendingCommand.value, "");
+      this.showConfirmDialog = true;
+    },
     async swapLineups() {
       await this.$apollo.mutate({
         mutation: generateMutation({
