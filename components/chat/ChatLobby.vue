@@ -64,8 +64,10 @@ import socket from "~/web-sockets/Socket";
 import type { Lobby } from "~/web-sockets/Socket";
 
 import { useRightSidebar } from "~/composables/useRightSidebar";
+import { useSound } from "~/composables/useSound";
 
 const { rightSidebarOpen } = useRightSidebar();
+const { playNotificationSound } = useSound();
 
 interface ChatMessagesRef {
   scrollToBottom: (force?: boolean) => void;
@@ -164,6 +166,7 @@ export default {
               this.unreadCount++;
             }
             this.safeScrollToBottom();
+            playNotificationSound();
           },
         );
       },

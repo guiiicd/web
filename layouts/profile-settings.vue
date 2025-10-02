@@ -58,6 +58,12 @@ import Default from "~/layouts/default.vue";
             </Button>
           </nuxt-link>
 
+          <nuxt-link to="/settings/notifications">
+            <Button variant="ghost" class="w-full text-left justify-start">
+              {{ $t("pages.settings.notifications.title") }}
+            </Button>
+          </nuxt-link>
+
           <template v-if="hasDiscordLinked">
             <Button
               variant="ghost"

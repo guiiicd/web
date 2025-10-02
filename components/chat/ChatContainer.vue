@@ -11,8 +11,13 @@
 <script lang="ts">
 import socket from "~/web-sockets/Socket";
 import type { Lobby } from "~/web-sockets/Socket";
+import { useSound } from "~/composables/useSound";
 
 export default {
+  setup() {
+    const { playNotificationSound } = useSound();
+    return { playNotificationSound };
+  },
   props: {
     instance: {
       type: String,
@@ -76,6 +81,7 @@ export default {
           if (this.isMinimized && this.global) {
             this.unreadCount++;
           }
+          this.playNotificationSound();
         },
       );
     },
