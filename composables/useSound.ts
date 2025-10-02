@@ -2,7 +2,7 @@ import { ref } from "vue";
 
 export const useSound = () => {
   const isEnabled = ref(true);
-  const volume = ref(0.5);
+  const volume = ref(0.7);
 
   const loadSettings = () => {
     if (!import.meta.client) {
