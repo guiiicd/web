@@ -141,6 +141,8 @@ import {
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
+import { e_match_status_enum } from "~/generated/zeus";
+import { useSound } from "~/composables/useSound";
 
 export default {
   props: {
@@ -233,15 +235,32 @@ export default {
           }),
         ),
       }),
+      playTickSound: useSound().playTickSound,
+      playMatchFoundSound: useSound().playMatchFoundSound,
     };
   },
   watch: {
     isPicking: {
       immediate: true,
-      handler() {
+      handler(isPicking) {
         this.form.setValues({
           map_id: undefined,
         });
+
+        if (!isPicking) {
+          return;
+        }
+        console.info("isPicking", isPicking);
+
+        this.playMatchFoundSound();
+      },
+    },
+    picks: {
+      immediate: true,
+      handler(currentPicks, oldPicks) {
+        if (oldPicks && currentPicks.length > oldPicks.length) {
+          this.playTickSound();
+        }
       },
     },
   },

@@ -102,7 +102,7 @@ export const useSound = () => {
       const masterShelf = audioContext.createBiquadFilter();
       masterShelf.type = "lowshelf";
       masterShelf.frequency.setValueAtTime(80, now);
-      masterShelf.gain.setValueAtTime(4.5, now); // subtle bass emphasis
+      masterShelf.gain.setValueAtTime(1.5, now);
 
       const masterLowpass = audioContext.createBiquadFilter();
       masterLowpass.type = "lowpass";
@@ -147,7 +147,7 @@ export const useSound = () => {
       kickOsc.frequency.exponentialRampToValueAtTime(50, now + 0.2);
       kickGain.gain.setValueAtTime(0, now);
       kickGain.gain.linearRampToValueAtTime(
-        Math.min(1, volume.value * 0.95),
+        Math.min(1, volume.value * 0.85),
         now + 0.004,
       );
       kickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
@@ -211,7 +211,7 @@ export const useSound = () => {
       scheduleNote(196.0, 0.31, 0.95, "sine", 0.26); // G3
 
       // Subtle sub-bass pad to bring bass forward without muddiness
-      scheduleNote(65.41, 0.02, 0.6, "sine", 0.18); // C2
+      scheduleNote(65.41, 0.02, 0.6, "sine", 0.12); // C2, slightly reduced level
 
       // 3) Subtle bell accent with light vibrato
       const bellStart = now + 0.55;

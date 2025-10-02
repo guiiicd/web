@@ -116,11 +116,11 @@ const isAdmin = computed(() => {
         </Button>
         <template v-if="isAdmin">
           <Button variant="outline" @click="testTickSound" class="w-full">
-          {{ $t("pages.settings.notifications.test_tick_sound") }}
-        </Button>
-        <Button variant="outline" @click="testCountdownSound" class="w-full">
-          {{ $t("pages.settings.notifications.test_countdown_sound") }}
-        </Button>
+            {{ $t("pages.settings.notifications.test_tick_sound") }}
+          </Button>
+          <Button variant="outline" @click="testCountdownSound" class="w-full">
+            {{ $t("pages.settings.notifications.test_countdown_sound") }}
+          </Button>
         </template>
       </div>
     </div>

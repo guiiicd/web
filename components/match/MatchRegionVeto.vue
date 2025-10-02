@@ -140,6 +140,7 @@ import {
 } from "~/generated/zeus";
 import { generateMutation } from "~/graphql/graphqlGen";
 import { useApplicationSettingsStore } from "~/stores/ApplicationSettings";
+import { useSound } from "~/composables/useSound";
 
 export default {
   props: {
@@ -179,10 +180,24 @@ export default {
   watch: {
     isPicking: {
       immediate: true,
-      handler() {
+      handler(isPicking) {
         this.form.setValues({
           region: undefined,
         });
+
+        if (!isPicking) {
+          return;
+        }
+
+        this.playMatchFoundSound();
+      },
+    },
+    picks: {
+      immediate: true,
+      handler(currentPicks, oldPicks) {
+        if (oldPicks && currentPicks.length > oldPicks.length) {
+          this.playTickSound();
+        }
       },
     },
   },
@@ -197,6 +212,8 @@ export default {
           }),
         ),
       }),
+      playTickSound: useSound().playTickSound,
+      playMatchFoundSound: useSound().playMatchFoundSound,
     };
   },
   computed: {

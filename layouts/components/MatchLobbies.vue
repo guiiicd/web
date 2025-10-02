@@ -66,11 +66,44 @@ import MatchLobby from "~/components/matchmaking-lobby/MatchLobby.vue";
 </template>
 
 <script lang="ts">
+import { e_match_status_enum } from "~/generated/zeus";
 export default {
   data() {
     return {
       choosingLobby: false,
+      playMatchFoundSound: useSound().playMatchFoundSound,
     };
+  },
+  watch: {
+    match: {
+      immediate: true,
+      handler(currentMatch, oldMatch) {
+        if (!currentMatch || currentMatch.id === oldMatch?.id) {
+          return;
+        }
+
+        switch (this.match.status) {
+          case e_match_status_enum.Veto:
+          case e_match_status_enum.Live:
+            if (oldMatch && currentMatch.status !== oldMatch.status) {
+              this.playMatchFoundSound();
+            }
+            break;
+          case e_match_status_enum.WaitingForCheckIn:
+            const matchLineups = this.match.lineup_1.lineup_players.concat(
+              this.match.lineup_2.lineup_players,
+            );
+            const meInMatch = matchLineups.find((lobby: any) => {
+              return lobby.player.steam_id === this.me.steam_id;
+            });
+
+            if (meInMatch.checked_in === false) {
+              this.playMatchFoundSound();
+            }
+            break;
+        }
+      },
+    },
   },
   computed: {
     me() {
