@@ -47,6 +47,7 @@ import { AlertDialog, AlertDialogContent } from "@/components/ui/alert-dialog";
 <script lang="ts">
 import { useMatchmakingStore } from "~/stores/MatchmakingStore";
 import socket from "~/web-sockets/Socket";
+import { useSound } from "~/composables/useSound";
 
 export default {
   data() {
@@ -54,6 +55,9 @@ export default {
       remainingSeconds: 0,
       routedConfirmedId: undefined as string | undefined,
       countdownInterval: undefined as NodeJS.Timeout | undefined,
+      playCountdownSound: useSound().playCountdownSound,
+      playMatchFoundSound: useSound().playMatchFoundSound,
+      playTickSound: useSound().playTickSound,
     };
   },
   computed: {
@@ -70,8 +74,21 @@ export default {
   watch: {
     confirmation: {
       immediate: true,
-      handler() {
-        this.updateCountdown();
+      handler(confirmation, oldConfirmation) {
+        if (!confirmation) {
+          return;
+        }
+
+        if (!oldConfirmation) {
+          this.playMatchFoundSound();
+          this.updateCountdown();
+          this.countdownInterval = setInterval(this.updateCountdown, 1000);
+        }
+
+        if (this.confirmation?.isReady) {
+          this.playTickSound();
+        }
+
         if (this.confirmation?.matchId) {
           if (this.routedConfirmedId !== this.confirmation.matchId) {
             this.routedConfirmedId = this.confirmation.matchId;
@@ -95,13 +112,11 @@ export default {
         const expiresAt = new Date(this.confirmation.expiresAt).getTime();
         const now = new Date().getTime();
         const difference = Math.max(0, Math.floor((expiresAt - now) / 1000));
+
+        this.playCountdownSound();
         this.remainingSeconds = difference;
       }
     },
-  },
-  mounted() {
-    this.updateCountdown();
-    this.countdownInterval = setInterval(this.updateCountdown, 1000);
   },
   beforeUnmount() {
     if (this.countdownInterval !== null) {

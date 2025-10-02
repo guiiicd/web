@@ -34,6 +34,7 @@ export const useMatchmakingStore = defineStore("matchmaking", () => {
       confirmationId: string;
       type: e_match_types_enum;
       region: string;
+      players: number;
     };
   }>({
     details: undefined,

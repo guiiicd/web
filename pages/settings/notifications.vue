@@ -10,7 +10,15 @@ definePageMeta({
   layout: "profile-settings",
 });
 
-const { isEnabled, volume, updateSettings, playNotificationSound } = useSound();
+const {
+  isEnabled,
+  volume,
+  updateSettings,
+  playNotificationSound,
+  playMatchFoundSound,
+  playTickSound,
+  playCountdownSound,
+} = useSound();
 
 const handleSoundToggle = (enabled: boolean) => {
   updateSettings(enabled);
@@ -22,9 +30,25 @@ const handleVolumeChange = (event: Event) => {
   updateSettings(isEnabled.value, newVolume);
 };
 
-const testSound = () => {
+const testChatSound = () => {
   playNotificationSound();
 };
+
+const testMatchFoundSound = () => {
+  playMatchFoundSound();
+};
+
+const testTickSound = () => {
+  playTickSound();
+};
+
+const testCountdownSound = () => {
+  playCountdownSound();
+};
+
+const isAdmin = computed(() => {
+  return useAuthStore().isAdmin;
+});
 </script>
 
 <template>
@@ -83,10 +107,22 @@ const testSound = () => {
         />
       </div>
 
-      <!-- Test Sound Button -->
-      <Button variant="outline" @click="testSound" class="w-full">
-        {{ $t("pages.settings.notifications.test_sound") }}
-      </Button>
+      <div class="flex gap-2">
+        <Button variant="outline" @click="testChatSound" class="w-full">
+          {{ $t("pages.settings.notifications.test_chat_sound") }}
+        </Button>
+        <Button variant="outline" @click="testMatchFoundSound" class="w-full">
+          {{ $t("pages.settings.notifications.test_match_found_sound") }}
+        </Button>
+        <template v-if="isAdmin">
+          <Button variant="outline" @click="testTickSound" class="w-full">
+          {{ $t("pages.settings.notifications.test_tick_sound") }}
+        </Button>
+        <Button variant="outline" @click="testCountdownSound" class="w-full">
+          {{ $t("pages.settings.notifications.test_countdown_sound") }}
+        </Button>
+        </template>
+      </div>
     </div>
   </div>
 </template>

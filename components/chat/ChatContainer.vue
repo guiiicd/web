@@ -14,10 +14,6 @@ import type { Lobby } from "~/web-sockets/Socket";
 import { useSound } from "~/composables/useSound";
 
 export default {
-  setup() {
-    const { playNotificationSound } = useSound();
-    return { playNotificationSound };
-  },
   props: {
     instance: {
       type: String,
@@ -46,6 +42,7 @@ export default {
       isMinimized: false,
       unreadCount: 0,
       lastReadMessageCount: 0,
+      playNotificationSound: useSound().playNotificationSound,
     };
   },
   methods: {
