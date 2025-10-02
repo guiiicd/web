@@ -250,7 +250,6 @@ export default {
         if (!isPicking) {
           return;
         }
-        console.info("isPicking", isPicking);
 
         this.playMatchFoundSound();
       },

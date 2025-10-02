@@ -156,6 +156,7 @@ export default {
               max_players: true,
               plugin_version: true,
               connect_password: true,
+              offline_at: true,
               current_match: {
                 id: true,
               },

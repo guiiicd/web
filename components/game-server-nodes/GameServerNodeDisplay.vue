@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import FiveStackToolTip from "~/components/FiveStackToolTip.vue";
 import { e_game_server_node_statuses_enum } from "~/generated/zeus";
+import TimeAgo from "~/components/TimeAgo.vue";
 </script>
 
 <template>
@@ -41,35 +42,40 @@ import { e_game_server_node_statuses_enum } from "~/generated/zeus";
         </div>
       </template>
 
-      <template
-        v-if="
-          gameServerNode.status === e_game_server_node_statuses_enum.Offline
-        "
-      >
-        {{ $t("pages.game_server_nodes.status.offline") }}
-      </template>
-      <template
-        v-else-if="
-          gameServerNode.status === e_game_server_node_statuses_enum.Online
-        "
-      >
-        {{ $t("pages.game_server_nodes.status.online") }}
-      </template>
-      <template
-        v-else-if="
-          gameServerNode.status === e_game_server_node_statuses_enum.Setup
-        "
-      >
-        {{ $t("pages.game_server_nodes.status.setup") }}
-      </template>
-      <template
-        v-else-if="
-          gameServerNode.status ===
-          e_game_server_node_statuses_enum.NotAcceptingNewMatches
-        "
-      >
-        {{ $t("pages.game_server_nodes.status.not_accepting") }}
-      </template>
+      <div class="flex items-center gap-1 font-medium">
+        <template
+          v-if="
+            gameServerNode.status === e_game_server_node_statuses_enum.Offline
+          "
+        >
+          {{ $t("pages.game_server_nodes.status.offline") }}
+          <template v-if="gameServerNode.offline_at">
+            <TimeAgo :date="gameServerNode.offline_at" />
+          </template>
+        </template>
+        <template
+          v-else-if="
+            gameServerNode.status === e_game_server_node_statuses_enum.Online
+          "
+        >
+          {{ $t("pages.game_server_nodes.status.online") }}
+        </template>
+        <template
+          v-else-if="
+            gameServerNode.status === e_game_server_node_statuses_enum.Setup
+          "
+        >
+          {{ $t("pages.game_server_nodes.status.setup") }}
+        </template>
+        <template
+          v-else-if="
+            gameServerNode.status ===
+            e_game_server_node_statuses_enum.NotAcceptingNewMatches
+          "
+        >
+          {{ $t("pages.game_server_nodes.status.not_accepting") }}
+        </template>
+      </div>
 
       <div
         class="flex items-center gap-4 text-xs"

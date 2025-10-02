@@ -219,6 +219,7 @@ export default {
               game_server_node_id: true,
               connection_link: true,
               connection_string: true,
+              offline_at: true,
             },
           ],
         }),

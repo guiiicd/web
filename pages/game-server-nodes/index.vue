@@ -268,6 +268,7 @@ export default {
               cpu_governor_info: true,
               cpu_cores_per_socket: true,
               cpu_threads_per_core: true,
+              offline_at: true,
               e_region: {
                 description: true,
               },

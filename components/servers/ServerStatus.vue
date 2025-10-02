@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import FiveStackToolTip from "~/components/FiveStackToolTip.vue";
+import TimeAgo from "~/components/TimeAgo.vue";
 </script>
 
 <template>
@@ -30,9 +31,12 @@ import FiveStackToolTip from "~/components/FiveStackToolTip.vue";
       </div>
     </template>
 
-    <template v-if="!server.connected">
+    <div v-if="!server.connected" class="flex items-center gap-1">
       {{ $t("pages.dedicated_servers.detail.status.disconnected") }}
-    </template>
+      <template v-if="server.offline_at">
+        <TimeAgo :date="server.offline_at" />
+      </template>
+    </div>
     <template v-else-if="!server.rcon_status">
       {{ $t("pages.dedicated_servers.detail.status.no_rcon") }}
     </template>
