@@ -22,7 +22,12 @@ import { PencilIcon } from "lucide-vue-next";
 import JoinLineupForm from "~/components/match/JoinLineupForm.vue";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { FormItem, FormControl, FormMessage } from "~/components/ui/form";
+import {
+  FormItem,
+  FormControl,
+  FormMessage,
+  FormField,
+} from "~/components/ui/form";
 </script>
 
 <template>
@@ -70,15 +75,20 @@ import { FormItem, FormControl, FormMessage } from "~/components/ui/form";
                   $t("match.overview.update_team_name")
                 }}</DialogTitle>
                 <form @submit.prevent="saveTeamName" class="space-y-4 pt-2">
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        v-model="editName"
-                        :placeholder="$t('match.overview.team_name') as string"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+                  <FormField name="team_name" v-slot="{ componentField }">
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          v-bind="componentField"
+                          v-model="editName"
+                          :placeholder="
+                            $t('match.overview.team_name') as string
+                          "
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  </FormField>
                   <div class="flex justify-end gap-2">
                     <DialogClose as-child>
                       <Button type="button" variant="outline">{{
