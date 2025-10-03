@@ -19,9 +19,15 @@ definePageMeta({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>{{ $t("pages.settings.application.db_backups.name") }}</TableHead>
-          <TableHead class="text-right">{{ $t("pages.settings.application.db_backups.size") }}</TableHead>
-          <TableHead>{{ $t("pages.settings.application.db_backups.created_at") }}</TableHead>
+          <TableHead>{{
+            $t("pages.settings.application.db_backups.name")
+          }}</TableHead>
+          <TableHead class="text-right">{{
+            $t("pages.settings.application.db_backups.size")
+          }}</TableHead>
+          <TableHead>{{
+            $t("pages.settings.application.db_backups.created_at")
+          }}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody v-if="backups.length">

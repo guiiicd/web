@@ -113,6 +113,18 @@ import TimeAgo from "~/components/TimeAgo.vue";
         <div class="font-medium text-sm">
           {{ gameServerNode.label || gameServerNode.id }}
         </div>
+
+        <div
+          class="text-muted-foreground"
+          v-if="gameServerNode.lan_ip && gameServerNode.public_ip"
+        >
+          <a :href="`http://${gameServerNode.lan_ip}:8080`" target="_blank">
+            {{ gameServerNode.lan_ip }}
+          </a>
+          {{ gameServerNode.lan_ip && gameServerNode.public_ip ? "/" : "" }}
+          {{ gameServerNode.public_ip }}
+        </div>
+
         <div class="text-muted-foreground text-xs" v-if="gameServerNode.label">
           {{ gameServerNode.id }}
         </div>

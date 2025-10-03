@@ -7,18 +7,7 @@ definePageMeta({
 </script>
 
 <template>
-  <div class="mb-8 p-4 bg-muted rounded-lg">
-    <h3 class="text-lg font-semibold mb-2">
-      {{ $t("pages.settings.application.demo_settings.current_storage") }}
-    </h3>
-    <div>
-      <p class="text-sm text-muted-foreground">
-        {{ $t("pages.settings.application.demo_settings.used_storage") }}
-      </p>
-      <p class="text-2xl font-bold">~{{ currentStorage }} GB</p>
-    </div>
-  </div>
-
+  {{ form.values.demo_network_limiter }}
   <div class="mb-8 p-4 bg-muted rounded-lg flex flex-col gap-2">
     <h3 class="text-lg font-semibold">
       {{ $t("pages.settings.application.demo_settings.test_s3_title") }}
@@ -47,6 +36,50 @@ definePageMeta({
   </div>
 
   <form @submit.prevent="updateSettings" class="grid gap-4">
+    <FormField v-slot="{ componentField }" name="demo_network_limiter">
+      <FormItem>
+        <FormLabel>{{
+          $t("pages.settings.application.demo_settings.demo_network_limiter")
+        }}</FormLabel>
+        <FormDescription>{{
+          $t(
+            "pages.settings.application.demo_settings.demo_network_limiter_description",
+          )
+        }}</FormDescription>
+        <Select v-bind="componentField">
+          <FormControl>
+            <SelectTrigger>
+              <SelectValue
+                :placeholder="$t('demo_network_limiter.network_limit')"
+              />
+            </SelectTrigger>
+          </FormControl>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem :value="null">
+                {{ $t("demo_network_limiter.unlimited") }}
+              </SelectItem>
+              <SelectItem :value="0">0 Mbps</SelectItem>
+              <SelectItem :value="1">1 Mbps</SelectItem>
+              <SelectItem :value="2">2 Mbps</SelectItem>
+              <SelectItem :value="5">5 Mbps</SelectItem>
+              <SelectItem :value="10">10 Mbps</SelectItem>
+              <SelectItem :value="20">20 Mbps</SelectItem>
+              <SelectItem :value="50">50 Mbps</SelectItem>
+              <SelectItem :value="100">100 Mbps</SelectItem>
+              <SelectItem :value="200">200 Mbps</SelectItem>
+              <SelectItem :value="500">500 Mbps</SelectItem>
+              <SelectItem :value="1000">1000 Mbps</SelectItem>
+              <SelectItem :value="2000">2000 Mbps</SelectItem>
+              <SelectItem :value="5000">5000 Mbps</SelectItem>
+              <SelectItem :value="10000">10000 Mbps</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <FormMessage />
+      </FormItem>
+    </FormField>
+
     <FormField v-slot="{ componentField }" name="s3_min_retention">
       <FormItem>
         <FormLabel>{{
@@ -118,22 +151,9 @@ import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import { z } from "zod";
 import { toast } from "@/components/ui/toast";
-import { generateQuery } from "~/graphql/graphqlGen";
 
 export default {
-  apollo: {
-    match_map_demos_aggregate: {
-      query: generateQuery({
-        match_map_demos_aggregate: {
-          aggregate: {
-            sum: {
-              size: true,
-            },
-          },
-        },
-      }),
-    },
-  },
+  apollo: {},
   data() {
     return {
       form: useForm({
@@ -142,6 +162,7 @@ export default {
             s3_min_retention: z.number().int().min(1).optional().default(1),
             s3_max_storage: z.number().int().min(1).default(10),
             cloudflare_worker_url: z.string().url().optional(),
+            demo_network_limiter: z.number().int().optional().nullable(),
           }),
         ),
       }),
@@ -154,8 +175,12 @@ export default {
         for (const setting of newVal) {
           if (
             setting.name === "s3_min_retention" ||
-            setting.name === "s3_max_storage"
+            setting.name === "s3_max_storage" ||
+            setting.name === "demo_network_limiter"
           ) {
+            if (!setting.value) {
+              continue;
+            }
             this.form.setFieldValue(setting.name, parseInt(setting.value));
             continue;
           }
@@ -171,7 +196,7 @@ export default {
         data: {
           testUpload: { error },
         },
-      } = await this.$apollo.mutate({
+      } = await (this.$apollo as any).mutate({
         mutation: generateMutation({
           testUpload: {
             error: true,
@@ -198,7 +223,7 @@ export default {
         data: {
           getTestUploadLink: { link, error },
         },
-      } = await this.$apollo.mutate({
+      } = await (this.$apollo as any).mutate({
         mutation: generateMutation({
           getTestUploadLink: {
             link: true,
@@ -218,7 +243,7 @@ export default {
       window.open(link, "_blank");
     },
     async updateSettings() {
-      await this.$apollo.mutate({
+      await (this.$apollo as any).mutate({
         mutation: generateMutation({
           insert_settings: [
             {
@@ -234,6 +259,10 @@ export default {
                 {
                   name: "cloudflare_worker_url",
                   value: this.form.values.cloudflare_worker_url,
+                },
+                {
+                  name: "demo_network_limiter",
+                  value: this.form.values.demo_network_limiter?.toString(),
                 },
               ],
               on_conflict: {
@@ -256,14 +285,6 @@ export default {
   computed: {
     settings() {
       return useApplicationSettingsStore().settings;
-    },
-    currentStorage() {
-      const size = this.match_map_demos_aggregate?.aggregate.sum.size;
-      if (!size) {
-        return;
-      }
-
-      return (size / 1024 / 1024 / 1024).toFixed(2);
     },
   },
 };

@@ -43,13 +43,6 @@ import { AlertTriangle } from "lucide-vue-next";
       ></GameServerNodeDisplay>
     </TableCell>
     <TableCell>
-      <a :href="`http://${gameServerNode.lan_ip}:8080`" target="_blank">
-        {{ gameServerNode.lan_ip }}
-      </a>
-      {{ gameServerNode.lan_ip && gameServerNode.public_ip ? "/" : "" }}
-      {{ gameServerNode.public_ip }}
-    </TableCell>
-    <TableCell>
       <template v-if="gameServerNode.supports_low_latency">
         <Activity class="h-4 w-4" />
       </template>
@@ -348,6 +341,39 @@ import { AlertTriangle } from "lucide-vue-next";
         </FormField>
       </form>
     </TableCell>
+    <TableCell>
+      <Select
+        :model-value="gameServerNode.demo_network_limiter?.toString()"
+        @update:model-value="(value) => updateNetworkLimiter(value)"
+      >
+        <SelectTrigger class="w-full">
+          <SelectValue
+            :placeholder="$t('demo_network_limiter.network_limit')"
+          />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectItem :value="null">
+              {{ $t("demo_network_limiter.unlimited") }}
+            </SelectItem>
+            <SelectItem value="0">0 Mbps</SelectItem>
+            <SelectItem value="1">1 Mbps</SelectItem>
+            <SelectItem value="2">2 Mbps</SelectItem>
+            <SelectItem value="5">5 Mbps</SelectItem>
+            <SelectItem value="10">10 Mbps</SelectItem>
+            <SelectItem value="20">20 Mbps</SelectItem>
+            <SelectItem value="50">50 Mbps</SelectItem>
+            <SelectItem value="100">100 Mbps</SelectItem>
+            <SelectItem value="200">200 Mbps</SelectItem>
+            <SelectItem value="500">500 Mbps</SelectItem>
+            <SelectItem value="1000">1000 Mbps</SelectItem>
+            <SelectItem value="2000">2000 Mbps</SelectItem>
+            <SelectItem value="5000">5000 Mbps</SelectItem>
+            <SelectItem value="10000">10000 Mbps</SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </TableCell>
     <TableCell class="flex items-center space-x-2">
       <Switch
         class="cursor-pointer"
@@ -438,6 +464,7 @@ interface GameServerNode {
   status: string;
   region: string;
   enabled: boolean;
+  demo_network_limiter?: number | null;
   build_id?: string;
   pin_build_id?: string;
   pin_plugin_version?: string;
@@ -803,6 +830,25 @@ export default defineComponent({
               },
               _set: {
                 region,
+              },
+            },
+            {
+              __typename: true,
+            },
+          ],
+        }),
+      });
+    },
+    async updateNetworkLimiter(limit: string | null) {
+      await this.$apollo.mutate({
+        mutation: generateMutation({
+          update_game_server_nodes_by_pk: [
+            {
+              pk_columns: {
+                id: this.gameServerNode.id,
+              },
+              _set: {
+                demo_network_limiter: limit ? parseInt(limit) : null,
               },
             },
             {

@@ -113,9 +113,6 @@ import { Switch } from "~/components/ui/switch";
             <TableHead>{{
               $t("pages.game_server_nodes.table.node")
             }}</TableHead>
-            <TableHead>{{
-              $t("pages.game_server_nodes.table.lan_public_ip")
-            }}</TableHead>
             <TableHead>
               <a
                 href="https://docs.5stack.gg/servers/low-latency-kernel"
@@ -176,6 +173,9 @@ import { Switch } from "~/components/ui/switch";
                 }}</FiveStackToolTip>
               </div>
             </TableHead>
+            <TableHead>{{
+              $t("pages.game_server_nodes.table.demo_network_limiter")
+            }}</TableHead>
             <TableHead>{{
               $t("pages.game_server_nodes.table.enabled")
             }}</TableHead>
@@ -277,6 +277,7 @@ export default {
               },
               total_server_count: true,
               available_server_count: true,
+              demo_network_limiter: true,
             },
           ],
         }),
