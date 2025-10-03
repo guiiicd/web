@@ -186,7 +186,11 @@ export default {
       maps: {
         query: generateSubscription({
           maps: [
-            {},
+            {
+              order_by: {
+                name: "asc",
+              },
+            },
             {
               ...mapFields,
               enabled: true,
@@ -206,6 +210,9 @@ export default {
               type: {
                 _neq: e_map_pool_types_enum.Custom,
               },
+            },
+            order_by: {
+              type: "asc",
             },
           },
           {
