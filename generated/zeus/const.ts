@@ -262,6 +262,61 @@ export const AllTypesProps: Record<string,any> = {
 		_nin:"bytea"
 	},
 	cursor_ordering: "enum" as const,
+	db_backups_aggregate_fields:{
+		count:{
+			columns:"db_backups_select_column"
+		}
+	},
+	db_backups_bool_exp:{
+		_and:"db_backups_bool_exp",
+		_not:"db_backups_bool_exp",
+		_or:"db_backups_bool_exp",
+		created_at:"timestamptz_comparison_exp",
+		id:"uuid_comparison_exp",
+		name:"String_comparison_exp",
+		size:"Int_comparison_exp"
+	},
+	db_backups_constraint: "enum" as const,
+	db_backups_inc_input:{
+
+	},
+	db_backups_insert_input:{
+		created_at:"timestamptz",
+		id:"uuid"
+	},
+	db_backups_on_conflict:{
+		constraint:"db_backups_constraint",
+		update_columns:"db_backups_update_column",
+		where:"db_backups_bool_exp"
+	},
+	db_backups_order_by:{
+		created_at:"order_by",
+		id:"order_by",
+		name:"order_by",
+		size:"order_by"
+	},
+	db_backups_pk_columns_input:{
+		id:"uuid"
+	},
+	db_backups_select_column: "enum" as const,
+	db_backups_set_input:{
+		created_at:"timestamptz",
+		id:"uuid"
+	},
+	db_backups_stream_cursor_input:{
+		initial_value:"db_backups_stream_cursor_value_input",
+		ordering:"cursor_ordering"
+	},
+	db_backups_stream_cursor_value_input:{
+		created_at:"timestamptz",
+		id:"uuid"
+	},
+	db_backups_update_column: "enum" as const,
+	db_backups_updates:{
+		_inc:"db_backups_inc_input",
+		_set:"db_backups_set_input",
+		where:"db_backups_bool_exp"
+	},
 	e_friend_status_aggregate_fields:{
 		count:{
 			columns:"e_friend_status_select_column"
@@ -4895,6 +4950,12 @@ export const AllTypesProps: Record<string,any> = {
 		delete_api_keys_by_pk:{
 			id:"uuid"
 		},
+		delete_db_backups:{
+			where:"db_backups_bool_exp"
+		},
+		delete_db_backups_by_pk:{
+			id:"uuid"
+		},
 		delete_e_friend_status:{
 			where:"e_friend_status_bool_exp"
 		},
@@ -5333,6 +5394,14 @@ export const AllTypesProps: Record<string,any> = {
 		insert_api_keys_one:{
 			object:"api_keys_insert_input",
 			on_conflict:"api_keys_on_conflict"
+		},
+		insert_db_backups:{
+			objects:"db_backups_insert_input",
+			on_conflict:"db_backups_on_conflict"
+		},
+		insert_db_backups_one:{
+			object:"db_backups_insert_input",
+			on_conflict:"db_backups_on_conflict"
 		},
 		insert_e_friend_status:{
 			objects:"e_friend_status_insert_input",
@@ -5959,6 +6028,19 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		update_api_keys_many:{
 			updates:"api_keys_updates"
+		},
+		update_db_backups:{
+			_inc:"db_backups_inc_input",
+			_set:"db_backups_set_input",
+			where:"db_backups_bool_exp"
+		},
+		update_db_backups_by_pk:{
+			_inc:"db_backups_inc_input",
+			_set:"db_backups_set_input",
+			pk_columns:"db_backups_pk_columns_input"
+		},
+		update_db_backups_many:{
+			updates:"db_backups_updates"
 		},
 		update_e_friend_status:{
 			_set:"e_friend_status_set_input",
@@ -9355,6 +9437,19 @@ export const AllTypesProps: Record<string,any> = {
 		api_keys_by_pk:{
 			id:"uuid"
 		},
+		db_backups:{
+			distinct_on:"db_backups_select_column",
+			order_by:"db_backups_order_by",
+			where:"db_backups_bool_exp"
+		},
+		db_backups_aggregate:{
+			distinct_on:"db_backups_select_column",
+			order_by:"db_backups_order_by",
+			where:"db_backups_bool_exp"
+		},
+		db_backups_by_pk:{
+			id:"uuid"
+		},
 		e_friend_status:{
 			distinct_on:"e_friend_status_select_column",
 			order_by:"e_friend_status_order_by",
@@ -10779,6 +10874,23 @@ export const AllTypesProps: Record<string,any> = {
 		api_keys_stream:{
 			cursor:"api_keys_stream_cursor_input",
 			where:"api_keys_bool_exp"
+		},
+		db_backups:{
+			distinct_on:"db_backups_select_column",
+			order_by:"db_backups_order_by",
+			where:"db_backups_bool_exp"
+		},
+		db_backups_aggregate:{
+			distinct_on:"db_backups_select_column",
+			order_by:"db_backups_order_by",
+			where:"db_backups_bool_exp"
+		},
+		db_backups_by_pk:{
+			id:"uuid"
+		},
+		db_backups_stream:{
+			cursor:"db_backups_stream_cursor_input",
+			where:"db_backups_bool_exp"
 		},
 		e_friend_status:{
 			distinct_on:"e_friend_status_select_column",
@@ -14597,6 +14709,69 @@ export const ReturnTypes: Record<string,any> = {
 	},
 	bigint: `scalar.bigint` as const,
 	bytea: `scalar.bytea` as const,
+	db_backups:{
+		created_at:"timestamptz",
+		id:"uuid",
+		name:"String",
+		size:"Int"
+	},
+	db_backups_aggregate:{
+		aggregate:"db_backups_aggregate_fields",
+		nodes:"db_backups"
+	},
+	db_backups_aggregate_fields:{
+		avg:"db_backups_avg_fields",
+		count:"Int",
+		max:"db_backups_max_fields",
+		min:"db_backups_min_fields",
+		stddev:"db_backups_stddev_fields",
+		stddev_pop:"db_backups_stddev_pop_fields",
+		stddev_samp:"db_backups_stddev_samp_fields",
+		sum:"db_backups_sum_fields",
+		var_pop:"db_backups_var_pop_fields",
+		var_samp:"db_backups_var_samp_fields",
+		variance:"db_backups_variance_fields"
+	},
+	db_backups_avg_fields:{
+		size:"Float"
+	},
+	db_backups_max_fields:{
+		created_at:"timestamptz",
+		id:"uuid",
+		name:"String",
+		size:"Int"
+	},
+	db_backups_min_fields:{
+		created_at:"timestamptz",
+		id:"uuid",
+		name:"String",
+		size:"Int"
+	},
+	db_backups_mutation_response:{
+		affected_rows:"Int",
+		returning:"db_backups"
+	},
+	db_backups_stddev_fields:{
+		size:"Float"
+	},
+	db_backups_stddev_pop_fields:{
+		size:"Float"
+	},
+	db_backups_stddev_samp_fields:{
+		size:"Float"
+	},
+	db_backups_sum_fields:{
+		size:"Int"
+	},
+	db_backups_var_pop_fields:{
+		size:"Float"
+	},
+	db_backups_var_samp_fields:{
+		size:"Float"
+	},
+	db_backups_variance_fields:{
+		size:"Float"
+	},
 	e_friend_status:{
 		description:"String",
 		value:"String"
@@ -16809,6 +16984,8 @@ export const ReturnTypes: Record<string,any> = {
 		delete_abandoned_matches_by_pk:"abandoned_matches",
 		delete_api_keys:"api_keys_mutation_response",
 		delete_api_keys_by_pk:"api_keys",
+		delete_db_backups:"db_backups_mutation_response",
+		delete_db_backups_by_pk:"db_backups",
 		delete_e_friend_status:"e_friend_status_mutation_response",
 		delete_e_friend_status_by_pk:"e_friend_status",
 		delete_e_game_cfg_types:"e_game_cfg_types_mutation_response",
@@ -16951,6 +17128,8 @@ export const ReturnTypes: Record<string,any> = {
 		insert_abandoned_matches_one:"abandoned_matches",
 		insert_api_keys:"api_keys_mutation_response",
 		insert_api_keys_one:"api_keys",
+		insert_db_backups:"db_backups_mutation_response",
+		insert_db_backups_one:"db_backups",
 		insert_e_friend_status:"e_friend_status_mutation_response",
 		insert_e_friend_status_one:"e_friend_status",
 		insert_e_game_cfg_types:"e_game_cfg_types_mutation_response",
@@ -17120,6 +17299,9 @@ export const ReturnTypes: Record<string,any> = {
 		update_api_keys:"api_keys_mutation_response",
 		update_api_keys_by_pk:"api_keys",
 		update_api_keys_many:"api_keys_mutation_response",
+		update_db_backups:"db_backups_mutation_response",
+		update_db_backups_by_pk:"db_backups",
+		update_db_backups_many:"db_backups_mutation_response",
 		update_e_friend_status:"e_friend_status_mutation_response",
 		update_e_friend_status_by_pk:"e_friend_status",
 		update_e_friend_status_many:"e_friend_status_mutation_response",
@@ -18682,6 +18864,9 @@ export const ReturnTypes: Record<string,any> = {
 		api_keys:"api_keys",
 		api_keys_aggregate:"api_keys_aggregate",
 		api_keys_by_pk:"api_keys",
+		db_backups:"db_backups",
+		db_backups_aggregate:"db_backups_aggregate",
+		db_backups_by_pk:"db_backups",
 		e_friend_status:"e_friend_status",
 		e_friend_status_aggregate:"e_friend_status_aggregate",
 		e_friend_status_by_pk:"e_friend_status",
@@ -19174,6 +19359,10 @@ export const ReturnTypes: Record<string,any> = {
 		api_keys_aggregate:"api_keys_aggregate",
 		api_keys_by_pk:"api_keys",
 		api_keys_stream:"api_keys",
+		db_backups:"db_backups",
+		db_backups_aggregate:"db_backups_aggregate",
+		db_backups_by_pk:"db_backups",
+		db_backups_stream:"db_backups",
 		e_friend_status:"e_friend_status",
 		e_friend_status_aggregate:"e_friend_status_aggregate",
 		e_friend_status_by_pk:"e_friend_status",

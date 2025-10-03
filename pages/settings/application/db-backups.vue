@@ -1,0 +1,96 @@
+<script setup lang="ts">
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
+definePageMeta({
+  layout: "application-settings",
+});
+</script>
+
+<template>
+  <div>
+    <h1 class="text-xl font-semibold mb-4">DB Backups</h1>
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>{{ $t("pages.settings.application.db_backups.name") }}</TableHead>
+          <TableHead class="text-right">{{ $t("pages.settings.application.db_backups.size") }}</TableHead>
+          <TableHead>{{ $t("pages.settings.application.db_backups.created_at") }}</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody v-if="backups.length">
+        <TableRow v-for="backup in backups" :key="backup.id">
+          <TableCell>{{ backup.name }}</TableCell>
+          <TableCell class="text-right tabular-nums">{{
+            formatBytes(backup.size)
+          }}</TableCell>
+          <TableCell>{{
+            new Date(backup.created_at).toLocaleString()
+          }}</TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  </div>
+</template>
+
+<script lang="ts">
+import { generateSubscription } from "~/graphql/graphqlGen";
+export default {
+  data() {
+    return {
+      backups: [] as Array<{
+        id: string;
+        name: string;
+        size: number;
+        created_at: string;
+      }>,
+    };
+  },
+  apollo: {
+    $subscribe: {
+      backups: {
+        query: generateSubscription({
+          db_backups: [
+            {},
+            {
+              id: true,
+              name: true,
+              size: true,
+              created_at: true,
+            },
+          ],
+        }),
+        result: function ({
+          data,
+        }: {
+          data: {
+            db_backups: Array<{
+              id: string;
+              name: string;
+              size: number;
+              created_at: string;
+            }>;
+          };
+        }) {
+          this.backups = data.db_backups;
+        },
+      },
+    },
+  },
+  methods: {
+    formatBytes(bytes: number) {
+      if (bytes === 0) return "0 B";
+      const units = ["B", "KB", "MB", "GB", "TB", "PB"];
+      const index = Math.floor(Math.log(bytes) / Math.log(1024));
+      const value = bytes / Math.pow(1024, index);
+      return `${value.toFixed(2)} ${units[index]}`;
+    },
+  },
+};
+</script>
