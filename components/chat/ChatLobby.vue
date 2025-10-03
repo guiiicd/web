@@ -94,6 +94,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    playNotificationSound: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
@@ -166,7 +170,10 @@ export default {
               this.unreadCount++;
             }
             this.safeScrollToBottom();
-            playNotificationSound();
+
+            if (this.playNotificationSound) {
+              playNotificationSound();
+            }
           },
         );
       },

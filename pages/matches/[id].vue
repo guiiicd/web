@@ -42,6 +42,7 @@ import { e_player_roles_enum } from "~/generated/zeus";
         instance="matches/id"
         type="match"
         :lobby-id="match.id"
+        :play-notification-sound="match.status !== e_match_status_enum.Live"
         v-if="canJoinLobby"
       />
       <MatchLiveStreams :match="match" v-if="canViewStreams"></MatchLiveStreams>
