@@ -5,7 +5,7 @@ import MatchInfo from "~/components/match/MatchInfo.vue";
 import CheckIntoMatch from "~/components/match/CheckIntoMatch.vue";
 import ChatLobby from "~/components/chat/ChatLobby.vue";
 import MatchRegionVeto from "~/components/match/MatchRegionVeto.vue";
-import JoinMatch from "~/components/match/JoinMatch.vue";
+import QuickMatchConnect from "~/components/match/QuickMatchConnect.vue";
 import { e_match_status_enum } from "~/generated/zeus";
 import MatchMapVeto from "~/components/match/MatchMapVeto.vue";
 import ScheduleMatch from "~/components/match/ScheduleMatch.vue";
@@ -35,7 +35,7 @@ import { e_player_roles_enum } from "~/generated/zeus";
       </Card>
 
       <CheckIntoMatch :match="match"></CheckIntoMatch>
-      <JoinMatch :match="match"></JoinMatch>
+      <QuickMatchConnect :match="match"></QuickMatchConnect>
       <MatchInfo :match="match"></MatchInfo>
       <ChatLobby
         class="max-h-96"

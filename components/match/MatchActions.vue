@@ -8,7 +8,7 @@ import { e_match_status_enum } from "~/generated/zeus";
 </script>
 
 <template>
-  <div class="flex gap-2 items-center">
+  <div class="flex gap-2 items-center" v-if="canAct">
     <MatchLobbyAccess
       :match="match"
       v-if="match.status === e_match_status_enum.PickingPlayers"
@@ -125,6 +125,9 @@ export default {
     },
   },
   computed: {
+    canAct() {
+      return this.match.is_in_lineup || this.match.is_organizer;
+    },
     hasMinimumLineupPlayers() {
       return (
         this.match.lineup_1?.lineup_players.length >=
