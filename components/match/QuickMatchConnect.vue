@@ -1,6 +1,18 @@
+<script setup lang="ts">
+import { e_match_status_enum } from "~/generated/zeus";
+</script>
+
 <template>
-  <Card class="p-4">
+  <Card class="p-4" v-if="match.status === e_match_status_enum.Live">
     <CardContent class="p-0">
+      <template v-if="canWatch && !match.tv_connection_string">
+        <div
+          class="flex items-center gap-2 p-4 rounded-lg border bg-foreground/10 mb-2"
+        >
+          <Tv class="w-4 h-4" />
+          {{ $t("match.server.tv_delay", { delay: match.options.tv_delay }) }}
+        </div>
+      </template>
       <template v-if="match.tv_connection_string && !match.connection_link">
         <div
           class="flex items-center gap-2 p-4 rounded-lg border bg-foreground/10 mb-2"
@@ -83,6 +95,7 @@
 <script lang="ts">
 import { Loader, ExternalLink, Copy, Tv } from "lucide-vue-next";
 import ClipBoard from "~/components/ClipBoard.vue";
+import { e_player_roles_enum } from "~/generated/zeus";
 
 export default {
   components: {
@@ -114,6 +127,24 @@ export default {
   computed: {
     me() {
       return useAuthStore().me;
+    },
+    canWatch() {
+      if (this.match.is_in_lineup) {
+        return false;
+      }
+
+      if (this.match.is_organizer) {
+        return this.match.is_server_online;
+      }
+
+      return useAuthStore().isRoleAbove(this.minimumRoleToStream);
+    },
+    minimumRoleToStream() {
+      return (
+        useApplicationSettingsStore().settings.find(
+          (setting) => setting.name === "public.minimum_role_to_stream",
+        )?.value || e_player_roles_enum.user
+      );
     },
     lobby() {
       return useMatchLobbyStore().lobbyChat[`match:${this.match?.id}`];
