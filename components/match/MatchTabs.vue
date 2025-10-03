@@ -249,7 +249,7 @@ provide("commander", commander);
             :disabled="!match.is_server_online"
             @click="
               command.confirm
-                ? confirmCommand(command)
+                ? confirmCommand(command, commander)
                 : commander(command.value, '')
             "
           >
@@ -533,11 +533,14 @@ export default {
     },
   },
   methods: {
-    async confirmCommand(command: {
-      value: string;
-      display: string;
-      confirm: boolean;
-    }) {
+    async confirmCommand(
+      command: {
+        value: string;
+        display: string;
+        confirm: boolean;
+      },
+      commander,
+    ) {
       this.pendingCommand = command;
       this.executePending = () => commander(this.pendingCommand.value, "");
       this.showConfirmDialog = true;
