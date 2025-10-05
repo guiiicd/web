@@ -435,7 +435,7 @@ import Logout from "./Logout.vue";
     </SidebarContent>
     <SidebarFooter>
       <SidebarMenu>
-        <SidebarMenuItem
+        <!-- <SidebarMenuItem
           v-if="
             me?.role === e_player_roles_enum.administrator ||
             me?.role === e_player_roles_enum.system_administrator
@@ -455,9 +455,9 @@ import Logout from "./Logout.vue";
               {{ $t("layouts.app_nav.footer.report_issue") }}
             </a>
           </SidebarMenuButton>
-        </SidebarMenuItem>
+        </SidebarMenuItem> -->
 
-        <!-- <SidebarMenuItem>
+        <SidebarMenuItem>
           <SidebarMenuButton
             as-child
             :tooltip="$t('layouts.app_nav.tooltips.join_discord')"
@@ -472,7 +472,7 @@ import Logout from "./Logout.vue";
               {{ $t("layouts.app_nav.footer.join_discord") }}
             </a>
           </SidebarMenuButton>
-        </SidebarMenuItem> -->
+        </SidebarMenuItem>
 
         <InstallPWA />
 
