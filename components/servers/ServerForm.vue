@@ -18,11 +18,74 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Switch } from "~/components/ui/switch";
+import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 </script>
 
 <template>
   <form @submit.prevent="updateCreateServer" class="grid gap-4">
-    <FormField v-slot="{ componentField }" name="type">
+    <FormField v-slot="{ componentField }" name="use_valve_modes">
+      <FormItem>
+        <FormLabel class="text-base">
+          {{ $t("server.form.type") }}
+        </FormLabel>
+        <FormControl>
+          <RadioGroup
+            :model-value="componentField.modelValue ? 'valve' : 'ranked'"
+            class="grid gap-3"
+          >
+            <div
+              class="flex items-center space-x-3 rounded-lg border p-3 hover:bg-muted/50 transition-colors cursor-pointer"
+              @click="
+                componentField &&
+                componentField['onUpdate:modelValue'] &&
+                componentField['onUpdate:modelValue'](false)
+              "
+            >
+              <RadioGroupItem id="mode-ranked" value="ranked" />
+              <div class="grid gap-1.5 leading-none">
+                <label
+                  class="text-sm font-medium leading-none"
+                  for="mode-ranked"
+                >
+                  {{ $t("server.form.ranked_server") }}
+                </label>
+                <p class="text-sm text-muted-foreground">
+                  {{ $t("server.form.ranked_server_description") }}
+                </p>
+              </div>
+            </div>
+            <div
+              class="flex items-center space-x-3 rounded-lg border p-3 hover:bg-muted/50 transition-colors cursor-pointer"
+              @click="
+                componentField &&
+                componentField['onUpdate:modelValue'] &&
+                componentField['onUpdate:modelValue'](true)
+              "
+            >
+              <RadioGroupItem id="mode-valve" value="valve" />
+              <div class="grid gap-1.5 leading-none">
+                <label
+                  class="text-sm font-medium leading-none"
+                  for="mode-valve"
+                >
+                  {{ $t("server.form.valve_presets") }}
+                </label>
+                <p class="text-sm text-muted-foreground">
+                  {{ $t("server.form.valve_presets_description") }}
+                </p>
+              </div>
+            </div>
+          </RadioGroup>
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </FormField>
+
+    <FormField
+      v-if="form.values.use_valve_modes"
+      v-slot="{ componentField }"
+      name="type"
+    >
       <FormItem>
         <FormLabel>{{ $t("server.form.type") }}</FormLabel>
         <Select v-bind="componentField">
@@ -35,7 +98,7 @@ import { Switch } from "~/components/ui/switch";
             <SelectGroup>
               <SelectItem
                 :value="serverType"
-                v-for="serverType in serverTypes"
+                v-for="serverType in valveModeTypes"
                 :key="serverType"
               >
                 {{ serverType }}
@@ -91,11 +154,7 @@ import { Switch } from "~/components/ui/switch";
             </FormDescription>
           </div>
           <FormControl>
-            <Switch
-              @click.stop
-              :model-value="componentField.modelValue"
-              @update:model-value="componentField['onUpdate:modelValue']"
-            />
+            <Switch @click.stop :model-value="componentField.modelValue" />
           </FormControl>
         </FormItem>
       </FormField>
@@ -316,6 +375,7 @@ export default {
         validationSchema: toTypedSchema(
           z
             .object({
+              use_valve_modes: z.boolean().default(false),
               host: z
                 .string()
                 .ip({ version: "v4" })
@@ -382,6 +442,7 @@ export default {
             port,
             region,
             tv_port,
+            use_valve_modes: type !== e_server_types_enum.Ranked,
             use_game_server_node: !!game_server_node_id,
             game_server_node_id: game_server_node_id
               ? game_server_node_id.toString()
@@ -391,6 +452,21 @@ export default {
             max_players: max_players || 32,
           });
           return;
+        }
+      },
+    },
+    "form.values.use_valve_modes": {
+      immediate: true,
+      handler(newValue) {
+        if (!newValue) {
+          this.form.setFieldValue("type", e_server_types_enum.Ranked);
+          return;
+        }
+        if (newValue && this.form.values.type === e_server_types_enum.Ranked) {
+          const firstNonRanked = this.valveModeTypes[0];
+          if (firstNonRanked) {
+            this.form.setFieldValue("type", firstNonRanked);
+          }
         }
       },
     },
@@ -423,6 +499,11 @@ export default {
     },
     serverTypes() {
       return Object.values(e_server_types_enum);
+    },
+    valveModeTypes() {
+      return Object.values(e_server_types_enum).filter(
+        (t) => t !== e_server_types_enum.Ranked,
+      );
     },
     isEditingGameServerNode() {
       return !!(this.server && this.server.game_server_node_id);

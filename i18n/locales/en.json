@@ -1256,8 +1256,10 @@
             "game_server_node_description": "Select a game server node with CS installed",
             "type": "Server Type",
             "select_type": "Select Server Type",
-            
-            
+            "ranked_server": "Ranked Server",
+            "ranked_server_description": "Fully managed ranked experience by 5stack.",
+            "valve_presets": "Valve Presets",
+            "valve_presets_description": "Choose from casual/competitive and other Valve-presets.",
             "connect_password": "Connect Password",
             "connect_password_description": "Password required to connect to the server (optional)",
             "rcon_password": "RCON Password",
