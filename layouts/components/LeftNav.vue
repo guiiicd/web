@@ -457,7 +457,7 @@ import Logout from "./Logout.vue";
           </SidebarMenuButton>
         </SidebarMenuItem>
 
-        <SidebarMenuItem>
+        <!-- <SidebarMenuItem>
           <SidebarMenuButton
             as-child
             :tooltip="$t('layouts.app_nav.tooltips.join_discord')"
@@ -472,7 +472,7 @@ import Logout from "./Logout.vue";
               {{ $t("layouts.app_nav.footer.join_discord") }}
             </a>
           </SidebarMenuButton>
-        </SidebarMenuItem>
+        </SidebarMenuItem> -->
 
         <InstallPWA />
 
