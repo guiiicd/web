@@ -6,7 +6,7 @@ import { ChevronDownIcon } from "lucide-vue-next";
 <template>
   <div class="flex flex-col gap-2" v-if="sanctions && sanctions.length > 0">
     <Collapsible>
-      <CollapsibleTrigger class="flex items-center gap-2">
+      <CollapsibleTrigger class="flex items-center gap-2 group">
         <Badge variant="destructive"
           >{{
             activeSanctions
@@ -15,7 +15,9 @@ import { ChevronDownIcon } from "lucide-vue-next";
           }}
           {{ $t("player.sanctions.title") }}</Badge
         >
-        <ChevronDownIcon class="h-4 w-4" />
+        <ChevronDownIcon
+          class="h-4 w-4 transition-transform duration-200 group-data-[state=open]:rotate-180"
+        />
       </CollapsibleTrigger>
 
       <CollapsibleContent>

@@ -314,11 +314,11 @@ import FiveStackToolTip from "./FiveStackToolTip.vue";
                 }}
               </span>
               <Button type="button" variant="ghost" size="icon" class="h-8 w-8">
-                <ChevronDown
+                <ChevronUp
                   v-if="showAdvancedSettings"
                   class="h-4 w-4 transition-transform duration-200"
                 />
-                <ChevronUp
+                <ChevronDown
                   v-else
                   class="h-4 w-4 transition-transform duration-200"
                 />
