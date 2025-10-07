@@ -379,8 +379,8 @@ export default {
                 ready_setting: $("ready_setting", "e_ready_settings_enum!"),
                 ...(this.canSetVetoSettings
                   ? {
-                      check_in_settings: $(
-                        "check_in_settings",
+                      check_in_setting: $(
+                        "check_in_setting",
                         "e_check_in_settings_enum!",
                       ),
                     }
