@@ -14,14 +14,14 @@
       <AlertDialogHeader>
         <AlertDialogTitle>
           {{
-            isAdmin || isSystemAdmin
+            canChangeName
               ? $t("player.change_name.title")
               : $t("player.change_name.request_title")
           }}
         </AlertDialogTitle>
         <AlertDialogDescription>
           {{
-            isAdmin || isSystemAdmin
+            canChangeName
               ? $t("player.change_name.description")
               : $t("player.change_name.request_description")
           }}
@@ -42,7 +42,7 @@
           {{ $t("common.cancel") }}
         </AlertDialogCancel>
         <AlertDialogAction
-          @click="isAdmin || isSystemAdmin ? changeName() : requestNameChange()"
+          @click="canChangeName ? changeName() : requestNameChange()"
         >
           {{ $t("common.confirm") }}
         </AlertDialogAction>
@@ -58,6 +58,7 @@ import { z } from "zod";
 import { toTypedSchema } from "@vee-validate/zod";
 import { $ } from "~/generated/zeus";
 import { toast } from "@/components/ui/toast";
+import { e_player_roles_enum } from "~/generated/zeus";
 
 export default {
   props: {
@@ -140,20 +141,10 @@ export default {
     me() {
       return useAuthStore().me;
     },
-    isAdmin() {
-      return useAuthStore().isAdmin;
-    },
-    isSystemAdmin() {
-      return useAuthStore().isSystemAdmin;
-    },
     canChangeName() {
-      if (!this.me) {
-        return false;
-      }
       return (
         this.player.steam_id === this.me.steam_id ||
-        this.isAdmin ||
-        this.isSystemAdmin
+        useAuthStore().isRoleAbove(e_player_roles_enum.system_administrator)
       );
     },
   },

@@ -164,6 +164,7 @@ export default {
                 timeout_setting: true,
                 tech_timeout_setting: true,
                 ready_setting: true,
+                check_in_setting: true,
                 lobby_access: true,
                 map_pool_id: true,
                 map_pool: {

@@ -112,7 +112,11 @@ import { Info } from "lucide-vue-next";
 import * as z from "zod";
 import { useForm } from "vee-validate";
 import { generateMutation } from "~/graphql/graphqlGen";
-import { $, e_map_pool_types_enum } from "~/generated/zeus";
+import {
+  $,
+  e_map_pool_types_enum,
+  e_player_roles_enum,
+} from "~/generated/zeus";
 import matchOptionsValidator from "~/utilities/match-options-validator";
 import { toast } from "@/components/ui/toast";
 
@@ -192,6 +196,11 @@ export default {
           }
         }
       },
+    },
+  },
+  computed: {
+    canSetVetoSettings() {
+      return useAuthStore().isRoleAbove(e_player_roles_enum.match_organizer);
     },
   },
   methods: {
@@ -346,6 +355,9 @@ export default {
           tv_delay: form.tv_delay,
           number_of_substitutes: form.number_of_substitutes,
           map_pool_id: mapPoolId,
+          ...(this.canSetVetoSettings
+            ? { check_in_setting: form.check_in_setting }
+            : {}),
         },
         mutation: generateMutation({
           update_match_options_by_pk: [
@@ -365,6 +377,14 @@ export default {
                 region_veto: $("region_veto", "Boolean!"),
                 regions: $("regions", "[String!]!"),
                 ready_setting: $("ready_setting", "e_ready_settings_enum!"),
+                ...(this.canSetVetoSettings
+                  ? {
+                      check_in_settings: $(
+                        "check_in_settings",
+                        "e_check_in_settings_enum!",
+                      ),
+                    }
+                  : {}),
                 timeout_setting: $(
                   "timeout_setting",
                   "e_timeout_settings_enum!",
@@ -404,6 +424,9 @@ export default {
           coaches: form.coaches,
           timeout_setting: form.timeout_setting,
           ready_setting: form.ready_setting,
+          ...(this.canSetVetoSettings
+            ? { check_in_setting: form.check_in_setting }
+            : {}),
           tech_timeout_setting: form.tech_timeout_setting,
           tv_delay: form.tv_delay,
           number_of_substitutes: form.number_of_substitutes,
@@ -460,6 +483,14 @@ export default {
                     region_veto: $("region_veto", "Boolean!"),
                     regions: $("regions", "[String!]!"),
                     ready_setting: $("ready_setting", "e_ready_settings_enum!"),
+                    ...(this.canSetVetoSettings
+                      ? {
+                          check_in_setting: $(
+                            "check_in_setting",
+                            "e_check_in_settings_enum!",
+                          ),
+                        }
+                      : {}),
                     timeout_setting: $(
                       "timeout_setting",
                       "e_timeout_settings_enum!",

@@ -317,6 +317,57 @@ export const AllTypesProps: Record<string,any> = {
 		_set:"db_backups_set_input",
 		where:"db_backups_bool_exp"
 	},
+	e_check_in_settings_aggregate_fields:{
+		count:{
+			columns:"e_check_in_settings_select_column"
+		}
+	},
+	e_check_in_settings_bool_exp:{
+		_and:"e_check_in_settings_bool_exp",
+		_not:"e_check_in_settings_bool_exp",
+		_or:"e_check_in_settings_bool_exp",
+		description:"String_comparison_exp",
+		value:"String_comparison_exp"
+	},
+	e_check_in_settings_constraint: "enum" as const,
+	e_check_in_settings_enum: "enum" as const,
+	e_check_in_settings_enum_comparison_exp:{
+		_eq:"e_check_in_settings_enum",
+		_in:"e_check_in_settings_enum",
+		_neq:"e_check_in_settings_enum",
+		_nin:"e_check_in_settings_enum"
+	},
+	e_check_in_settings_insert_input:{
+
+	},
+	e_check_in_settings_on_conflict:{
+		constraint:"e_check_in_settings_constraint",
+		update_columns:"e_check_in_settings_update_column",
+		where:"e_check_in_settings_bool_exp"
+	},
+	e_check_in_settings_order_by:{
+		description:"order_by",
+		value:"order_by"
+	},
+	e_check_in_settings_pk_columns_input:{
+
+	},
+	e_check_in_settings_select_column: "enum" as const,
+	e_check_in_settings_set_input:{
+
+	},
+	e_check_in_settings_stream_cursor_input:{
+		initial_value:"e_check_in_settings_stream_cursor_value_input",
+		ordering:"cursor_ordering"
+	},
+	e_check_in_settings_stream_cursor_value_input:{
+
+	},
+	e_check_in_settings_update_column: "enum" as const,
+	e_check_in_settings_updates:{
+		_set:"e_check_in_settings_set_input",
+		where:"e_check_in_settings_bool_exp"
+	},
 	e_friend_status_aggregate_fields:{
 		count:{
 			columns:"e_friend_status_select_column"
@@ -4035,6 +4086,7 @@ export const AllTypesProps: Record<string,any> = {
 		_not:"match_options_bool_exp",
 		_or:"match_options_bool_exp",
 		best_of:"Int_comparison_exp",
+		check_in_setting:"e_check_in_settings_enum_comparison_exp",
 		coaches:"Boolean_comparison_exp",
 		has_active_matches:"Boolean_comparison_exp",
 		id:"uuid_comparison_exp",
@@ -4064,6 +4116,7 @@ export const AllTypesProps: Record<string,any> = {
 
 	},
 	match_options_insert_input:{
+		check_in_setting:"e_check_in_settings_enum",
 		id:"uuid",
 		lobby_access:"e_lobby_access_enum",
 		map_pool:"map_pools_obj_rel_insert_input",
@@ -4086,6 +4139,7 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	match_options_order_by:{
 		best_of:"order_by",
+		check_in_setting:"order_by",
 		coaches:"order_by",
 		has_active_matches:"order_by",
 		id:"order_by",
@@ -4114,6 +4168,7 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	match_options_select_column: "enum" as const,
 	match_options_set_input:{
+		check_in_setting:"e_check_in_settings_enum",
 		id:"uuid",
 		lobby_access:"e_lobby_access_enum",
 		map_pool_id:"uuid",
@@ -4127,6 +4182,7 @@ export const AllTypesProps: Record<string,any> = {
 		ordering:"cursor_ordering"
 	},
 	match_options_stream_cursor_value_input:{
+		check_in_setting:"e_check_in_settings_enum",
 		id:"uuid",
 		lobby_access:"e_lobby_access_enum",
 		map_pool_id:"uuid",
@@ -4980,6 +5036,12 @@ export const AllTypesProps: Record<string,any> = {
 		delete_db_backups_by_pk:{
 			id:"uuid"
 		},
+		delete_e_check_in_settings:{
+			where:"e_check_in_settings_bool_exp"
+		},
+		delete_e_check_in_settings_by_pk:{
+
+		},
 		delete_e_friend_status:{
 			where:"e_friend_status_bool_exp"
 		},
@@ -5426,6 +5488,14 @@ export const AllTypesProps: Record<string,any> = {
 		insert_db_backups_one:{
 			object:"db_backups_insert_input",
 			on_conflict:"db_backups_on_conflict"
+		},
+		insert_e_check_in_settings:{
+			objects:"e_check_in_settings_insert_input",
+			on_conflict:"e_check_in_settings_on_conflict"
+		},
+		insert_e_check_in_settings_one:{
+			object:"e_check_in_settings_insert_input",
+			on_conflict:"e_check_in_settings_on_conflict"
 		},
 		insert_e_friend_status:{
 			objects:"e_friend_status_insert_input",
@@ -6065,6 +6135,17 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		update_db_backups_many:{
 			updates:"db_backups_updates"
+		},
+		update_e_check_in_settings:{
+			_set:"e_check_in_settings_set_input",
+			where:"e_check_in_settings_bool_exp"
+		},
+		update_e_check_in_settings_by_pk:{
+			_set:"e_check_in_settings_set_input",
+			pk_columns:"e_check_in_settings_pk_columns_input"
+		},
+		update_e_check_in_settings_many:{
+			updates:"e_check_in_settings_updates"
 		},
 		update_e_friend_status:{
 			_set:"e_friend_status_set_input",
@@ -9474,6 +9555,19 @@ export const AllTypesProps: Record<string,any> = {
 		db_backups_by_pk:{
 			id:"uuid"
 		},
+		e_check_in_settings:{
+			distinct_on:"e_check_in_settings_select_column",
+			order_by:"e_check_in_settings_order_by",
+			where:"e_check_in_settings_bool_exp"
+		},
+		e_check_in_settings_aggregate:{
+			distinct_on:"e_check_in_settings_select_column",
+			order_by:"e_check_in_settings_order_by",
+			where:"e_check_in_settings_bool_exp"
+		},
+		e_check_in_settings_by_pk:{
+
+		},
 		e_friend_status:{
 			distinct_on:"e_friend_status_select_column",
 			order_by:"e_friend_status_order_by",
@@ -10915,6 +11009,23 @@ export const AllTypesProps: Record<string,any> = {
 		db_backups_stream:{
 			cursor:"db_backups_stream_cursor_input",
 			where:"db_backups_bool_exp"
+		},
+		e_check_in_settings:{
+			distinct_on:"e_check_in_settings_select_column",
+			order_by:"e_check_in_settings_order_by",
+			where:"e_check_in_settings_bool_exp"
+		},
+		e_check_in_settings_aggregate:{
+			distinct_on:"e_check_in_settings_select_column",
+			order_by:"e_check_in_settings_order_by",
+			where:"e_check_in_settings_bool_exp"
+		},
+		e_check_in_settings_by_pk:{
+
+		},
+		e_check_in_settings_stream:{
+			cursor:"e_check_in_settings_stream_cursor_input",
+			where:"e_check_in_settings_bool_exp"
 		},
 		e_friend_status:{
 			distinct_on:"e_friend_status_select_column",
@@ -14796,6 +14907,31 @@ export const ReturnTypes: Record<string,any> = {
 	db_backups_variance_fields:{
 		size:"Float"
 	},
+	e_check_in_settings:{
+		description:"String",
+		value:"String"
+	},
+	e_check_in_settings_aggregate:{
+		aggregate:"e_check_in_settings_aggregate_fields",
+		nodes:"e_check_in_settings"
+	},
+	e_check_in_settings_aggregate_fields:{
+		count:"Int",
+		max:"e_check_in_settings_max_fields",
+		min:"e_check_in_settings_min_fields"
+	},
+	e_check_in_settings_max_fields:{
+		description:"String",
+		value:"String"
+	},
+	e_check_in_settings_min_fields:{
+		description:"String",
+		value:"String"
+	},
+	e_check_in_settings_mutation_response:{
+		affected_rows:"Int",
+		returning:"e_check_in_settings"
+	},
 	e_friend_status:{
 		description:"String",
 		value:"String"
@@ -16552,6 +16688,7 @@ export const ReturnTypes: Record<string,any> = {
 	},
 	match_options:{
 		best_of:"Int",
+		check_in_setting:"e_check_in_settings_enum",
 		coaches:"Boolean",
 		has_active_matches:"Boolean",
 		id:"uuid",
@@ -17032,6 +17169,8 @@ export const ReturnTypes: Record<string,any> = {
 		delete_api_keys_by_pk:"api_keys",
 		delete_db_backups:"db_backups_mutation_response",
 		delete_db_backups_by_pk:"db_backups",
+		delete_e_check_in_settings:"e_check_in_settings_mutation_response",
+		delete_e_check_in_settings_by_pk:"e_check_in_settings",
 		delete_e_friend_status:"e_friend_status_mutation_response",
 		delete_e_friend_status_by_pk:"e_friend_status",
 		delete_e_game_cfg_types:"e_game_cfg_types_mutation_response",
@@ -17176,6 +17315,8 @@ export const ReturnTypes: Record<string,any> = {
 		insert_api_keys_one:"api_keys",
 		insert_db_backups:"db_backups_mutation_response",
 		insert_db_backups_one:"db_backups",
+		insert_e_check_in_settings:"e_check_in_settings_mutation_response",
+		insert_e_check_in_settings_one:"e_check_in_settings",
 		insert_e_friend_status:"e_friend_status_mutation_response",
 		insert_e_friend_status_one:"e_friend_status",
 		insert_e_game_cfg_types:"e_game_cfg_types_mutation_response",
@@ -17348,6 +17489,9 @@ export const ReturnTypes: Record<string,any> = {
 		update_db_backups:"db_backups_mutation_response",
 		update_db_backups_by_pk:"db_backups",
 		update_db_backups_many:"db_backups_mutation_response",
+		update_e_check_in_settings:"e_check_in_settings_mutation_response",
+		update_e_check_in_settings_by_pk:"e_check_in_settings",
+		update_e_check_in_settings_many:"e_check_in_settings_mutation_response",
 		update_e_friend_status:"e_friend_status_mutation_response",
 		update_e_friend_status_by_pk:"e_friend_status",
 		update_e_friend_status_many:"e_friend_status_mutation_response",
@@ -18913,6 +19057,9 @@ export const ReturnTypes: Record<string,any> = {
 		db_backups:"db_backups",
 		db_backups_aggregate:"db_backups_aggregate",
 		db_backups_by_pk:"db_backups",
+		e_check_in_settings:"e_check_in_settings",
+		e_check_in_settings_aggregate:"e_check_in_settings_aggregate",
+		e_check_in_settings_by_pk:"e_check_in_settings",
 		e_friend_status:"e_friend_status",
 		e_friend_status_aggregate:"e_friend_status_aggregate",
 		e_friend_status_by_pk:"e_friend_status",
@@ -19409,6 +19556,10 @@ export const ReturnTypes: Record<string,any> = {
 		db_backups_aggregate:"db_backups_aggregate",
 		db_backups_by_pk:"db_backups",
 		db_backups_stream:"db_backups",
+		e_check_in_settings:"e_check_in_settings",
+		e_check_in_settings_aggregate:"e_check_in_settings_aggregate",
+		e_check_in_settings_by_pk:"e_check_in_settings",
+		e_check_in_settings_stream:"e_check_in_settings",
 		e_friend_status:"e_friend_status",
 		e_friend_status_aggregate:"e_friend_status_aggregate",
 		e_friend_status_by_pk:"e_friend_status",

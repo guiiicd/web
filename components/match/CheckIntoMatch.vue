@@ -10,12 +10,17 @@
         </template>
       </CardTitle>
       <CardDescription>
-        {{
-          $t("match.check_in.description", {
-            required: playersRequiredToStart,
-            checked: totalCheckedIn,
-          })
-        }}
+        <template v-if="isCheckedIn">
+          {{
+            $t("match.check_in.checked_in_description", {
+              required: playersRequiredToStart,
+              checked: totalCheckedIn,
+            })
+          }}
+        </template>
+        <template v-else>
+          {{ $t("match.check_in.description") }}
+        </template>
       </CardDescription>
     </CardHeader>
     <CardContent v-if="!isCheckedIn">
@@ -33,6 +38,7 @@
 <script lang="ts">
 import { generateMutation } from "~/graphql/graphqlGen";
 import TimeAgo from "~/components/TimeAgo.vue";
+import { e_check_in_settings_enum } from "~/generated/zeus";
 
 export default {
   components: { TimeAgo },
@@ -72,7 +78,14 @@ export default {
       }).length;
     },
     playersRequiredToStart() {
-      return this.match.min_players_per_lineup * 2;
+      switch (this.match.options.check_in_setting) {
+        case e_check_in_settings_enum.Players:
+          return this.match.min_players_per_lineup * 2;
+        case e_check_in_settings_enum.Captains:
+          return 2;
+        case e_check_in_settings_enum.Admin:
+          return 1;
+      }
     },
   },
   methods: {

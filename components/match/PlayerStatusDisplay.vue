@@ -1,7 +1,10 @@
 <script lang="ts" setup>
 import PlayerDisplay from "~/components/PlayerDisplay.vue";
 import FiveStackToolTip from "../FiveStackToolTip.vue";
-import { e_match_status_enum } from "~/generated/zeus";
+import {
+  e_check_in_settings_enum,
+  e_match_status_enum,
+} from "~/generated/zeus";
 </script>
 
 <template>
@@ -152,7 +155,17 @@ export default {
       return this.lobby?.get(this.member.player.steam_id)?.inGame;
     },
     isReady() {
-      return this.member.checked_in;
+      switch (this.match.options.check_in_setting) {
+        case e_check_in_settings_enum.Players:
+          return this.member.checked_in;
+        case e_check_in_settings_enum.Captains:
+          if (this.member.captain) {
+            return this.member.checked_in;
+          }
+          return true;
+        case e_check_in_settings_enum.Admin:
+          return true;
+      }
     },
     showStatus() {
       if (!this.match) {

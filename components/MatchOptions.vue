@@ -693,6 +693,43 @@ import FiveStackToolTip from "./FiveStackToolTip.vue";
               </FormField>
             </div>
 
+            <div
+              class="flex flex-col space-y-3 rounded-lg border p-4"
+              v-if="canSetcheckInSettings"
+            >
+              <FormField v-slot="{ componentField }" name="check_in_setting">
+                <FormItem>
+                  <FormLabel class="text-lg font-semibold">{{
+                    $t("match.options.advanced.check_in_settings.label")
+                  }}</FormLabel>
+                  <FormDescription>{{
+                    $t("match.options.advanced.check_in_settings.description")
+                  }}</FormDescription>
+                  <FormControl>
+                    <Select v-bind="componentField">
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem
+                            :value="vetoSetting.value"
+                            v-for="vetoSetting in checkInSettings"
+                            :key="vetoSetting.value"
+                          >
+                            {{ vetoSetting.display }}
+                          </SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              </FormField>
+            </div>
+
             <div class="flex flex-col space-y-3 rounded-lg border p-4">
               <FormField v-slot="{ componentField }" name="ready_setting">
                 <FormItem>
@@ -805,10 +842,12 @@ import FiveStackToolTip from "./FiveStackToolTip.vue";
 <script lang="ts">
 import { generateQuery } from "~/graphql/graphqlGen";
 import {
+  e_player_roles_enum,
   e_match_types_enum,
   e_match_status_enum,
   e_ready_settings_enum,
   e_timeout_settings_enum,
+  e_check_in_settings_enum,
 } from "~/generated/zeus";
 import { mapFields } from "~/graphql/mapGraphql";
 import { useApplicationSettingsStore } from "~/stores/ApplicationSettings";
@@ -1053,6 +1092,28 @@ export default {
         },
       ];
     },
+    checkInSettings(): EnumSetting[] {
+      return [
+        {
+          display: this.$t(
+            "match.options.advanced.check_in_settings.options.admins",
+          ),
+          value: e_check_in_settings_enum.Admin,
+        },
+        {
+          display: this.$t(
+            "match.options.advanced.check_in_settings.options.captains",
+          ),
+          value: e_check_in_settings_enum.Captains,
+        },
+        {
+          display: this.$t(
+            "match.options.advanced.check_in_settings.options.everyone",
+          ),
+          value: e_check_in_settings_enum.Players,
+        },
+      ];
+    },
     readySettings(): EnumSetting[] {
       return [
         {
@@ -1146,15 +1207,10 @@ export default {
         return false;
       }
 
-      const {
-        isAdmin,
-        isSystemAdmin,
-        isMatchOrganizer,
-        isTournamentOrganizer,
-      } = useAuthStore();
-      return (
-        isAdmin || isSystemAdmin || isMatchOrganizer || isTournamentOrganizer
-      );
+      return useAuthStore().isRoleAbove(e_player_roles_enum.match_organizer);
+    },
+    canSetcheckInSettings() {
+      return useAuthStore().isRoleAbove(e_player_roles_enum.match_organizer);
     },
   },
   methods: {

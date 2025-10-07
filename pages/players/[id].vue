@@ -48,11 +48,6 @@ import SteamIcon from "~/components/icons/SteamIcon.vue";
         <div class="flex gap-2">
           <template v-if="canSanction">
             <SanctionPlayer :player="player" />
-          </template>
-
-          <template
-            v-if="(isAdmin || isSystemAdmin) && player.steam_id !== me.steam_id"
-          >
             <Popover>
               <PopoverTrigger as-child>
                 <Button variant="outline" class="ml-auto">
@@ -372,23 +367,8 @@ export default {
     canSanction() {
       return (
         this.player.steam_id !== this.me.steam_id &&
-        (this.isAdmin ||
-          this.isSystemAdmin ||
-          this.isMatchOrganizer ||
-          this.isTournamentOrganizer)
+        useAuthStore().isRoleAbove(e_player_roles_enum.match_organizer)
       );
-    },
-    isMatchOrganizer() {
-      return useAuthStore().isMatchOrganizer;
-    },
-    isTournamentOrganizer() {
-      return useAuthStore().isTournamentOrganizer;
-    },
-    isAdmin() {
-      return useAuthStore().isAdmin;
-    },
-    isSystemAdmin() {
-      return useAuthStore().isSystemAdmin;
     },
     kd() {
       if (this.player?.deaths_aggregate.aggregate.count === 0) {
