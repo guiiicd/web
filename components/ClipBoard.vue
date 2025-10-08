@@ -41,13 +41,13 @@ export default {
         }
 
         toast({
-          title: "Copied to Clipboard",
+          title: this.$t("pages.toasts.copied_to_clipboard"),
         });
       } catch (err) {
         console.error("Failed to copy to clipboard:", err);
         this.fallbackCopyToClipboard(this.data);
         toast({
-          title: "Copied to Clipboard",
+          title: this.$t("pages.toasts.copied_to_clipboard"),
         });
       }
     },

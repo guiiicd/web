@@ -226,7 +226,7 @@ export default {
       });
 
       toast({
-        title: "Updated Matchmaking Settings",
+        title: this.$t("pages.settings.application.matchmaking.updated"),
       });
     },
   },

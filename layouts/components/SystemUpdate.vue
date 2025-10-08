@@ -104,7 +104,7 @@ export default {
       });
 
       toast({
-        title: "System is Updating",
+        title: this.$t("layouts.system_update.updating"),
       });
     },
   },

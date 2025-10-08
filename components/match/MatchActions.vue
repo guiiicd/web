@@ -138,12 +138,20 @@ export default {
           ],
         }),
       });
+
+      toast({
+        title: this.$t("match.actions.canceled"),
+      });
     },
     async deleteMatch() {
       await this.$apollo.mutate({
         mutation: generateMutation({
           deleteMatch: [{ match_id: this.match.id }, { success: true }],
         }),
+      });
+
+      toast({
+        title: this.$t("match.actions.deleted"),
       });
 
       this.$router.push({
@@ -172,7 +180,7 @@ export default {
       });
 
       toast({
-        title: "Requestd Organizer",
+        title: this.$t("match.actions.requested_organizer"),
       });
     },
   },

@@ -246,7 +246,7 @@ socket.listen("players-online", (onlinePlayerSteamIds) => {
 socket.listen("matchmaking:error", (data: { message: string }) => {
   toast({
     variant: "destructive",
-    title: "Error",
+    title: useNuxtApp().$i18n.t("common.error"),
     description: data.message,
   });
 });

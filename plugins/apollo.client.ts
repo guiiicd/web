@@ -80,7 +80,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
         toast({
           variant: "destructive",
-          title: "Error",
+          title: nuxtApp.$i18n.t("common.error"),
           description: graphqlError.message,
         });
       }

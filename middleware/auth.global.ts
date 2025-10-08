@@ -12,7 +12,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     if (typeof errorMessage === "string") {
       toast({
         variant: "destructive",
-        title: "Error",
+        title: useNuxtApp().$i18n.t("common.error"),
         description: errorMessage,
       });
     }
