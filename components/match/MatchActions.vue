@@ -145,6 +145,10 @@ export default {
           deleteMatch: [{ match_id: this.match.id }, { success: true }],
         }),
       });
+
+      this.$router.push({
+        name: "manage-matches",
+      });
     },
     async startMatch() {
       await this.$apollo.mutate({
