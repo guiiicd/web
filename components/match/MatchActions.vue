@@ -4,7 +4,7 @@ import MatchSelectServer from "~/components/match/MatchSelectServer.vue";
 import MatchSelectWinner from "~/components/match/MatchSelectWinner.vue";
 import DropdownMenuItem from "~/components/ui/dropdown-menu/DropdownMenuItem.vue";
 import MatchLobbyAccess from "./MatchLobbyAccess.vue";
-import { e_match_status_enum } from "~/generated/zeus";
+import { e_match_status_enum, e_player_roles_enum } from "~/generated/zeus";
 </script>
 
 <template>
@@ -30,8 +30,9 @@ import { e_match_status_enum } from "~/generated/zeus";
           >
             {{ $t("match.actions.call_support") }}
           </DropdownMenuItem>
-
-          <DropdownMenuSeparator />
+          <DropdownMenuSeparator
+            v-if="match.can_assign_server || match.is_organizer"
+          />
         </template>
 
         <DropdownMenuItem v-if="match.can_assign_server">
@@ -42,7 +43,9 @@ import { e_match_status_enum } from "~/generated/zeus";
           <MatchSelectWinner :match="match"></MatchSelectWinner>
         </DropdownMenuItem>
 
-        <DropdownMenuSeparator v-if="match.can_start || match.can_cancel" />
+        <DropdownMenuSeparator
+          v-if="match.can_start || match.can_cancel || canDeleteMatch"
+        />
 
         <template v-if="match.can_start">
           <DropdownMenuItem
@@ -67,21 +70,59 @@ import { e_match_status_enum } from "~/generated/zeus";
             $t("match.actions.cancel")
           }}</DropdownMenuItem>
         </template>
+
+        <template v-if="canDeleteMatch">
+          <DropdownMenuItem
+            class="text-destructive"
+            @click="showDeleteDialog = true"
+            >{{ $t("match.actions.delete") }}</DropdownMenuItem
+          >
+        </template>
       </DropdownMenuContent>
     </DropdownMenu>
+
+    <AlertDialog :open="showDeleteDialog">
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{{
+            $t("match.delete_confirm.title")
+          }}</AlertDialogTitle>
+          <AlertDialogDescription>
+            {{ $t("match.delete_confirm.description") }}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel @click="showDeleteDialog = false">
+            {{ $t("match.delete_confirm.cancel") }}
+          </AlertDialogCancel>
+          <AlertDialogAction
+            @click="
+              deleteMatch();
+              showDeleteDialog = false;
+            "
+          >
+            {{ $t("match.delete_confirm.confirm") }}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   </div>
 </template>
 
 <script lang="ts">
 import { generateMutation } from "~/graphql/graphqlGen";
 import { toast } from "@/components/ui/toast";
-import { e_match_map_status_enum } from "~/generated/zeus";
 export default {
   props: {
     match: {
       type: Object,
       required: true,
     },
+  },
+  data() {
+    return {
+      showDeleteDialog: false,
+    };
   },
   methods: {
     async cancelMatch() {
@@ -95,6 +136,13 @@ export default {
               success: true,
             },
           ],
+        }),
+      });
+    },
+    async deleteMatch() {
+      await this.$apollo.mutate({
+        mutation: generateMutation({
+          deleteMatch: [{ match_id: this.match.id }, { success: true }],
         }),
       });
     },
@@ -127,6 +175,12 @@ export default {
   computed: {
     canAct() {
       return this.match.is_in_lineup || this.match.is_organizer;
+    },
+    canDeleteMatch() {
+      return (
+        this.match.status !== e_match_status_enum.Live &&
+        useAuthStore().isRoleAbove(e_player_roles_enum.system_administrator)
+      );
     },
     hasMinimumLineupPlayers() {
       return (

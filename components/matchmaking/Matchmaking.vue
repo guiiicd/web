@@ -75,7 +75,7 @@ import FiveStackToolTip from "../FiveStackToolTip.vue";
           @click="leaveMatchmaking"
         >
           <span class="relative z-10 flex items-center justify-center gap-2">
-            <span>Cancel Matchmaking</span>
+            <span>{{ $t("matchmaking.cancel_matchmaking") }}</span>
           </span>
           <div
             class="absolute inset-0 -translate-x-full group-hover:translate-x-0 bg-gradient-to-r from-red-800 to-red-900 transition-transform duration-300"

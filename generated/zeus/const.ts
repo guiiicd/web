@@ -5011,6 +5011,9 @@ export const AllTypesProps: Record<string,any> = {
 		createApiKey:{
 
 		},
+		deleteMatch:{
+
+		},
 		delete__map_pool:{
 			where:"_map_pool_bool_exp"
 		},
@@ -17161,6 +17164,7 @@ export const ReturnTypes: Record<string,any> = {
 		cancelMatch:"SuccessOutput",
 		checkIntoMatch:"SuccessOutput",
 		createApiKey:"ApiKeyResponse",
+		deleteMatch:"SuccessOutput",
 		delete__map_pool:"_map_pool_mutation_response",
 		delete__map_pool_by_pk:"_map_pool",
 		delete_abandoned_matches:"abandoned_matches_mutation_response",
