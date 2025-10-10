@@ -69,10 +69,9 @@ provide("commander", commander);
         {{ $t("match.tabs.admin") }}
       </TabsTrigger>
     </TabsList>
-    <TabsContent value="overview" class="grid gap-4">
-      <Card class="w-fit">
-        <CardHeader></CardHeader>
-        <CardContent>
+    <TabsContent value="overview" class="grid gap-4 max-w-[1500px]">
+      <Card>
+        <CardContent class="py-2">
           <LineupOverview
             :match="match"
             :lineup="match.lineup_1"
@@ -80,9 +79,8 @@ provide("commander", commander);
         </CardContent>
       </Card>
 
-      <Card class="w-fit">
-        <CardHeader></CardHeader>
-        <CardContent>
+      <Card>
+        <CardContent class="py-2">
           <LineupOverview
             :match="match"
             :lineup="match.lineup_2"
