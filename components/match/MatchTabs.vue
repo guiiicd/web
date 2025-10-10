@@ -23,6 +23,7 @@ import ServiceLogs from "~/components/ServiceLogs.vue";
 import { e_match_types_enum } from "~/generated/zeus";
 import MatchForm from "~/components/match/MatchForm.vue";
 import MatchLiveStreams from "~/components/match/MatchLiveStreams.vue";
+import PlayerInvites from "~/components/match/PlayerInvites.vue";
 
 const commander = new EventEmitter();
 provide("commander", commander);
@@ -136,6 +137,8 @@ provide("commander", commander);
           </ScrollArea>
         </DrawerContent>
       </Drawer>
+
+      <PlayerInvites />
 
       <div class="flex gap-4" v-if="canAdjustLineups">
         <Button variant="destructive" @click="randomizeTeams">

@@ -191,6 +191,7 @@ import {
                 <AssignPlayerToLineup
                   :lineup="lineup"
                   :exclude="excludePlayers"
+                  :match-id="match.id"
                 ></AssignPlayerToLineup>
               </template>
               <template

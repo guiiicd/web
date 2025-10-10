@@ -94,6 +94,45 @@ definePageMeta({
       </FormItem>
     </FormField>
 
+    <FormField
+      v-slot="{ componentField }"
+      name="public.lineup_add_without_invite"
+    >
+      <FormItem>
+        <FormLabel class="text-lg font-semibold">{{
+          $t("pages.settings.application.lineup_add_without_invite")
+        }}</FormLabel>
+        <FormDescription>
+          {{
+            $t(
+              "pages.settings.application.lineup_add_without_invite_description",
+            )
+          }}
+        </FormDescription>
+        <FormControl>
+          <Select v-bind="componentField">
+            <FormControl>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem
+                  :value="role.value"
+                  v-for="role in lineupRoles"
+                  :key="role.value"
+                >
+                  <span class="capitalize">{{ role.display }}</span>
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </FormField>
+
     <div class="flex justify-start">
       <Button
         type="submit"
@@ -135,6 +174,15 @@ export default {
         },
         { value: e_player_roles_enum.administrator, display: "Administrator" },
       ],
+      lineupRoles: [
+        { value: e_player_roles_enum.user, display: "User" },
+        { value: e_player_roles_enum.verified_user, display: "Verified User" },
+        { value: e_player_roles_enum.streamer, display: "Streamer" },
+        {
+          value: e_player_roles_enum.match_organizer,
+          display: "Match Organizer",
+        },
+      ],
       form: useForm({
         validationSchema: toTypedSchema(
           z.object({
@@ -144,6 +192,9 @@ export default {
                 .string()
                 .default(e_player_roles_enum.user),
               max_acceptable_latency: z.number().default(100),
+              lineup_add_without_invite: z
+                .string()
+                .default(e_player_roles_enum.user),
             }),
           }),
         ),
@@ -207,6 +258,11 @@ export default {
                   value: String(
                     (this.form.values as any).public.max_acceptable_latency,
                   ),
+                },
+                {
+                  name: "public.lineup_add_without_invite",
+                  value: (this.form.values as any).public
+                    .lineup_add_without_invite,
                 },
                 {
                   name: "auto_cancel_duration",
