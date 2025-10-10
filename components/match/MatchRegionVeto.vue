@@ -137,6 +137,7 @@ import {
   $,
   e_match_status_enum,
   e_veto_pick_types_enum,
+  e_player_roles_enum,
 } from "~/generated/zeus";
 import { generateMutation } from "~/graphql/graphqlGen";
 import { useApplicationSettingsStore } from "~/stores/ApplicationSettings";
@@ -220,10 +221,7 @@ export default {
     canOverride() {
       return (
         this.match.is_organizer &&
-        (useAuthStore().isMatchOrganizer ||
-          useAuthStore().isTournamentOrganizer ||
-          useAuthStore().isSystemAdmin ||
-          useAuthStore().isAdmin)
+        useAuthStore().isRoleAbove(e_player_roles_enum.match_organizer)
       );
     },
     isPicking() {

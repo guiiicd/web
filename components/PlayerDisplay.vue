@@ -154,7 +154,7 @@ import FiveStackToolTip from "./FiveStackToolTip.vue";
                 <template v-if="isStreamer">
                   <Podcast class="w-3 h-3 mr-1 text-green-500" />
                 </template>
-                <template v-if="isOrganizer">
+                <template v-if="isMatchOrganizer">
                   <Shield class="w-3 h-3 mr-1 text-yellow-500" />
                 </template>
                 <template v-if="isTournamentOrganizer">
@@ -290,7 +290,7 @@ export default {
     isStreamer() {
       return this.player?.role === e_player_roles_enum.streamer;
     },
-    isOrganizer() {
+    isMatchOrganizer() {
       return this.player?.role === e_player_roles_enum.match_organizer;
     },
     isTournamentOrganizer() {

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { Users } from "lucide-vue-next";
-import { useRouter } from "vue-router";
+import { Swords } from "lucide-vue-next";
 import { useApplicationSettingsStore } from "~/stores/ApplicationSettings";
 </script>
 
@@ -13,7 +12,7 @@ import { useApplicationSettingsStore } from "~/stores/ApplicationSettings";
       <div
         class="p-2 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors"
       >
-        <Users class="w-6 h-6 text-primary" />
+        <Swords class="size-10 text-primary" />
       </div>
       <div class="space-y-2">
         <h3

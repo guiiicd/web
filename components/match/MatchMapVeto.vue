@@ -137,11 +137,11 @@ import {
   e_sides_enum,
   e_veto_pick_types_enum,
   order_by,
+  e_player_roles_enum,
 } from "~/generated/zeus/index";
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
-import { e_match_status_enum } from "~/generated/zeus";
 import { useSound } from "~/composables/useSound";
 
 export default {
@@ -313,11 +313,8 @@ export default {
     },
     canOverride() {
       return (
-        this.match.is_organizer &&
-        (useAuthStore().isMatchOrganizer ||
-          useAuthStore().isTournamentOrganizer ||
-          useAuthStore().isSystemAdmin ||
-          useAuthStore().isAdmin)
+        this.match.is_organizer ||
+        useAuthStore().isRoleAbove(e_player_roles_enum.match_organizer)
       );
     },
     isPicking() {

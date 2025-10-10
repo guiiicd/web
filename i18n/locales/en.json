@@ -136,7 +136,8 @@
                 },
                 "matchmaking": {
                     "title": "Matchmaking",
-                    "description": "Matchmaking allows players to join a queue and be matched with other players."
+                    "description": "Matchmaking allows players to join a queue and be matched with other players.",
+                    "updated": "Settings updated successfully"
                 },
                 "discord": {
                     "title": "Discord",
@@ -145,7 +146,8 @@
                     "webhook_description": "We use this discord webhook to send notifications that require action from a player. Ex. match issues, bugs, etc.",
                     "support_role": "Discord Support Role ID",
                     "support_role_description": "This role will be pinged when used for support actions. You can get the Role ID from the Discord application by turning on developer mode and right clicking and copy id.",
-                    "update": "Update"
+                    "update": "Update",
+                    "updated": "Updated Discord Settings"
                 },
                 "game_type_configs": {
                     "title": "Game Type Configs",
@@ -157,7 +159,8 @@
                     "minimum_role_to_stream": "Minimum Role Allowed to Connect to TV (Delayed)",
                     "minimum_role_to_stream_description": "This role will be able to connect to TV.",
                     "minimum_role_to_spectate": "Minimum Role Allowed to Spectate (No Delay)",
-                    "minimum_role_to_spectate_description": "This role will be able to connect and spectate matches."
+                    "minimum_role_to_spectate_description": "This role will be able to connect and spectate matches.",
+                    "updated": "Updated Streaming Settings"
                 },
                 "create_matches_role": "Minimum Role Allowed to Create Matches",
                 "create_matches_role_description": "This role will be able to create matches.",
@@ -169,6 +172,8 @@
                 "matchmaking_min_role_description": "This role will be able to join matchmaking.",
                 "max_acceptable_latency": "Maximum Acceptable Latency",
                 "max_acceptable_latency_description": "This is the maximum latency that a player can have to join a match.",
+                "lineup_add_without_invite": "Minimum Role to Add Players to Lineup Without Invite",
+                "lineup_add_without_invite_description": "This role will be able to add players to match lineups without sending an invite first.",
                 "auto_cancel_duration": "Auto Cancel Duration",
                 "auto_cancel_duration_description": "This is the duration in minutes that a match will be auto canceled if not started within the duration.",
                 "update": "Update",
@@ -204,7 +209,8 @@
                     "test_download": "Test Download",
                     "test_download_failed": "Test Download Failed",
                     "demo_network_limiter": "Global Demo Network Limiter",
-                    "demo_network_limiter_description": "The global network limiter for the demo files."
+                    "demo_network_limiter_description": "The global network limiter for the demo files.",
+                    "updated_s3_settings": "Updated S3 Settings"
                 },
                 "update_map_pools": {
                     "title": "Automatic Update Map Pools",
@@ -255,7 +261,8 @@
                 "description": "Are you sure you want to delete this region? This action cannot be undone.",
                 "cancel": "Cancel",
                 "confirm": "Delete"
-            }
+            },
+            "deleted": "Deleted Region"
         },
         "players": {
             "title": "Players",
@@ -299,6 +306,9 @@
             "detail": {
                 "schedule": "Schedule"
             }
+        },
+        "toasts": {
+            "copied_to_clipboard": "Copied to Clipboard"
         },
         "game_server_nodes": {
             "title": "Game Server Nodes",
@@ -474,6 +484,7 @@
             "fix_link": "If a system upgrade persists, you may need to fix your versions",
             "cancel": "Cancel",
             "update": "Update",
+            "updating": "System is Updating",
             "panel_update": "Your panel is out of date, pull and run the update script"
         },
         "match_lobby": {
@@ -625,6 +636,8 @@
     },
     "tournament": {
         "overview": "Overview",
+        "joined": "Joined Tournament",
+        "updated": "Updated Tournament",
         "settings": "Settings",
         "admin": "Admin",
         "show_organizers": "View Organizers",
@@ -903,6 +916,15 @@
                         "everyone": "Anyone"
                     }
                 },
+                "check_in_settings": {
+                    "label": "Check In Settings",
+                    "description": "Controls how players check in before the match starts.",
+                    "options": {
+                        "admins": "Admins",
+                        "captains": "Captains",
+                        "everyone": "All Players Required to Check In"
+                    }
+                },
                 "ready_settings": {
                     "label": "Ready Settings",
                     "description": "Controls how the match determines to be ready to start.",
@@ -926,6 +948,7 @@
             "timeout_setting": "Timeout Setting",
             "tech_timeout_setting": "Tech Timeout Setting",
             "ready_setting": "Ready Setting",
+            "check_in_setting": "Veto Setting",
             "map_pool": "Map Pool",
             "advanced_settings": "Show Advanced Settings"
         },
@@ -1005,7 +1028,17 @@
             "call_support": "Call for Support",
             "start_veto": "Start Veto",
             "skip_checkin": "Skip Check In",
-            "cancel": "Cancel Match"
+            "cancel": "Cancel Match",
+            "delete": "Delete Match",
+            "canceled": "Match Canceled",
+            "deleted": "Match Deleted",
+            "requested_organizer": "Requested Organizer"
+        },
+        "delete_confirm": {
+            "title": "Delete Match",
+            "description": "Are you sure you want to delete this match? This action cannot be undone.",
+            "cancel": "Cancel",
+            "confirm": "Delete"
         },
         "lineup": {
             "stats": {
@@ -1020,6 +1053,18 @@
             },
             "discord_user": "This is a Discord user, register your discord id to enable stat tracking by typing",
             "discord_link": "in the official discord channel."
+        },
+        "invites": {
+            "title": "Invites",
+            "no_invites": "No pending invites",
+            "invited_player": "Invited Player",
+            "invited_by": "Invited By",
+            "deleted_success": "Invite deleted successfully",
+            "delete_error": "Failed to delete invite",
+            "delete_confirm": {
+                "title": "Delete Invite",
+                "description": "Are you sure you want to delete the invite for {player} ({steam_id})? This action cannot be undone."
+            }
         },
         "overview": {
             "promote_captain": "Promote to Captain",
@@ -1067,7 +1112,8 @@
             "title": "Check In",
             "checked_in": "Checked In",
             "check_in": "Check In",
-            "description": "Please check in to confirm your participation in this match"
+            "description": "Please check in to confirm your participation in this match",
+            "checked_in_description": "You have checked in {checked} out of {required} players required to start the match"
         },
         "coach": {
             "assign": "Assign Coach"
@@ -1165,6 +1211,7 @@
         }
     },
     "matchmaking": {
+        "cancel_matchmaking": "Cancel Matchmaking",
         "searching_for_match": "Searching for a {type} match",
         "invites": "Invites",
         "lobby": {
@@ -1256,8 +1303,10 @@
             "game_server_node_description": "Select a game server node with CS installed",
             "type": "Server Type",
             "select_type": "Select Server Type",
-            
-            
+            "ranked_server": "Ranked Server",
+            "ranked_server_description": "Fully managed ranked experience by 5stack.",
+            "valve_presets": "Valve Presets",
+            "valve_presets_description": "Choose from casual/competitive and other Valve-presets.",
             "connect_password": "Connect Password",
             "connect_password_description": "Password required to connect to the server (optional)",
             "rcon_password": "RCON Password",

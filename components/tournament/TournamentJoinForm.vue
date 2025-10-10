@@ -243,7 +243,7 @@ export default {
       });
 
       toast({
-        title: "Joined Tournament",
+        title: this.$t("tournament.join.title"),
       });
 
       this.form.resetForm();

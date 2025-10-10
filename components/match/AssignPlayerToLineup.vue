@@ -21,6 +21,10 @@ export default {
       type: Object,
       required: true,
     },
+    matchId: {
+      type: String,
+      required: true,
+    },
     exclude: {
       type: Array,
       required: true,
@@ -29,6 +33,25 @@ export default {
   },
   methods: {
     async addMember(steam_id: bigint) {
+      if (!this.canAddWithoutInvite) {
+        await this.$apollo.mutate({
+          mutation: generateMutation({
+            insert_match_invites_one: [
+              {
+                object: {
+                  steam_id: steam_id,
+                  match_id: this.matchId,
+                },
+              },
+              {
+                __typename: true,
+              },
+            ],
+          }),
+        });
+        return;
+      }
+
       await this.$apollo.mutate({
         mutation: generateMutation({
           insert_match_lineup_players_one: [
@@ -44,6 +67,11 @@ export default {
           ],
         }),
       });
+    },
+  },
+  computed: {
+    canAddWithoutInvite() {
+      return useApplicationSettingsStore().canAddWithoutInvite;
     },
   },
 };

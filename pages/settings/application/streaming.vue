@@ -187,7 +187,7 @@ export default {
       });
 
       toast({
-        title: "Updated Streaming Settings",
+        title: this.$t("pages.settings.application.streaming.updated"),
       });
     },
   },

@@ -83,7 +83,7 @@ const { isMobile } = useSidebar();
                       </NuxtLink>
                     </NavigationMenuLink>
                   </li>
-                  <li>
+                  <!-- <li>
                     <NavigationMenuLink as-child>
                       <NuxtLink
                         to="/tournaments"
@@ -92,7 +92,7 @@ const { isMobile } = useSidebar();
                         {{ $t("layouts.top_nav.play.tournaments") }}
                       </NuxtLink>
                     </NavigationMenuLink>
-                  </li>
+                  </li> -->
                   <li>
                     <NavigationMenuLink as-child>
                       <NuxtLink

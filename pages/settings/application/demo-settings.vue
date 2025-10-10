@@ -278,7 +278,9 @@ export default {
       });
 
       toast({
-        title: "Updated S3 Settings",
+        title: this.$t(
+          "pages.settings.application.demo_settings.updated_s3_settings",
+        ),
       });
     },
   },

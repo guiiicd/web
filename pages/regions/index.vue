@@ -249,7 +249,7 @@ export default {
       this.regionToDelete = null;
 
       toast({
-        title: "Deleted Region",
+        title: this.$t("pages.regions.deleted"),
       });
     },
     async toggleSteamRelay(region) {

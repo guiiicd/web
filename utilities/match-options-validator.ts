@@ -4,6 +4,7 @@ import {
   e_match_types_enum,
   e_ready_settings_enum,
   e_timeout_settings_enum,
+  e_check_in_settings_enum,
 } from "~/generated/zeus";
 
 export default function matchOptionsValidator(component: any, additional: any) {
@@ -21,6 +22,7 @@ export default function matchOptionsValidator(component: any, additional: any) {
       number_of_substitutes: z.number().min(0).max(5).default(0),
       type: z.string().default(e_match_types_enum.Competitive),
       ready_setting: z.string().default(e_ready_settings_enum.Players),
+      check_in_setting: z.string().default(e_check_in_settings_enum.Players),
       timeout_setting: z
         .string()
         .default(e_timeout_settings_enum.CoachAndPlayers),

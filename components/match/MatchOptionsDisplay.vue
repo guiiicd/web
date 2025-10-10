@@ -106,6 +106,12 @@ import {
           }}</span>
           <span>{{ options.ready_setting }}</span>
         </li>
+        <li class="flex items-center justify-between">
+          <span class="text-muted-foreground">{{
+            $t("match.options.check_in_setting")
+          }}</span>
+          <span>{{ options.check_in_setting }}</span>
+        </li>
       </ul>
     </CollapsibleContent>
   </Collapsible>
