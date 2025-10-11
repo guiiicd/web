@@ -35,7 +35,7 @@ definePageMeta({
         class="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
       >
         {{ $t("pages.login.powered_by") }} CS2Mix.com.br
-        <GithubLogoIcon class="w-4 h-4" />
+        <!-- <GithubLogoIcon class="w-4 h-4" /> -->
       </a>
     </div>
   </div>
@@ -43,7 +43,7 @@ definePageMeta({
 
 <script lang="ts">
 import { useAuthStore } from "~/stores/AuthStore";
-import { GithubLogoIcon } from "@radix-icons/vue";
+// import { GithubLogoIcon } from "@radix-icons/vue";
 
 export default {
   methods: {
