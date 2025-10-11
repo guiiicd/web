@@ -91,7 +91,7 @@
                     "link": "Link do Discord",
                     "unlink_dialog": {
                         "title": "Desvincular a Conta do Discord",
-                        "description": "Tem certeza de que deseja desvincular sua conta do Discord? Isso removerá a conexão entre suas contas do 5Stack e do Discord.",
+                        "description": "Tem certeza de que deseja desvincular sua conta do Discord? Isso removerá a conexão entre suas contas do CS2Mix e do Discord.",
                         "cancel": "Cancelar",
                         "confirm": "Desvincular"
                     },
@@ -110,7 +110,7 @@
                 "telemetry": {
                     "title": "Telemetria",
                     "telemetry": "Telemetria",
-                    "telemetry_description": "Ajude a melhorar o 5stack compartilhando seus dados de telemetria anonimamente.",
+                    "telemetry_description": "Ajude a melhorar o CS2Mix compartilhando seus dados de telemetria anonimamente.",
                     "update": "Configurações de telemetria atualizadas"
                 },
                 "matchmaking": {
@@ -463,7 +463,7 @@
             "no_notifications": "Nenhuma notificação"
         },
         "app_nav": {
-            "brand": "5stack",
+            "brand": "CS2Mix",
             "navigation": {
                 "play": "Jogar",
                 "watch": "Acompanhar",
@@ -524,9 +524,9 @@
         "top_nav": {
             "my_matches": "Minhas partidas",
             "home": "Minhas partidas",
-            "play_menu": "Reproduzir",
+            "play_menu": "Jogar",
             "community_menu": "Comunidade",
-            "watch_menu": "Acompanhar",
+            "watch_menu": "Partidas",
             "play": {
                 "find_match": "Encontrar uma partida",
                 "tournaments": "Torneios",
@@ -556,8 +556,8 @@
                         "subtitle": "Conversa, suporte e anúncios"
                     },
                     "github": {
-                        "title": "5stack.gg",
-                        "subtitle": "Exibir 5stack no GitHub"
+                        "title": "Saiba mais",
+                        "subtitle": "Saiba mais sobre o CS2Mix"
                     }
                 }
             },

@@ -237,7 +237,7 @@ const { isMobile } = useSidebar();
                     <li>
                       <NavigationMenuLink as-child>
                         <a
-                          href="https://github.com/5stackgg/5stack-panel"
+                          href="https://discord.gg/sB3kSwDeSb"
                           target="_blank"
                           rel="noopener noreferrer"
                           class="flex flex-col px-2 py-2 rounded hover:text-green-300 transition-colors"
