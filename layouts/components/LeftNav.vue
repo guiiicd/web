@@ -441,7 +441,7 @@ import Logout from "./Logout.vue";
             me?.role === e_player_roles_enum.system_administrator
           "
         >
-          <SidebarMenuButton
+          <!-- <SidebarMenuButton
             as-child
             :tooltip="$t('layouts.app_nav.tooltips.report_issue')"
           >
@@ -454,7 +454,7 @@ import Logout from "./Logout.vue";
               <GithubLogoIcon class="w-5 h-5" />
               {{ $t("layouts.app_nav.footer.report_issue") }}
             </a>
-          </SidebarMenuButton>
+          </SidebarMenuButton> -->
         </SidebarMenuItem>
 
         <SidebarMenuItem>
