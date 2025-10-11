@@ -43,7 +43,7 @@ const { isMobile } = useSidebar();
       >
         <NuxtImg class="rounded h-6 w-6" src="/favicon/64.png" />
         <span class="font-extrabold text-base tracking-widest text-[#f5c6a5]"
-          >5Stack</span
+          >CS2Mix</span
         >
       </NuxtLink>
       <SystemStatus v-if="!isMobile" />
